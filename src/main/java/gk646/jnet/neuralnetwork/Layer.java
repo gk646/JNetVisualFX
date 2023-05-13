@@ -1,6 +1,4 @@
-package gk646.jnet.neuralNetwork;
-
-import java.util.List;
+package gk646.jnet.neuralnetwork;
 
 public final class Layer {
     byte neuronCount;
@@ -28,7 +26,7 @@ public final class Layer {
         return temp;
     }
 
-    public static short[][][] createWeightMatrix(short[] layerInfo) {
+    public static float[][][] createWeightMatrix(short[] layerInfo) {
         NetworkUtils.logger.info("Creating weight matrix");
 
         short layerCount = (short) layerInfo.length;
@@ -38,10 +36,10 @@ public final class Layer {
         }
 
         // We have layerCount - 1 weight matrices, because the weights connect pairs of layers
-        short[][][] temp = new short[layerCount - 1][][];
+        float[][][] temp = new float[layerCount - 1][][];
 
         for (byte i = 0; i < layerCount - 1; i++) {
-            temp[i] = new short[layerInfo[i]][layerInfo[i+1]];
+            temp[i] = new float[layerInfo[i]][layerInfo[i+1]];
         }
         return temp;
     }

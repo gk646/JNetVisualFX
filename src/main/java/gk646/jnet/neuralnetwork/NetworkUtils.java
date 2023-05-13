@@ -1,6 +1,6 @@
-package gk646.jnet.neuralNetwork;
+package gk646.jnet.neuralnetwork;
 
-import gk646.jnet.neuralNetwork.exceptions.NetworkIntegrityException;
+import gk646.jnet.neuralnetwork.exceptions.NetworkIntegrityException;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
@@ -16,7 +16,6 @@ public final class NetworkUtils {
     static {
         initLogger();
     }
-
     NetworkUtils() {
     }
 
@@ -27,7 +26,7 @@ public final class NetworkUtils {
         }
     }
 
-    public void print3DArray(short[][][] array) {
+    public void print3DArray(float[][][] array) {
         if (!verbose) return;
         for (int i = 0; i < array.length; i++) {
             System.out.println("Weight Layer Pair " + i + ":");
@@ -42,6 +41,7 @@ public final class NetworkUtils {
     }
 
     public void sleep(int millis) {
+        if(!verbose) return;
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {

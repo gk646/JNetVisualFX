@@ -1,4 +1,4 @@
-package gk646.jnet.neuralNetwork.builder;
+package gk646.jnet.neuralnetwork.builder;
 
 public enum NeuronInitState {
     RANDOM, ZERO;
