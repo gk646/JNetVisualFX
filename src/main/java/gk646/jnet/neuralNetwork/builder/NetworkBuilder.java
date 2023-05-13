@@ -1,5 +1,7 @@
 package gk646.jnet.neuralNetwork.builder;
 
+import gk646.jnet.neuralNetwork.exceptions.IllegalNetworkArguments;
+
 import java.util.List;
 
 public final class NetworkBuilder {
@@ -11,8 +13,9 @@ public final class NetworkBuilder {
     public NetworkBuilder(List<Integer> layerInfo, ActivationFunction activeFunc) {
         this.layerInfo = layerInfo;
         this.activeFunc = activeFunc;
-    }
 
+        checkBuilderViability();
+    }
 
     public NetworkBuilder setNeuronInitState(NeuronInitState neuronInitState) {
         this.neuronInitState = neuronInitState;
@@ -29,5 +32,19 @@ public final class NetworkBuilder {
 
     public ActivationFunction getActiveFunc() {
         return activeFunc;
+    }
+
+    private void checkBuilderViability() {
+        if(layerInfo.size() > 127)  throw new IllegalNetworkArguments("Amount of layers must be less than 128");
+
+        for(int num : layerInfo){
+            if(num <= 0){
+                throw new IllegalNetworkArguments("Layer size must be greater than 0");
+            }else if( num > 127){
+                throw new IllegalNetworkArguments("Layer size must be less than 128");
+            }
+        }
+
+        if(activeFunc == null) throw new IllegalNetworkArguments("No activation function!");
     }
 }
