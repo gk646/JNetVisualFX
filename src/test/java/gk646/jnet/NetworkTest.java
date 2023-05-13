@@ -5,6 +5,7 @@ import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.neuralnetwork.builder.NeuronInitState;
+import gk646.jnet.neuralnetwork.builder.WeightInitState;
 import gk646.jnet.neuralnetwork.exceptions.IllegalNetworkArguments;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +53,7 @@ class NetworkTest {
     @Test
     void backPropagationTestXOR() {
         // Create the network with 2 inputs, 2 hidden neurons, and 1 output
-        NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2, 2, 1), ActivationFunction.SIGMOID));
+        NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2, 2, 1), ActivationFunction.SIGMOID).setWeightInitState(WeightInitState.RANDOM).setNeuronInitState(NeuronInitState.RANDOM));
 
         // XOR input and output pairs
         float[][] inputs = { {0, 0}, {0, 1}, {1, 0}, {1, 1} };

@@ -5,6 +5,7 @@ import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.neuralnetwork.builder.NeuronInitState;
+import gk646.jnet.neuralnetwork.builder.WeightInitState;
 
 import java.util.List;
 
@@ -12,8 +13,7 @@ public class Main {
     public static void main(String[] args) {
 
         var netBuilder = new NetworkBuilder(List.of(3, 3, 4), ActivationFunction.SIGMOID);
-        netBuilder.setNeuronInitState(NeuronInitState.RANDOM);
-
+        netBuilder.setNeuronInitState(NeuronInitState.RANDOM).setWeightInitState(WeightInitState.random(-1,1));
 
         var network = new NeuralNetwork(netBuilder);
 
