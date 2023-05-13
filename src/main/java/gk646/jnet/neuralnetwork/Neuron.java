@@ -1,4 +1,4 @@
-package gk646.jnet.neuralNetwork;
+package gk646.jnet.neuralnetwork;
 
 public final class Neuron {
 

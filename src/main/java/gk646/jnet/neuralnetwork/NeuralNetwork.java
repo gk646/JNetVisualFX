@@ -1,6 +1,6 @@
-package gk646.jnet.neuralNetwork;
+package gk646.jnet.neuralnetwork;
 
-import gk646.jnet.neuralNetwork.builder.NetworkBuilder;
+import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -18,7 +18,7 @@ public final class NeuralNetwork {
         if (inputs.length != network.layers[0].neuronCount) {
             throw new InputMismatchException("Input array doesn't match the size of the input layer!");
         }
-        float[] temp = network.forwardPass(inputs).get(network.layerCount-2);
+        float[] temp = network.forwardPass(inputs).get(network.layerCount - 2)[1];
         if (!NetworkUtils.verbose) return temp;
         System.out.println(Arrays.toString(temp));
         return temp;
@@ -30,10 +30,14 @@ public final class NeuralNetwork {
         }
     }
 
-    public void train(int repetitions, float[] data) {
+    public void train(int repetitions, float[] input, float[] target) {
         for (int i = 0; i < repetitions; i++) {
-            //network.backPropagation();
+            network.backPropagation(input, target);
         }
+    }
+
+    public void train(float[] input, float[] target) {
+        network.backPropagation(input, target);
     }
 
     public void train(int repetitions, float[][][] data) {
