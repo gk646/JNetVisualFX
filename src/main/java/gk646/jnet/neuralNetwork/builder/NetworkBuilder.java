@@ -19,8 +19,12 @@ public final class NetworkBuilder {
         return this;
     }
 
-    public List<Integer> getLayerInfo() {
-        return layerInfo;
+    public short[] getLayerInfo() {
+        short[] temp = new short[layerInfo.size()];
+        for (int i = 0; i < layerInfo.size(); i++) {
+            temp[i] = layerInfo.get(i).shortValue();
+        }
+        return temp;
     }
 
     public ActivationFunction getActiveFunc() {
