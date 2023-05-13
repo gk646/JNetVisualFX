@@ -10,11 +10,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.print("Hello and welcome!\n");
 
-        Network network = new Network(new NetworkBuilder(List.of(1, 4, 3, 4), ActivationFunction.SIGMOID).setNeuronInitState(NeuronInitState.RANDOM));
+        Network network = new Network(new NetworkBuilder(List.of(3,4,4), ActivationFunction.SIGMOID).setNeuronInitState(NeuronInitState.RANDOM));
 
 
-        network.testInput(new float[]{1});
+        network.testInput(new float[]{3,3,3});
     }
 }

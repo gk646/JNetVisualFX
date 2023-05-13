@@ -5,38 +5,13 @@ import gk646.jnet.neuralNetwork.builder.NetworkBuilder;
 import gk646.jnet.neuralNetwork.exceptions.NetworkIntegrityException;
 
 import java.util.Arrays;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+
+import static gk646.jnet.neuralNetwork.NetworkUtils.logger;
 
 public final class Network {
-    public static final Logger logger = Logger.getLogger(Network.class.getName());
-
-    static {
-        Logger rootLogger = Logger.getLogger("");
-        Handler[] handlers = rootLogger.getHandlers();
-        if (handlers[0] instanceof ConsoleHandler) {
-            rootLogger.removeHandler(handlers[0]);
-        }
-
-        Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(Level.ALL);
-        consoleHandler.setFormatter(new Formatter() {
-            @Override
-            public String format(LogRecord logRecord) {
-                return
-                        " [" + logRecord.getLevel() + "] " +
-                                logRecord.getMessage() + "\n";
-            }
-        });
 
 
-        logger.addHandler(consoleHandler);
-    }
-
+    NetworkUtils netUtils = new NetworkUtils();
     Layer[] layers;
     byte layerCount;
     byte outputLayerSize;
@@ -57,40 +32,34 @@ public final class Network {
     }
 
 
-    public void testInput(float[] inputs) {
+    public float[] testInput(float[] inputs) {
         if (inputs.length != layers[0].neuronCount) {
             throw new IllegalArgumentException("Input array doesn't match the size of the input layer!");
         }
-        System.out.println(Arrays.toString(forwardPass(inputs)));
+        float [] result = forwardPass(inputs);
+        System.out.println(Arrays.toString(result));
+        return result;
     }
 
     private float[] forwardPass(float[] inputs) {
-
         float[] layerInput = inputs;
 
-        for (byte i = 0; i < layerCount - 1; ++i) {
+        for (byte i = 0; i < layerCount - 1; i++) {
             float[] layerOutput = new float[layerInfo[i + 1]];
 
-            for (int j = 0; j < layerOutput.length; j++) {
-                float weightedSum = dotProduct(layerInput, weightMatrix[i][j]) + layers[i].neurons[j].bias;
+            for (int j = 0; j < layerOutput.length; j++) {  // Iterate over neurons in next layer
+                float weightedSum = 0;
+                for (int k = 0; k < layerInput.length; k++) { // Iterate over neurons in current layer
+                    weightedSum += layerInput[k] * weightMatrix[i][k][j];
+                }
+                weightedSum += layers[i+1].neurons[j].bias;
                 layerOutput[j] = activeFunc.apply(weightedSum);
             }
             layerInput = layerOutput;
         }
         return layerInput;
     }
-    public void print3DArray(short[][][] array) {
-        for (int i = 0; i < array.length; i++) {
-            System.out.println("Slice " + i + ":");
-            for (int j = 0; j < array[i].length; j++) {
-                for (int k = 0; k < array[i][j].length; k++) {
-                    System.out.print(array[i][j][k] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
-        }
-    }
+
 
 
     private float dotProduct(float[] inputs, short[] weights) {
@@ -113,9 +82,6 @@ public final class Network {
         }
         for (int i = 0; i < max; i++) {
             for (int j = 0; j < layerCount; j++) {
-                if (layerInfo[j] < max && i < max - layerInfo[j]) {
-
-                }
                 if (i < layerInfo[j]) {
                     sb.append("o ");
                 } else {
@@ -139,13 +105,15 @@ public final class Network {
         }
         logger.info("Printing network structure:");
         System.out.println(this);
-        try {
-            Thread.sleep(25);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
-        print3DArray(new short[5][2][2]);
+        netUtils.sleep(20);
+
+        logger.info("Printing weight matrix structure: \n");
+
+        netUtils.print3DArray(weightMatrix);
+
+        netUtils.sleep(20);
+
         logger.info("Network integrity checks successful!\n");
     }
 }
