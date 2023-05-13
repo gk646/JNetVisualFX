@@ -5,20 +5,27 @@ import gk646.jnet.neuralnetwork.builder.DerivativeActivationFunction;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 
 import java.util.ArrayList;
-
+/**
+ * A java implementation of a NeuralNetwork. Performs the basic {@link Network#forwardPass(float[])} and {@link Network#backPropagation(float[], float[])}
+ * to learn from inputData.
+ * Allows for various customization through the  {@link  NetworkBuilder}.
+ * Supported activation functions: RELU ,SIGMOID.
+ *
+ * @param networkBuilder an instance of {@link  NetworkBuilder}
+ */
 public final class Network {
     //VARIABLES
     byte layerCount;
-    byte learningRate = 1;
+    byte learnRate = 1;
     byte outputLayerSize;
     float[][][] weightMatrix;
     short[] layerInfo;
-
     //OBJECTS
     NetworkUtils netUtils = new NetworkUtils();
     Layer[] layers;
     ActivationFunction activeFunc;
     DerivativeActivationFunction derivativeFunc;
+
 
     public Network(NetworkBuilder networkBuilder) {
         this.layerInfo = networkBuilder.getLayerInfo();
@@ -26,14 +33,20 @@ public final class Network {
         this.outputLayerSize = (byte) layerInfo[layerCount - 1];
         this.activeFunc = networkBuilder.getActiveFunc();
         this.derivativeFunc = DerivativeActivationFunction.valueOf(activeFunc.name());
+        this.learnRate = networkBuilder.getLearnRate();
 
-        layers = Layer.createLayers(layerInfo);
-        weightMatrix = Layer.createWeightMatrix(layerInfo);
+        layers = Layer.createLayers(layerInfo, networkBuilder.getNeuronInitState());
+        weightMatrix = Layer.createWeightMatrix(layerInfo, networkBuilder.getWeightInit());
 
         netUtils.networkIntegrityCheck(this);
     }
 
-
+    /**
+     * Performs a standard forwardPass through the Network.
+     *
+     * @param inputs a float Array
+     * @return a List of both pre- and postActivation values for each Layer (in that order).
+     */
     ArrayList<float[][]> forwardPass(float[] inputs) {
         float[] layerInput = inputs;
         ArrayList<float[][]> layerOutputsAndInputs = new ArrayList<>(layerCount);
@@ -73,11 +86,10 @@ public final class Network {
                     // Update weights and compute next layer's error
                     nextError[prevNeuronIndex] += weightMatrix[layerIndex][prevNeuronIndex][neuronIndex] * outputGradient;
                     weightMatrix[layerIndex][prevNeuronIndex][neuronIndex]
-                            -= learningRate * outputGradient * layerOutputsAndInputs.get(layerIndex - 1 >= 0 ?  layerIndex - 1 :layerIndex)[1][prevNeuronIndex];
+                            -= learnRate * outputGradient * layerOutputsAndInputs.get(layerIndex - 1 >= 0 ? layerIndex - 1 : layerIndex)[1][prevNeuronIndex];
                 }
-
                 // Update biases
-                layers[layerIndex + 1].neurons[neuronIndex].bias -= learningRate * outputGradient;
+                layers[layerIndex + 1].neurons[neuronIndex].bias -= learnRate * outputGradient;
             }
 
             error = nextError;

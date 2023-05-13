@@ -2,6 +2,7 @@ package gk646.jnet.neuralnetwork;
 
 import gk646.jnet.neuralnetwork.exceptions.NetworkIntegrityException;
 
+import java.util.Random;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -10,7 +11,11 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public final class NetworkUtils {
+    public static final Random rng = new Random(System.nanoTime());
     public static final Logger logger = Logger.getLogger(NetworkUtils.class.getName());
+    /**
+     * Controls the visibility of debug messages and logging.
+     */
     public static boolean verbose = true;
 
     static {
@@ -40,6 +45,11 @@ public final class NetworkUtils {
         }
     }
 
+    /**
+     * Performs {@link Thread#sleep(long)} for the given time.
+     * Skips the duration if  {@link NetworkUtils#verbose} is false:
+     * @param millis amount of milliseconds as int.
+     */
     public void sleep(int millis) {
         if(!verbose) return;
         try {
@@ -73,8 +83,10 @@ public final class NetworkUtils {
         System.out.println(sb);
     }
 
-
-    public void networkIntegrityCheck(Network network) {
+    /**
+     * Performs various checks regarding the structural integrity of the network.
+     */
+    void networkIntegrityCheck(Network network) {
         logger.info("Performing network integrity checks");
         for (int i = 0; i < network.layerCount - 1; i++) {
             if (network.weightMatrix[i].length != network.layerInfo[i] || network.weightMatrix[i][0].length != network.layerInfo[i + 1]) {
