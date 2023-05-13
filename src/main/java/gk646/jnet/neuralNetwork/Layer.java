@@ -13,7 +13,7 @@ public final class Layer {
     }
 
     public static Layer[] createLayers(short[] layerInfo) {
-        Network.logger.info("Creating layers");
+        NetworkUtils.logger.info("Creating layers");
 
         byte layerCount = (byte) layerInfo.length;
         if (layerCount < 1 || layerCount > layerInfo.length) {
@@ -29,11 +29,11 @@ public final class Layer {
     }
 
     public static short[][][] createWeightMatrix(short[] layerInfo) {
-        Network.logger.info("Creating weight matrix");
+        NetworkUtils.logger.info("Creating weight matrix");
 
         short layerCount = (short) layerInfo.length;
         if (layerCount < 2) {
-            Network.logger.severe("Invalid layerCount. There should be at least two layers.");
+            NetworkUtils.logger.severe("Invalid layerCount. There should be at least two layers.");
             throw new IllegalArgumentException("Invalid layerCount. There should be at least two layers.");
         }
 

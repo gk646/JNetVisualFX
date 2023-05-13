@@ -14,6 +14,16 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
+task runWithTests(type: GradleBuild) {
+    tasks = ['clean', 'test', 'run']
+}
+
+task run(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gk646.jnet.Main'
+}
+
+
 test {
     useJUnitPlatform()
 }
