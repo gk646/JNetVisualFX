@@ -11,12 +11,11 @@ import java.util.ArrayList;
  * Allows for various customization through the  {@link  NetworkBuilder}.
  * Supported activation functions: RELU ,SIGMOID.
  *
- * @param networkBuilder an instance of {@link  NetworkBuilder}
  */
 public final class Network {
     //VARIABLES
     byte layerCount;
-    byte learnRate = 1;
+    byte learnRate;
     byte outputLayerSize;
     float[][][] weightMatrix;
     short[] layerInfo;

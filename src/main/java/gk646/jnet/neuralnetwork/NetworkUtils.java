@@ -37,13 +37,19 @@ public final class NetworkUtils {
             System.out.println("Weight Layer Pair " + i + ":");
             for (int j = 0; j < array[i].length; j++) {
                 for (int k = 0; k < array[i][j].length; k++) {
-                    System.out.print(array[i][j][k] + " ");
+                    float num = array[i][j][k];
+                    if(num < 0){
+                        System.out.printf("%.4f | ", array[i][j][k]);
+                    }else {
+                        System.out.printf(" %.4f | ", array[i][j][k]);
+                    }
                 }
                 System.out.println();
             }
             System.out.println();
         }
     }
+
 
     /**
      * Performs {@link Thread#sleep(long)} for the given time.
