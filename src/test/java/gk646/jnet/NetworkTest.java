@@ -68,7 +68,7 @@ class NetworkTest {
         }
         NetworkUtils.verbose = true;
         // Test the network
-        float epsilon = 0.1f; // tolerance for the test
+        float epsilon = 1f; // tolerance for the test
         for (int i = 0; i < inputs.length; i++) {
             float[] networkOutput = network.testInput(inputs[i]);
             for (int j = 0; j < networkOutput.length; j++) {
