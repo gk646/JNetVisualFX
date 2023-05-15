@@ -18,7 +18,7 @@ public final class Terminal {
     public static StringBuilder currentText = new StringBuilder();
     private ContainerHelper terminal;
     public static final LimitedQueue<String> commandHistory = new LimitedQueue<>(COMMAND_HISTORY_LENGTH);
-    private static final LimitedQueue<String> scrollingText = new LimitedQueue<>(MAX_LINES);
+    private static final LimitedQueue<String> scrollingText = new LimitedQueue<>(5);
     private static final Parser parser = new Parser();
 
 
@@ -60,6 +60,11 @@ public final class Terminal {
     }
 
     public static void parseText(String text) {
+        if (text.isBlank()) {
+            scrollingText.add(terminalRoot);
+            return;
+        }
+
         if (!parser.parse(text)) {
             scrollingText.add(text + " :was not found to be a command");
         } else {

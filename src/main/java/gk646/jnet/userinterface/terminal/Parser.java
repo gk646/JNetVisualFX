@@ -18,7 +18,7 @@ public final class Parser {
 
     static HashMap<String, Constructor> constructorMap = new HashMap<>();
 
-    Command[] commands = Command.values();
+    public static Command[] commands = Command.values();
 
 
     Parser() {
@@ -80,12 +80,10 @@ public final class Parser {
 
     private boolean parseARGSCommands(String prompt) {
         for (Command command : commands) {
-            if (prompt.contains(command.getKeyWord())) {
+            if (prompt.startsWith(command.getKeyWord())) {
                 Terminal.addText(command.cmd(prompt));
                 return true;
             }
-        }
-        if (prompt.contains("man")) {
         }
         return false;
     }

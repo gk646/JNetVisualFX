@@ -7,6 +7,8 @@ public final class InputHandler {
     private final String ENTER = "\r";
     private final String BACKSPACE = "\b";
     private byte commandHistoryOffset = -1;
+    private boolean CTRLpressed;
+    private boolean preventInput;
 
     public InputHandler() {
     }
@@ -21,7 +23,6 @@ public final class InputHandler {
         String activeCharacter = event.getCharacter();
         switch (activeCharacter) {
             case ENTER -> {
-                Terminal.changeFontSize(-1);
                 Terminal.parseText(Terminal.currentText.toString());
                 Terminal.currentText = new StringBuilder();
                 commandHistoryOffset = -1;
@@ -35,17 +36,18 @@ public final class InputHandler {
                 return;
             }
         }
-        Terminal.currentText.append(event.getCharacter());
+        if (!CTRLpressed) {
+            Terminal.currentText.append(event.getCharacter());
+        }
     }
 
     public void handleSpecialKeyType(KeyEvent event) {
         switch (event.getCode()) {
             case UP -> {
-                if (commandHistoryOffset < Terminal.commandHistory.size()-1) {
+                if (commandHistoryOffset < Terminal.commandHistory.size() - 1) {
                     commandHistoryOffset++;
                 }
                 Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
-
             }
             case DOWN -> {
                 if (commandHistoryOffset >= 1) {
@@ -53,6 +55,25 @@ public final class InputHandler {
                 }
                 Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
             }
+
+            case CONTROL -> CTRLpressed = true;
+
+            case PLUS -> {
+                if (CTRLpressed) {
+                    Terminal.changeFontSize(1);
+                }
+            }
+            case MINUS -> {
+                if (CTRLpressed) {
+                    Terminal.changeFontSize(-1);
+                }
+            }
+        }
+    }
+
+    public void handleSpecialKeyLift(KeyEvent event) {
+        switch (event.getCode()) {
+            case CONTROL -> CTRLpressed = false;
         }
     }
 }
