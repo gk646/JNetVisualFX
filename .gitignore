@@ -1,10 +1,14 @@
+### Gradle ###
 .gradle
+gradlew.bat
+gradlew
+build.gradle
+settings.gradle
 build/
 gradle/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-.idea/
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
