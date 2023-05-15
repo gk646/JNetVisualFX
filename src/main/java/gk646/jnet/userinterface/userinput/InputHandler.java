@@ -26,18 +26,28 @@ public final class InputHandler {
                 Terminal.parseText(Terminal.currentText.toString());
                 Terminal.currentText = new StringBuilder();
                 commandHistoryOffset = -1;
+                Terminal.cursorOffsetLeft = 0;
+
                 return;
             }
             case BACKSPACE -> {
                 int length = Terminal.currentText.length();
                 if (length > 0) {
-                    Terminal.currentText.deleteCharAt(length - 1);
+                    if (Terminal.cursorOffsetLeft == 0) {
+                        Terminal.currentText.deleteCharAt(length - 1);
+                    } else if (Terminal.cursorOffsetLeft != length) {
+                        Terminal.currentText.deleteCharAt(length - 1 - Terminal.cursorOffsetLeft);
+                    }
                 }
                 return;
             }
         }
         if (!CTRLpressed) {
-            Terminal.currentText.append(event.getCharacter());
+            if (Terminal.cursorOffsetLeft == 0) {
+                Terminal.currentText.append(event.getCharacter());
+            } else {
+                Terminal.currentText.insert(Terminal.currentText.length() - Terminal.cursorOffsetLeft, event.getCharacter());
+            }
         }
     }
 
@@ -50,8 +60,12 @@ public final class InputHandler {
                 Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
             }
             case DOWN -> {
-                if (commandHistoryOffset >= 1) {
+                if (commandHistoryOffset > 0) {
                     commandHistoryOffset--;
+                } else {
+                    Terminal.currentText = new StringBuilder();
+                    commandHistoryOffset = -1;
+                    return;
                 }
                 Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
             }
@@ -66,6 +80,16 @@ public final class InputHandler {
             case MINUS -> {
                 if (CTRLpressed) {
                     Terminal.changeFontSize(-1);
+                }
+            }
+            case LEFT -> {
+                if (Terminal.cursorOffsetLeft < Terminal.currentText.length()) {
+                    Terminal.cursorOffsetLeft++;
+                }
+            }
+            case RIGHT -> {
+                if (Terminal.cursorOffsetLeft >= 1) {
+                    Terminal.cursorOffsetLeft--;
                 }
             }
         }

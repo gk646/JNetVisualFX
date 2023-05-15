@@ -15,7 +15,8 @@ import java.util.RandomAccess;
 public final class LimitedQueue<T> extends AbstractList<T> implements RandomAccess, Iterable<T> {
     private int size = 0;
     private final int maximumCapacity;
-    private T[] elements;
+    private boolean shifting;
+    public T[] elements;
 
     @SuppressWarnings("unchecked")
     public LimitedQueue(int maximumCapacity) {
@@ -33,10 +34,12 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
      */
     @Override
     public boolean add(T obj) {
-        System.out.println(size);
-        if (size == maximumCapacity - 1) {
+        if (shifting) {
             shift();
-            elements[size] = obj;
+        }
+        if (size == maximumCapacity) {
+            shifting = true;
+            elements[maximumCapacity - 1] = obj;
             return true;
         }
         elements[size++] = obj;
@@ -44,7 +47,7 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
     }
 
     private void shift() {
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < maximumCapacity - 1; i++) {
             elements[i] = elements[i + 1];
         }
     }
@@ -72,8 +75,18 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
      * @return the element at index currentSize-elementIndex or null
      */
     public T get(int elementIndex) {
-        if (size - elementIndex - 1 < 0) return elements[0];
+        if (size - elementIndex - 1 <= 0) return elements[0];
         return elements[size - elementIndex - 1];
+    }
+
+    /**
+     * The usual direct access for a list
+     *
+     * @param index the access index
+     * @return the elemtent at index
+     */
+    public T directGet(int index) {
+        return elements[index];
     }
 
     /**
@@ -84,11 +97,11 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
     @Override
     public Iterator<T> iterator() {
         return new Iterator<>() {
-            private int currentIndex = size;
+            private int currentIndex = size - 1;
 
             @Override
             public boolean hasNext() {
-                return currentIndex >= 0;
+                return currentIndex > -1;
             }
 
             @Override
@@ -110,7 +123,8 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
     @Override
     @SuppressWarnings("unchecked")
     public void clear() {
-        elements = (T[]) new Object[elements.length];
+        shifting = false;
+        elements = (T[]) new Object[maximumCapacity];
         size = 0;
     }
 
@@ -165,6 +179,16 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
             result = 31 * result + (elements[i] == null ? 0 : elements[i].hashCode());
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+
+        for (int i = 0; i < maximumCapacity; i++) {
+            string.append(directGet(i)).append("\n");
+        }
+        return string.toString();
     }
 }
 
