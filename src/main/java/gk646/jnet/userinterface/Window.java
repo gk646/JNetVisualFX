@@ -53,6 +53,7 @@ public class Window extends Application {
 
 
         sceneRoot.setOnKeyTyped(inputHandler::handleKeyType);
+        sceneRoot.setOnKeyPressed(inputHandler::handleSpecialKeyType);
     }
 
     @Override

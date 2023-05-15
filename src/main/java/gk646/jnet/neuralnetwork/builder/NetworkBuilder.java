@@ -20,12 +20,12 @@ public final class NetworkBuilder {
     private WeightInitState weightInitState;
 
     /**
-     * The NetoworkBuilder will internally check for viability of the given arguments
+     * The NetworkBuilder will internally check for viability of the given arguments
      *
      * @param layerInfo  a list, each entry specifiying the number of neurons for that layer.
      * @param activeFunc the activationFunction for the network
      */
-    @Manual(text = "The NetoworkBuilder will internally check for viability of the given arguments\n" +
+    @Manual(text = "The NetworkBuilder will internally check for viability of the given arguments\n" +
             "     \n" +
             "      @param layerInfo  a list, each entry specifiying the number of neurons for that layer.\n" +
             "      @param activeFunc the activationFunction for the network")

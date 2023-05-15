@@ -1,18 +1,24 @@
 package gk646.jnet.userinterface.terminal;
 
 import gk646.jnet.neuralnetwork.Network;
+import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
-import gk646.jnet.util.Manual;
+import gk646.jnet.userinterface.terminal.commands.Command;
 import javafx.application.Platform;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.regex.Matcher;
 
 public final class Parser {
-    HashMap<String, Method> methodMap = new HashMap<>();
 
-    HashMap<String, Constructor> constructorMap = new HashMap<>();
+    Matcher matcher;
+    static HashMap<String, Method> methodMap = new HashMap<>();
+
+    static HashMap<String, Constructor> constructorMap = new HashMap<>();
+
+    Command[] commands = Command.values();
 
 
     Parser() {
@@ -26,13 +32,15 @@ public final class Parser {
         for (Method method : Network.class.getMethods()) {
             methodMap.put(method.getName(), method);
         }
-        constructorMap.put(Network.class.getSimpleName(), Network.class.getConstructors()[0]);
-        constructorMap.put(NetworkBuilder.class.getSimpleName(), NetworkBuilder.class.getConstructors()[0]);
+        constructorMap.put(Network.class.getSimpleName(), NeuralNetwork.class.getConstructors()[0]);
+        constructorMap.put("NetBuilder", NetworkBuilder.class.getConstructors()[0]);
     }
 
 
     public boolean parse(String text) {
-        if (parseCustomCommands(text)) return true;
+        if (parseNOARGSCommands(text)) return true;
+        if (parseARGSCommands(text)) return true;
+
         if (text.contains("new")) {
             text = text.replace("new ", "");
             Constructor constructor = constructorMap.get(text);
@@ -41,8 +49,9 @@ public final class Parser {
                 return true;
             }
         } else {
-            Method method = parseMethods(text);
+            Method method = methodMap.get(text);
             if (method != null) {
+                //TODO invoke methods
                 return true;
             }
         }
@@ -50,7 +59,7 @@ public final class Parser {
     }
 
 
-    private boolean parseCustomCommands(String text) {
+    private boolean parseNOARGSCommands(String text) {
         switch (text) {
             case "clear" -> {
                 Terminal.clear();
@@ -66,20 +75,30 @@ public final class Parser {
                 return true;
             }
         }
-        if (text.contains("man")) {
-            text = text.replace("man ", "");
-            Method method = parseMethods(text);
-            if (method != null) {
-                String annotationText = method.getAnnotation(Manual.class).text().replace("\\*", "");
-                Terminal.addText(annotationText);
+        return false;
+    }
+
+    private boolean parseARGSCommands(String prompt) {
+        for (Command command : commands) {
+            if (prompt.contains(command.getKeyWord())) {
+                Terminal.addText(command.cmd(prompt));
                 return true;
             }
+        }
+        if (prompt.contains("man")) {
         }
         return false;
     }
 
+    public static HashMap<String, Method> getMethodMap() {
+        return methodMap;
+    }
 
-    private Method parseMethods(String text) {
-        return methodMap.get(text);
+    public static HashMap<String, Constructor> getConstructorMap() {
+        return constructorMap;
+    }
+
+    public Command[] getCommands() {
+        return commands;
     }
 }

@@ -22,11 +22,12 @@ import java.awt.Point;
  * {@link #networkVisualizer} and a {@link #log}.
  */
 public final class JNetVisualFX {
-    final ContainerHelper terminalPos = new ContainerHelper(70, 0, 30, 100);
+    final ContainerHelper terminalPos = new ContainerHelper(60, 0, 40, 100);
     final ContainerHelper networkPos = new ContainerHelper(0, 0, 70, 100);
+    final Canvas canvas;
     public static Point bounds;
     final Scene sceneRoot;
-    final GraphicsContext gc;
+    public static GraphicsContext gc;
     final Terminal terminal = new Terminal();
     final NetworkVisualizer networkVisualizer = new NetworkVisualizer();
     final Log log = new Log();
@@ -36,8 +37,9 @@ public final class JNetVisualFX {
 
     JNetVisualFX(Canvas canvas, InputHandler inputHandler, Scene scene) {
         bounds = new Point((int) canvas.getWidth(), (int) canvas.getHeight());
-        this.gc = canvas.getGraphicsContext2D();
+        gc = canvas.getGraphicsContext2D();
         this.inputHandler = inputHandler;
+        this.canvas = canvas;
         this.sceneRoot = scene;
 
         gc.setFont(Resources.cascadiaCode);
@@ -69,16 +71,20 @@ public final class JNetVisualFX {
         terminal.draw(gc, terminalPos);
     }
 
-
     private void update() {
         inputHandler.update();
+
         int width = (int) sceneRoot.getWidth();
         int height = (int) sceneRoot.getHeight();
-        if (width != bounds.x) {
+        if (width != bounds.x || height != bounds.y) {
             bounds.x = width;
-        }
-        if (height != bounds.y) {
             bounds.y = height;
+
+            canvas.setWidth(width);
+            canvas.setHeight(height);
+            gc = canvas.getGraphicsContext2D();
+
+            terminal.updateSize();
         }
     }
 }
