@@ -6,22 +6,36 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.RandomAccess;
 
-
+/**
+ * A capacity-restricted queue that internally handles shifting if maximal capacity is reached.
+ * Provides a backwards iterator when used in for-each.
+ *
+ * @param <T> the type
+ */
 public final class LimitedQueue<T> extends AbstractList<T> implements RandomAccess, Iterable<T> {
     private int size = 0;
+    private final int maximumCapacity;
     private T[] elements;
 
     @SuppressWarnings("unchecked")
-    public LimitedQueue(int initialCapacity) {
-        elements = (T[]) new Object[initialCapacity];
+    public LimitedQueue(int maximumCapacity) {
+        elements = (T[]) new Object[maximumCapacity];
+        this.maximumCapacity = maximumCapacity;
     }
 
+    /**
+     * Adds the element to the queue. If the predefined {@link #maximumCapacity} threshold is
+     * reached all elements beginning with the first are shifted to the right.
+     * The last element will then be overwritten by the added element.
+     *
+     * @param obj element whose presence in this collection is to be ensured
+     * @return true if the element was added
+     */
     @Override
     public boolean add(T obj) {
-        if (size == elements.length) {
-            size--;
+        if (size == maximumCapacity - 1) {
             shift();
-            elements[size++] = obj;
+            elements[size] = obj;
             return true;
         }
         elements[size++] = obj;
@@ -29,7 +43,7 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
     }
 
     private void shift() {
-        for (int i = 0; i < size-1; i++) {
+        for (int i = 0; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
     }
@@ -46,17 +60,19 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
     }
 
     public int size() {
-        int num = 0;
-        for (T obj : elements) {
-            if (obj != null) {
-                num++;
-            }
-        }
-        return num;
+       return size;
     }
 
-    public T get(int index) {
-        return elements[index];
+    /**
+     * Returns elements counting from the back.
+     * If the index is out of bounds returns null.
+     *
+     * @param elementIndex index of the element to return
+     * @return the element at index currentSize-elementIndex or null
+     */
+    public T get(int elementIndex) {
+        if (size - elementIndex - 1 < 0) return elements[0];
+        return elements[size - elementIndex - 1];
     }
 
     /**

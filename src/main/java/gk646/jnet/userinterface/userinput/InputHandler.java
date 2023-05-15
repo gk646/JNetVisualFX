@@ -4,9 +4,9 @@ import gk646.jnet.userinterface.terminal.Terminal;
 import javafx.scene.input.KeyEvent;
 
 public final class InputHandler {
-    public static StringBuilder currentText = new StringBuilder();
     private final String ENTER = "\r";
     private final String BACKSPACE = "\b";
+    private byte commandHistoryOffset = -1;
 
     public InputHandler() {
     }
@@ -19,21 +19,40 @@ public final class InputHandler {
 
     public void handleKeyType(KeyEvent event) {
         String activeCharacter = event.getCharacter();
-
         switch (activeCharacter) {
             case ENTER -> {
-                Terminal.addText(currentText.toString());
-                currentText = new StringBuilder();
+                Terminal.changeFontSize(-1);
+                Terminal.parseText(Terminal.currentText.toString());
+                Terminal.currentText = new StringBuilder();
+                commandHistoryOffset = -1;
                 return;
             }
             case BACKSPACE -> {
-                int length = currentText.length();
+                int length = Terminal.currentText.length();
                 if (length > 0) {
-                    currentText.deleteCharAt(length - 1);
+                    Terminal.currentText.deleteCharAt(length - 1);
                 }
                 return;
             }
         }
-        currentText.append(event.getCharacter());
+        Terminal.currentText.append(event.getCharacter());
+    }
+
+    public void handleSpecialKeyType(KeyEvent event) {
+        switch (event.getCode()) {
+            case UP -> {
+                if (commandHistoryOffset < Terminal.commandHistory.size()-1) {
+                    commandHistoryOffset++;
+                }
+                Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
+
+            }
+            case DOWN -> {
+                if (commandHistoryOffset >= 1) {
+                    commandHistoryOffset--;
+                }
+                Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
+            }
+        }
     }
 }

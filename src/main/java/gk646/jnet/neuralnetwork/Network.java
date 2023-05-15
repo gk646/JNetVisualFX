@@ -3,15 +3,20 @@ package gk646.jnet.neuralnetwork;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.neuralnetwork.builder.DerivativeActivationFunction;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.util.Manual;
 
 import java.util.ArrayList;
+
 /**
  * A java implementation of a NeuralNetwork. Performs the basic {@link Network#forwardPass(float[])} and {@link Network#backPropagation(float[], float[])}
  * to learn from inputData.
  * Allows for various customization through the  {@link  NetworkBuilder}.
  * Supported activation functions: RELU ,SIGMOID.
- *
  */
+@Manual(text = "A java implementation of a NeuralNetwork. Performs the basic {@link Network#forwardPass(float[])} and {@link Network#backPropagation(float[], float[])}\n" +
+        " * to learn from inputData.\n" +
+        " * Allows for various customization through the  {@link  NetworkBuilder}.\n" +
+        " * Supported activation functions: RELU ,SIGMOID.")
 public final class Network {
     //VARIABLES
     byte layerCount;
@@ -25,7 +30,7 @@ public final class Network {
     ActivationFunction activeFunc;
     DerivativeActivationFunction derivativeFunc;
 
-
+    @Manual(text = "heya")
     public Network(NetworkBuilder networkBuilder) {
         this.layerInfo = networkBuilder.getLayerInfo();
         this.layerCount = (byte) layerInfo.length;

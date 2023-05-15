@@ -1,16 +1,19 @@
 package gk646.jnet.neuralnetwork;
 
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.util.Manual;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;
+
 /**
  * The wrapper class for the network which allows for higher level concepts like batchTraining and regularization.
  */
+@Manual(text = "The wrapper class for the network which allows for higher level concepts like batchTraining and regularization.\n")
 public final class NeuralNetwork {
     private Network network;
 
-
+    @Manual(text = "The Neural Network. Built using a NetBuilder and calling NetBuilder.build()")
     public NeuralNetwork(NetworkBuilder netBuilder) {
         this.network = new Network(netBuilder);
     }
@@ -18,6 +21,7 @@ public final class NeuralNetwork {
     /**
      * Get the output for a given input. Performs a simple forwardPass through the network.
      * If {@link NetworkUtils#verbose} is true (default) prints out the result.
+     *
      * @param inputs a float array.
      * @return the output array form the forwardPass
      */
