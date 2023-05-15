@@ -1,13 +1,17 @@
 package gk646.jnet.neuralnetwork.builder;
 
 import gk646.jnet.neuralnetwork.exceptions.IllegalNetworkArguments;
+import gk646.jnet.util.Manual;
 
 import java.util.List;
+
 
 /**
  * A helper class to specify the network parameters. Besides layerInfo and the activationFunction customization is optional.
  * LayerInfo is a list where each entry is the number of neurons for that layer, including input and output layer!.
  */
+@Manual(text = " A helper class to specify the network parameters. Besides layerInfo and the activationFunction customization is optional.\n" +
+        "LayerInfo is a list where each entry is the number of neurons for that layer, including input and output layer!.")
 public final class NetworkBuilder {
     private List<Integer> layerInfo;
     private ActivationFunction activeFunc;
@@ -21,6 +25,10 @@ public final class NetworkBuilder {
      * @param layerInfo  a list, each entry specifiying the number of neurons for that layer.
      * @param activeFunc the activationFunction for the network
      */
+    @Manual(text = "The NetoworkBuilder will internally check for viability of the given arguments\n" +
+            "     \n" +
+            "      @param layerInfo  a list, each entry specifiying the number of neurons for that layer.\n" +
+            "      @param activeFunc the activationFunction for the network")
     public NetworkBuilder(List<Integer> layerInfo, ActivationFunction activeFunc) {
         this.layerInfo = layerInfo;
         this.activeFunc = activeFunc;
@@ -36,6 +44,12 @@ public final class NetworkBuilder {
      * @param neuronInitState the initState
      * @return a reference to this object
      */
+    @Manual(text = " Sets the neuron initialization state which controls how the initial bias of the neurons pre-training is initialized.\n" +
+            "     * Supported values RANDOM and ZERO.\n" +
+            "     * Recommended value: RANDOM\n" +
+            "     *\n" +
+            "     * @param neuronInitState the initState\n" +
+            "     * @return a reference to this object")
     public NetworkBuilder setNeuronInitState(NeuronInitState neuronInitState) {
         this.neuronInitState = neuronInitState;
         checkBuilderViability();
@@ -50,6 +64,13 @@ public final class NetworkBuilder {
      * @param learnRate an int.
      * @return a reference to this object
      */
+    @Manual(text = " Sets the learnRate the NeuralNetwork. Learnrate is the multiplier by which the gradient descent step is multiplied each learning iteration.\n" +
+            "     * Making the learnRate too small or too big can have a big impact on the outcome.\n" +
+            "     * Recommended values 1-5.\n" +
+            "     *\n" +
+            "     * @param learnRate an int.\n" +
+            "     * @return a reference to this object\n" +
+            "     */")
     public NetworkBuilder setLearnRate(int learnRate) {
         this.learnRate = (byte) learnRate;
         checkBuilderViability();
@@ -61,9 +82,17 @@ public final class NetworkBuilder {
      * This is a very crucial element and can lead to a virtually non-functioning network if set wrong.<br>
      * Supported values RANDOM (default range: -0.1, 0.1) and ZERO(0,0) and {@link WeightInitState#random(float, float)}.
      * Recommended value: RANDOM
+     *
      * @param weightInitState the weightInitState
      * @return a reference to this object
      */
+    @Manual(text = "Sets the weight initialization state which controls how the initial weights of the network weight matrix are set.\n" +
+            "     * This is a very crucial element and can lead to a virtually non-functioning network if set wrong.<br>\n" +
+            "     * Supported values RANDOM (default range: -0.1, 0.1) and ZERO(0,0) and {@link WeightInitState#random(float, float)}.\n" +
+            "     * Recommended value: RANDOM\n" +
+            "     *\n" +
+            "     * @param weightInitState the weightInitState\n" +
+            "     * @return a reference to this object")
     public NetworkBuilder setWeightInitState(WeightInitState weightInitState) {
         this.weightInitState = weightInitState;
         checkBuilderViability();

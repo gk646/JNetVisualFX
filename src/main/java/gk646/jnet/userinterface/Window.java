@@ -57,7 +57,7 @@ public class Window extends Application {
 
     @Override
     public void stop() {
-        System.exit(1);
+        System.exit(0);
     }
 
     private Point setupScreen() {

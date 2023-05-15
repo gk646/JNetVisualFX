@@ -2,7 +2,7 @@ package gk646.jnet.userinterface.graphics;
 
 import javafx.scene.text.Font;
 
-public class Resources {
+public final class Resources {
 
     private Resources(){}
 

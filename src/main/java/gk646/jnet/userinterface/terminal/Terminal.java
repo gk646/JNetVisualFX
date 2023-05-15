@@ -9,12 +9,13 @@ import javafx.scene.paint.Color;
 
 
 public final class Terminal {
-    private static final byte MAX_LINES = 20;
+    private static final byte MAX_LINES = 40;
     private static final byte LINE_HEIGHT = 17;
     private static String terminalRoot = "> ";
     private ContainerHelper terminal;
     private static final LimitedQueue<String> scrollingText = new LimitedQueue<>(MAX_LINES);
-    private final Parser parser = new Parser();
+    private static final Parser parser = new Parser();
+
 
     public Terminal() {
 
@@ -51,6 +52,14 @@ public final class Terminal {
     }
 
     public static void addText(String text) {
-        scrollingText.add( text);
+        if (!parser.parse(text)) {
+            scrollingText.add(text + " :was not found to be a command");
+        } else {
+            scrollingText.add(text);
+        }
+    }
+
+    public static void clear() {
+        scrollingText.clear();
     }
 }

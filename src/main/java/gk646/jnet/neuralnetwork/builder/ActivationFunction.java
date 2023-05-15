@@ -16,6 +16,5 @@ public enum ActivationFunction {
     };
 
 
-
     public abstract float apply(float x);
 }

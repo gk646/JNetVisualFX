@@ -3,6 +3,7 @@ package gk646.jnet.userinterface;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.userinterface.terminal.Log;
+import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
 import gk646.jnet.userinterface.userinput.InputHandler;
 import gk646.jnet.util.ContainerHelper;
@@ -30,6 +31,8 @@ public final class JNetVisualFX {
     final NetworkVisualizer networkVisualizer = new NetworkVisualizer();
     final Log log = new Log();
     final InputHandler inputHandler;
+
+    final static Playground playground = new Playground();
 
     JNetVisualFX(Canvas canvas, InputHandler inputHandler, Scene scene) {
         bounds = new Point((int) canvas.getWidth(), (int) canvas.getHeight());
