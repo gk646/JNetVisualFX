@@ -24,6 +24,9 @@ public enum Command {
         @Override
         public String cmd(String prompt) {
             prompt = prompt.replace("man ", "");
+            if (prompt.isBlank()) {
+                return "Missing argument: man <methodName> ";
+            }
             Method method = Parser.getMethodMap().get(prompt);
             if (method != null) {
                 Manual manual = method.getAnnotation(Manual.class);
@@ -38,7 +41,18 @@ public enum Command {
                     return manual.text().replace("\\*", "");
                 }
             }
-            return "Missing argument: man <methodName> ";
+            for (Command command : Parser.commands) {
+                if (command.keyWord.equals(prompt)) {
+                    return command.manPage;
+                }
+            }
+            return "no command or method named: " + prompt;
+        }
+    },
+    HELP(Pattern.compile("help"), "help", "help - how to use the termianl // returns a help page that allows show how to get information about other components // Syntax - help") {
+        @Override
+        public String cmd(String prompt) {
+            return "man <method or command> for manual the manual page";
         }
     };
     Matcher matcher;

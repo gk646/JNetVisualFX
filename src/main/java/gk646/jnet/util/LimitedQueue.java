@@ -33,6 +33,7 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
      */
     @Override
     public boolean add(T obj) {
+        System.out.println(size);
         if (size == maximumCapacity - 1) {
             shift();
             elements[size] = obj;
@@ -43,7 +44,7 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
     }
 
     private void shift() {
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size; i++) {
             elements[i] = elements[i + 1];
         }
     }
@@ -60,7 +61,7 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
     }
 
     public int size() {
-       return size;
+        return size;
     }
 
     /**
@@ -83,7 +84,7 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
     @Override
     public Iterator<T> iterator() {
         return new Iterator<>() {
-            private int currentIndex = size - 1;
+            private int currentIndex = size;
 
             @Override
             public boolean hasNext() {
