@@ -12,6 +12,7 @@ public final class Terminal {
     private static byte MAX_LINES = 25;
     private static byte LINE_HEIGHT = 17;
     private static byte FONT_SIZE = 15;
+    public static byte cursorOffsetLeft = 0;
     private static final byte COMMAND_HISTORY_LENGTH = 127;
     private int counter = 0;
     private static String terminalRoot = "> ";
@@ -42,6 +43,7 @@ public final class Terminal {
         gc.setFill(Color.MINTCREAM);
         short startX = terminal.getDrawX();
         short startY = (short) (JNetVisualFX.bounds.y - 25);
+        int count = 0;
         for (String string : scrollingText) {
             gc.fillText(string, startX, startY);
             startY -= LINE_HEIGHT;
@@ -54,8 +56,13 @@ public final class Terminal {
     }
 
     private void drawActiveLine(GraphicsContext gc) {
-        gc.fillText(terminalRoot + currentText.toString() + (counter % 45 < 20 ? "|" : "")
-                , terminal.getDrawX(), JNetVisualFX.bounds.y - 5);
+        StringBuilder activeLine = new StringBuilder(terminalRoot + currentText.toString());
+        if (cursorOffsetLeft > 0) {
+            activeLine.insert(activeLine.length() - cursorOffsetLeft, (counter % 45 < 20 ? "|" : " "));
+        } else {
+            activeLine.append(counter % 45 < 20 ? "|" : "");
+        }
+        gc.fillText(activeLine.toString(), terminal.getDrawX(), JNetVisualFX.bounds.y - 5);
         counter++;
     }
 
