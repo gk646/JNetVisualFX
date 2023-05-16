@@ -2,6 +2,7 @@ package gk646.jnet.userinterface;
 
 import gk646.jnet.userinterface.userinput.InputHandler;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -56,7 +57,16 @@ public class Window extends Application {
         sceneRoot.setOnKeyPressed(inputHandler::handleSpecialKeyType);
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
     }
-
+    public static void exit(){
+        new Thread(()->{
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            Platform.exit();
+        }).start();
+    }
     @Override
     public void stop() {
         System.exit(0);

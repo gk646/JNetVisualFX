@@ -3,7 +3,6 @@ package gk646.jnet.userinterface;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.userinterface.terminal.Log;
-import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
 import gk646.jnet.userinterface.userinput.InputHandler;
 import gk646.jnet.util.ContainerHelper;
@@ -22,18 +21,18 @@ import java.awt.Point;
  * {@link #networkVisualizer} and a {@link #log}.
  */
 public final class JNetVisualFX {
-    final ContainerHelper terminalPos = new ContainerHelper(60, 0, 40, 100);
-    final ContainerHelper networkPos = new ContainerHelper(0, 0, 70, 100);
+    static{
+        Terminal.containerHelper = new ContainerHelper(60, 0, 42, 105);
+        NetworkVisualizer.containerHelper = new ContainerHelper(0, 0, 70, 105);
+    }
     final Canvas canvas;
     public static Point bounds;
     final Scene sceneRoot;
     public static GraphicsContext gc;
-    final Terminal terminal = new Terminal();
-    final NetworkVisualizer networkVisualizer = new NetworkVisualizer();
+    final Terminal terminal;
+    final NetworkVisualizer networkVisualizer;
     final Log log = new Log();
     final InputHandler inputHandler;
-
-    final static Playground playground = new Playground();
 
     JNetVisualFX(Canvas canvas, InputHandler inputHandler, Scene scene) {
         bounds = new Point((int) canvas.getWidth(), (int) canvas.getHeight());
@@ -41,6 +40,10 @@ public final class JNetVisualFX {
         this.inputHandler = inputHandler;
         this.canvas = canvas;
         this.sceneRoot = scene;
+
+        terminal = new Terminal();
+        networkVisualizer = new NetworkVisualizer();
+
 
         gc.setFont(Resources.cascadiaCode);
     }
@@ -67,8 +70,8 @@ public final class JNetVisualFX {
     private void draw() {
         gc.clearRect(0, 0, bounds.x, bounds.y);
 
-        networkVisualizer.draw(gc, networkPos);
-        terminal.draw(gc, terminalPos);
+        networkVisualizer.draw(gc);
+        terminal.draw(gc);
     }
 
     private void update() {
@@ -85,6 +88,9 @@ public final class JNetVisualFX {
             gc = canvas.getGraphicsContext2D();
 
             terminal.updateSize();
+
+
+            NetworkVisualizer.updateSize();
         }
     }
 }

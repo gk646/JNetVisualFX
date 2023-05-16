@@ -1,6 +1,7 @@
 package gk646.jnet.userinterface.terminal;
 
 import gk646.jnet.userinterface.JNetVisualFX;
+import gk646.jnet.userinterface.graphics.Colors;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.util.ContainerHelper;
 import gk646.jnet.util.LimitedQueue;
@@ -17,13 +18,14 @@ public final class Terminal {
     private int counter = 0;
     private static String terminalRoot = "> ";
     public static StringBuilder currentText = new StringBuilder();
-    private ContainerHelper terminal;
+    public static ContainerHelper containerHelper;
     public static final LimitedQueue<String> commandHistory = new LimitedQueue<>(COMMAND_HISTORY_LENGTH);
-    private static final LimitedQueue<String> scrollingText = new LimitedQueue<>(5);
+    private static final LimitedQueue<String> scrollingText = new LimitedQueue<>(MAX_LINES);
     private static final Parser parser = new Parser();
-
-
+    private static Color backGround = Colors.BLACK;
+    private static Color text = Colors.WHITE_SMOKE;
     public Terminal() {
+        scrollingText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder((4,4,4),sigmoid)\"");
         commandHistory.add("help");
     }
 
@@ -31,8 +33,7 @@ public final class Terminal {
         MAX_LINES = (byte) (JNetVisualFX.bounds.y / LINE_HEIGHT);
     }
 
-    public void draw(GraphicsContext gc, ContainerHelper containerHelper) {
-        this.terminal = containerHelper;
+    public void draw(GraphicsContext gc) {
         drawBorder(gc);
         drawScrollingText(gc);
         drawActiveLine(gc);
@@ -41,9 +42,8 @@ public final class Terminal {
 
     private void drawScrollingText(GraphicsContext gc) {
         gc.setFill(Color.MINTCREAM);
-        short startX = terminal.getDrawX();
+        short startX = containerHelper.getDrawX();
         short startY = (short) (JNetVisualFX.bounds.y - 25);
-        int count = 0;
         for (String string : scrollingText) {
             gc.fillText(string, startX, startY);
             startY -= LINE_HEIGHT;
@@ -51,18 +51,19 @@ public final class Terminal {
     }
 
     private void drawBorder(GraphicsContext gc) {
-        gc.setFill(Color.BLACK);
-        gc.fillRect(terminal.getDrawX(), terminal.getDrawY(), terminal.getWidth(), terminal.getHeight());
+        gc.setFill(backGround);
+        gc.fillRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth(), containerHelper.getHeight());
     }
 
     private void drawActiveLine(GraphicsContext gc) {
+        gc.setFill(text);
         StringBuilder activeLine = new StringBuilder(terminalRoot + currentText.toString());
         if (cursorOffsetLeft > 0) {
             activeLine.insert(activeLine.length() - cursorOffsetLeft, (counter % 45 < 20 ? "|" : " "));
         } else {
             activeLine.append(counter % 45 < 20 ? "|" : "");
         }
-        gc.fillText(activeLine.toString(), terminal.getDrawX(), JNetVisualFX.bounds.y - 5);
+        gc.fillText(activeLine.toString(), containerHelper.getDrawX(), JNetVisualFX.bounds.y - 5);
         counter++;
     }
 
@@ -71,7 +72,6 @@ public final class Terminal {
             scrollingText.add(terminalRoot);
             return;
         }
-
         if (!parser.parse(text)) {
             scrollingText.add(text + " :was not found to be a command");
         } else {

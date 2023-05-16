@@ -1,24 +1,25 @@
 package gk646.jnet.userinterface.terminal;
 
+import gk646.jnet.Info;
 import gk646.jnet.neuralnetwork.Network;
 import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.userinterface.Window;
 import gk646.jnet.userinterface.terminal.commands.Command;
-import javafx.application.Platform;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
+import java.util.List;
 
 public final class Parser {
 
-    Matcher matcher;
+    private static final ArrayList<String> exitStringList = new ArrayList<>(List.of("exit", "logout", "shutdown", "goodbye", "bye", "byebye", "cya"));
     static HashMap<String, Method> methodMap = new HashMap<>();
-
     static HashMap<String, Constructor> constructorMap = new HashMap<>();
 
-    public static Command[] commands = Command.values();
+    public static final Command[] commands = Command.values();
 
 
     Parser() {
@@ -35,39 +36,37 @@ public final class Parser {
 
     public boolean parse(String text) {
         if (parseNOARGSCommands(text)) return true;
-        if (parseARGSCommands(text)) return true;
-
-        if (text.contains("new")) {
-            text = text.replace("new ", "");
-            Constructor constructor = constructorMap.get(text);
-            if (constructor != null) {
-                System.out.println(constructor.getName());
-                return true;
-            }
-        } else {
-            Method method = methodMap.get(text);
-            if (method != null) {
-                //TODO invoke methods
-                return true;
-            }
-        }
-        return false;
+        return parseARGSCommands(text);
     }
 
 
     private boolean parseNOARGSCommands(String text) {
+        if (exitStringList.contains(text)) {
+            Terminal.clear();
+            Terminal.addText("Thanks for using JNetVisualFX! - GoodBye");
+            Window.exit();
+            return true;
+        }
         switch (text) {
             case "clear" -> {
                 Terminal.clear();
                 return true;
             }
-            case "shutdown" -> {
-                Platform.exit();
+            case "reset" -> {
+                Playground.reset();
+                Terminal.addText("playground was reset");
                 return true;
             }
-            case "delete" -> {
-                Playground.networkBuilder = null;
-                Playground.neuralNetwork = null;
+            case "font" -> {
+                Terminal.addText("Cascadia Code : https://github.com/microsoft/cascadia-code");
+                return true;
+            }
+            case "github" -> {
+                Terminal.addText("JNetVisualFX's github page: https://github.com/gk646/JNetVisualFX");
+                return true;
+            }
+            case "version" -> {
+                Terminal.addText(Info.VERSION);
                 return true;
             }
         }

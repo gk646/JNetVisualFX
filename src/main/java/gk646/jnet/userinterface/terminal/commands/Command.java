@@ -1,7 +1,10 @@
 package gk646.jnet.userinterface.terminal.commands;
 
+import gk646.jnet.neuralnetwork.Network;
+import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.Parser;
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.util.Manual;
@@ -10,7 +13,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,16 +77,38 @@ public enum Command {
         @Override
         public String cmd(String prompt) {
             prompt = prompt.replace("new ", "");
-            if (prompt.isBlank()) {
-                return "Missing argument: new <objectName> ";
+            if (prompt.isBlank() || prompt.equals("new")) {
+                return "missing argument: new <creatableObject>  || possible: \"Network\",\"NetBuilder\"";
             }
+            String creatableName = prompt;
+            if (prompt.contains("(")) {
+                creatableName = prompt.substring(0, prompt.indexOf("("));
+            }
+
+            switch (creatableName) {
+                case "NetBuilder" -> {
+                    return netBuilderConstructor(prompt);
+                }
+                case "Network" -> {
+                    if (Playground.networkBuilder != null) {
+                        Playground.neuralNetwork = new NeuralNetwork(Playground.networkBuilder);
+                        NetworkVisualizer.updateSize();
+                        return "created a NeuralNetwork with the active NetBuilder";
+                    }
+                    return "missing NetBuilder || create a NetBuilder first || for help: man NetBuilder";
+                }
+            }
+            return "no creatable object named: " + prompt;
+        }
+
+        private String netBuilderConstructor(String prompt) {
             matcher = pattern.matcher(prompt);
             if (matcher.find()) {
                 String functionName = matcher.group(1);  // "Network"
 
                 Constructor constructor = Parser.getConstructorMap().get(functionName);
                 if (constructor == null) {
-                    return "not creatable object named: " + functionName;
+                    return "no creatable object named: " + functionName;
                 }
 
                 String[] numbers = matcher.group(2).split(",");  // ["1", "2", "3"]
@@ -93,7 +117,7 @@ public enum Command {
                     numList.add(Integer.parseInt(number));
                 }
 
-                if (numbers.length <= 0 || invalidDimensions(numList)) {
+                if (numbers.length == 0 || invalidDimensions(numList)) {
                     return "networkDimensions are illegal // (4,4,4) -> creates a network with 3 layers and 4 neurons each";
                 }
 
@@ -112,15 +136,9 @@ public enum Command {
                     return "error creating new object: " + e.getMessage();
                 }
 
-
-                System.out.println("Function name: " + functionName);
-                //System.out.println("Numbers: " + Arrays.toString(numList));
-                System.out.println("Second argument: " + activationFunctionString);
-
-
                 return "Created new " + functionName;
             }
-            return manPage;
+            return "Missing arguments: new NetBuiler((<List of numbers>),<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)";
         }
     };
     Matcher matcher;
