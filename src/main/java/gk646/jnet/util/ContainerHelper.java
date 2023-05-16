@@ -10,10 +10,10 @@ import static gk646.jnet.userinterface.JNetVisualFX.bounds;
  * Helper class to scale containers to the windows size according to the global {@link JNetVisualFX#bounds}.
  */
 public final class ContainerHelper {
-    public short percentX;
-    public short percentY;
-    public short width;
-    public short height;
+    private short percentX;
+    private short percentY;
+    private short width;
+    private short height;
 
 
     /**
