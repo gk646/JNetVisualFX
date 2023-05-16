@@ -25,14 +25,10 @@ public final class Parser {
         for (Method method : NetworkBuilder.class.getMethods()) {
             methodMap.put(method.getName(), method);
         }
-        for (Constructor constructor : NetworkBuilder.class.getConstructors()) {
-            constructorMap.put(constructor.getName(), constructor);
-        }
-
         for (Method method : Network.class.getMethods()) {
             methodMap.put(method.getName(), method);
         }
-        constructorMap.put(Network.class.getSimpleName(), NeuralNetwork.class.getConstructors()[0]);
+        constructorMap.put("Network", NeuralNetwork.class.getConstructors()[0]);
         constructorMap.put("NetBuilder", NetworkBuilder.class.getConstructors()[0]);
     }
 
