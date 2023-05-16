@@ -1,10 +1,17 @@
 package gk646.jnet.userinterface.terminal.commands;
 
+import gk646.jnet.neuralnetwork.builder.ActivationFunction;
+import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.userinterface.terminal.Parser;
+import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.util.Manual;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +27,7 @@ public enum Command {
             return "Missing argument: print(<args>)";
         }
     },
-    MAN(Pattern.compile("print\\((.*?)\\)"), "man", "man - manual // returns the manual page for that command or method //Syntax - man <commandName>") {
+    MAN(Pattern.compile("man"), "man", "man - manual // returns the manual page for that command or method //Syntax - man <commandName>") {
         @Override
         public String cmd(String prompt) {
             prompt = prompt.replace("man ", "");
@@ -54,6 +61,67 @@ public enum Command {
         public String cmd(String prompt) {
             return "man <method or command> for manual the manual page";
         }
+    },
+    NEW(Pattern.compile("(\\w+)\\(\\(([^)]+)\\),([^)]+)\\)"), "new", "new - create new object // works with either \"Network\" or \"NetBuilder\" // Syntax - new <ObjectName>") {
+        private boolean invalidDimensions(List<Integer> arr) {
+            for (int num : arr) {
+                if (num <= 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public String cmd(String prompt) {
+            prompt = prompt.replace("new ", "");
+            if (prompt.isBlank()) {
+                return "Missing argument: new <objectName> ";
+            }
+            matcher = pattern.matcher(prompt);
+            if (matcher.find()) {
+                String functionName = matcher.group(1);  // "Network"
+
+                Constructor constructor = Parser.getConstructorMap().get(functionName);
+                if (constructor == null) {
+                    return "not creatable object named: " + functionName;
+                }
+
+                String[] numbers = matcher.group(2).split(",");  // ["1", "2", "3"]
+                List<Integer> numList = new ArrayList<>();
+                for (String number : numbers) {
+                    numList.add(Integer.parseInt(number));
+                }
+
+                if (numbers.length <= 0 || invalidDimensions(numList)) {
+                    return "networkDimensions are illegal // (4,4,4) -> creates a network with 3 layers and 4 neurons each";
+                }
+
+                String activationFunctionString = matcher.group(3).toUpperCase();  // "SIGMOID"
+
+                ActivationFunction activeFunction;
+                try {
+                    activeFunction = ActivationFunction.valueOf(activationFunctionString);
+                } catch (IllegalArgumentException ignored) {
+                    return "no activationFunction named: " + activationFunctionString;
+                }
+
+                try {
+                    Playground.networkBuilder = (NetworkBuilder) constructor.newInstance(numList, activeFunction);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    return "error creating new object: " + e.getMessage();
+                }
+
+
+                System.out.println("Function name: " + functionName);
+                //System.out.println("Numbers: " + Arrays.toString(numList));
+                System.out.println("Second argument: " + activationFunctionString);
+
+
+                return "Created new " + functionName;
+            }
+            return manPage;
+        }
     };
     Matcher matcher;
     Pattern pattern;
@@ -70,5 +138,14 @@ public enum Command {
 
     public String getKeyWord() {
         return keyWord;
+    }
+
+
+    private boolean missingArgumentCheck(String prompt) {
+        prompt = prompt.replace(keyWord, "");
+        if (prompt.isBlank()) {
+            //return "Missing argument: man <methodName> ";
+        }
+        return true;
     }
 }

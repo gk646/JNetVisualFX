@@ -5,9 +5,9 @@ import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 
 public final class Playground {
 
-    static NetworkBuilder networkBuilder;
+    public static NetworkBuilder networkBuilder;
 
-    static NeuralNetwork neuralNetwork;
+    public static NeuralNetwork neuralNetwork;
 
     public Playground() {
 
