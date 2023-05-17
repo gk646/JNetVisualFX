@@ -57,6 +57,7 @@ public final class InputHandler {
                 if (commandHistoryOffset < Terminal.commandHistory.size() - 1) {
                     commandHistoryOffset++;
                 }
+                Terminal.cursorOffsetLeft = 0;
                 Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
             }
             case DOWN -> {
@@ -67,6 +68,7 @@ public final class InputHandler {
                     commandHistoryOffset = -1;
                     return;
                 }
+                Terminal.cursorOffsetLeft = 0;
                 Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
             }
 

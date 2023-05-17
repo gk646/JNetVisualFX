@@ -10,7 +10,7 @@ public final class Playground {
 
     public static NetworkBuilder networkBuilder;
 
-    public static NeuralNetwork neuralNetwork = new NeuralNetwork(new NetworkBuilder(List.of(4,4,4), ActivationFunction.SIGMOID));
+    public static NeuralNetwork neuralNetwork = new NeuralNetwork(new NetworkBuilder(List.of(10,10,10,1), ActivationFunction.SIGMOID));
 
     private Playground() {}
 

@@ -16,6 +16,7 @@ import java.util.List;
 public final class Parser {
 
     private static final ArrayList<String> exitStringList = new ArrayList<>(List.of("exit", "logout", "shutdown", "goodbye", "bye", "byebye", "cya"));
+    private static final ArrayList<String> helloList = new ArrayList<>(List.of("hello", "hey"));
     static HashMap<String, Method> methodMap = new HashMap<>();
     static HashMap<String, Constructor> constructorMap = new HashMap<>();
 
@@ -45,6 +46,10 @@ public final class Parser {
             Terminal.clear();
             Terminal.addText("Thanks for using JNetVisualFX! - GoodBye");
             Window.exit();
+            return true;
+        }
+        if (helloList.contains(text)) {
+            Terminal.addText("Hello - good to see you!");
             return true;
         }
         switch (text) {

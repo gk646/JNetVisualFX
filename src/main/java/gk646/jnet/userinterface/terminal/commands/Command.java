@@ -1,6 +1,5 @@
 package gk646.jnet.userinterface.terminal.commands;
 
-import gk646.jnet.neuralnetwork.Network;
 import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
@@ -55,7 +54,7 @@ public enum Command {
                     return command.manPage;
                 }
             }
-            return "no command or method named: " + prompt;
+            return "no object with manual page named: " + prompt;
         }
     },
     HELP(Pattern.compile("help"), "help", "help - how to use the termianl // returns a help page that allows show how to get information about other components // Syntax - help") {

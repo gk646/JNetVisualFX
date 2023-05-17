@@ -1,6 +1,5 @@
 package gk646.jnet.userinterface.graphics;
 
-import gk646.jnet.userinterface.JNetVisualFX;
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.util.ContainerHelper;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public final class NetworkVisualizer {
     public static ContainerHelper containerHelper;
-    public static byte circleRadius = 20;
+    public static float circleDiameter = 20;
     public static short offsetX = 0;
     public static int offsetY = 0;
     public static short verticalSpacing = 50;
@@ -18,6 +17,7 @@ public final class NetworkVisualizer {
     private Color neuronColor = Colors.ICE_BERG;
 
     private Color backGround = Colors.MILK;
+
     public NetworkVisualizer() {
     }
 
@@ -39,34 +39,70 @@ public final class NetworkVisualizer {
         for (short neuronCount : netDimensions) {
             int startY = getLayerCenterY(neuronCount);
             for (int j = 0; j < neuronCount; j++) {
-                gc.fillOval(startX, startY, circleRadius, circleRadius);
+                gc.fillOval(startX, startY, circleDiameter, circleDiameter);
                 startY += verticalSpacing;
             }
             startX += horizontalSpacing;
         }
+        containerHelper.drawDebugLines(gc);
     }
 
     private void drawBackGround(GraphicsContext gc) {
         gc.setFill(backGround);
-        gc.fillRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth(),containerHelper.getHeight());
+        gc.fillRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth(), containerHelper.getHeight());
     }
 
     private static int getLayerCenterY(short neuronCount) {
-        if (neuronCount == 1) return JNetVisualFX.bounds.y / 2 + circleRadius + offsetY;
+        if (neuronCount == 1) return (int) (containerHelper.getHeight() / 2 - circleDiameter / 2 + offsetY);
 
-        int totalSpaceNeededY = (neuronCount * circleRadius * 2) + ((neuronCount - 1) * verticalSpacing);
-        int startY = JNetVisualFX.bounds.y / 2 - totalSpaceNeededY / 2;
+        int totalSpaceNeededY = ((neuronCount - 1) * verticalSpacing);
+        while (totalSpaceNeededY >= containerHelper.getHeight() - 50) {
+            if (circleDiameter > 7) {
+                circleDiameter -= 0.2f;
+            }
+            verticalSpacing -= 1;
+            totalSpaceNeededY = ((neuronCount - 1) * verticalSpacing);
+        }
 
-        return startY - circleRadius + offsetY;
+        while (totalSpaceNeededY < containerHelper.getHeight() - 75) {
+            if (circleDiameter < 20) {
+                circleDiameter += 0.2f;
+            }
+            verticalSpacing += 1;
+            totalSpaceNeededY = ((neuronCount - 1) * verticalSpacing);
+        }
+
+        int startY = containerHelper.getHeight() / 2 - totalSpaceNeededY / 2;
+
+        return (int) (startY - circleDiameter / 2 + offsetY);
     }
 
     private int getLayerCenterX(int layerCount) {
-        if (layerCount == 1) return containerHelper.getWidth() / 2 - circleRadius + offsetX;
+        if (layerCount == 1) return (int) (containerHelper.getWidth() / 2 - circleDiameter / 2 + offsetX);
 
-        int totalSpaceNeededX = (layerCount * circleRadius * 2) + ((layerCount - 1) * horizontalSpacing);
+        int totalSpaceNeededX = ((layerCount - 1) * horizontalSpacing);
+
+        while (totalSpaceNeededX > containerHelper.getWidth() - 100) {
+            if (circleDiameter > 7) {
+                circleDiameter -= 0.05f;
+            }
+            horizontalSpacing -= 2;
+            totalSpaceNeededX = ((layerCount - 1) * horizontalSpacing);
+        }
+        while (totalSpaceNeededX < containerHelper.getWidth() - 120) {
+            if (circleDiameter < 20) {
+                circleDiameter += 0.1f;
+            }
+            if (horizontalSpacing <= 250) {
+                horizontalSpacing += 1;
+            } else {
+                break;
+            }
+            totalSpaceNeededX = ((layerCount - 1) * horizontalSpacing);
+        }
         int startX = containerHelper.getWidth() / 2 - totalSpaceNeededX / 2;
 
-        return startX - circleRadius + offsetX;
+        return (int) (startX - circleDiameter / 2 + offsetX);
     }
 
     public static void updateSize() {
