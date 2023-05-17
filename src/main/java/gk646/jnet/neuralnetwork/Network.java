@@ -23,7 +23,7 @@ public final class Network {
     byte learnRate;
     byte outputLayerSize;
     float[][][] weightMatrix;
-    public short[] layerInfo;
+    public int[] layerInfo;
     //OBJECTS
     NetworkUtils netUtils = new NetworkUtils();
     Layer[] layers;

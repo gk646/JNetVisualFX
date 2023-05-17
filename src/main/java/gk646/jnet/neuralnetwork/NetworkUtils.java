@@ -1,6 +1,8 @@
 package gk646.jnet.neuralnetwork;
 
 import gk646.jnet.neuralnetwork.exceptions.NetworkIntegrityException;
+import gk646.jnet.userinterface.JNetVisualFX;
+import gk646.jnet.userinterface.terminal.Log;
 
 import java.util.Random;
 import java.util.logging.ConsoleHandler;
@@ -21,32 +23,34 @@ public final class NetworkUtils {
     static {
         initLogger();
     }
+
     NetworkUtils() {
     }
 
-    public static void removeHandler() {
-        Handler[] handlers = logger.getHandlers();
-        if (handlers[0] instanceof ConsoleHandler) {
-            logger.removeHandler(handlers[0]);
-        }
-    }
-
     public void print3DArray(float[][][] array) {
+        StringBuilder sb = new StringBuilder();
         if (!verbose) return;
         for (int i = 0; i < array.length; i++) {
-            System.out.println("Weight Layer Pair " + i + ":");
+            System.out.println("Weight Layer Pair: "+i);
+            sb.append("Weight Layer Pair: ").append(i);
             for (int j = 0; j < array[i].length; j++) {
                 for (int k = 0; k < array[i][j].length; k++) {
                     float num = array[i][j][k];
-                    if(num < 0){
-                        System.out.printf("%.4f | ", array[i][j][k]);
-                    }else {
-                        System.out.printf(" %.4f | ", array[i][j][k]);
+                    if (num < 0) {
+                        System.out.printf("%.3f | ", array[i][j][k]);
+                        sb.append(String.format("%.3f | ", array[i][j][k]));
+                    } else {
+                        System.out.printf(" %.3f | ", array[i][j][k]);
+                        sb.append(String.format("%.3f | ", array[i][j][k]));
                     }
                 }
                 System.out.println();
+                sb.append("\n");
             }
             System.out.println();
+            sb.append("\n");
+            Log.addLogText(sb.toString());
+            sb = new StringBuilder();
         }
     }
 
@@ -54,10 +58,11 @@ public final class NetworkUtils {
     /**
      * Performs {@link Thread#sleep(long)} for the given time.
      * Skips the duration if  {@link NetworkUtils#verbose} is false:
+     *
      * @param millis amount of milliseconds as int.
      */
     public void sleep(int millis) {
-        if(!verbose) return;
+        if (!verbose) return;
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
@@ -85,8 +90,7 @@ public final class NetworkUtils {
             }
             sb.append("\n");
         }
-
-        System.out.println(sb);
+        Log.addLogText(sb.toString());
     }
 
     /**
@@ -101,8 +105,8 @@ public final class NetworkUtils {
             }
         }
         logger.info("Printing network structure:");
-        network.netUtils.printNetwork(network);
-        network.netUtils.sleep(20);
+        printNetwork(network);
+        sleep(20);
 
         logger.info("Printing weight matrix structure: \n");
         network.netUtils.print3DArray(network.weightMatrix);
@@ -131,6 +135,8 @@ public final class NetworkUtils {
             });
 
             logger.addHandler(consoleHandler);
+            JNetVisualFX.log = new Log();
+            logger.addHandler(JNetVisualFX.log);
         }
     }
 }

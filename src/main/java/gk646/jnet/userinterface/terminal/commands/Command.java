@@ -91,7 +91,6 @@ public enum Command {
                 case "Network" -> {
                     if (Playground.networkBuilder != null) {
                         Playground.neuralNetwork = new NeuralNetwork(Playground.networkBuilder);
-                        NetworkVisualizer.updateSize();
                         return "created a NeuralNetwork with the active NetBuilder";
                     }
                     return "missing NetBuilder || create a NetBuilder first || for help: man NetBuilder";

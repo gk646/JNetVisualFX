@@ -34,12 +34,10 @@ public final class Parser {
         constructorMap.put("NetBuilder", NetworkBuilder.class.getConstructors()[0]);
     }
 
-
     public boolean parse(String text) {
         if (parseNOARGSCommands(text)) return true;
         return parseARGSCommands(text);
     }
-
 
     private boolean parseNOARGSCommands(String text) {
         if (exitStringList.contains(text)) {

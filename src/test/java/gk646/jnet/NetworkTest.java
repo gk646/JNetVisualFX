@@ -20,7 +20,7 @@ class NetworkTest {
 
     static {
         NetworkUtils.verbose = false;
-        NetworkUtils.removeHandler();
+        //NetworkUtils.removeHandler();
     }
 
     @Test
