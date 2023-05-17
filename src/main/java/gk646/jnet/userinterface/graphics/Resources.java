@@ -8,6 +8,7 @@ public final class Resources {
     }
 
     public static Font cascadiaCode = Font.loadFont(Resources.class.getResourceAsStream("/CascadiaCode.ttf"), 15);
+    public static Font cascadiaCode12 = Font.loadFont(Resources.class.getResourceAsStream("/CascadiaCode.ttf"), 12);
 
 
     public static Font getFontInSize(int size) {

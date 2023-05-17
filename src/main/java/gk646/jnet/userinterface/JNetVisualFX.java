@@ -21,21 +21,23 @@ import java.awt.Point;
  * {@link #networkVisualizer} and a {@link #log}.
  */
 public final class JNetVisualFX {
-    static{
-        Terminal.containerHelper = new ContainerHelper(60, 0, 42, 105);
+    static {
+        Terminal.containerHelper = new ContainerHelper(65, 50, 35, 50);
+        Log.containerHelper = new ContainerHelper(65, 0, 35, 50);
         NetworkVisualizer.containerHelper = new ContainerHelper(0, 0, 60, 100);
     }
+
     final Canvas canvas;
     public static Point bounds;
     final Scene sceneRoot;
     public static GraphicsContext gc;
     final Terminal terminal;
     final NetworkVisualizer networkVisualizer;
-    final Log log = new Log();
+    public static Log log;
     final InputHandler inputHandler;
 
     JNetVisualFX(Canvas canvas, InputHandler inputHandler, Scene scene) {
-        bounds = new Point((int) canvas.getWidth(), (int) canvas.getHeight());
+        bounds = new Point((int) scene.getWidth(), (int) scene.getHeight());
         gc = canvas.getGraphicsContext2D();
         this.inputHandler = inputHandler;
         this.canvas = canvas;
@@ -53,17 +55,22 @@ public final class JNetVisualFX {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-        Thread updateThread = new Thread(() -> {
-            while (true) {
-                update();
-                try {
-                    Thread.sleep(8);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+        sceneRoot.widthProperty().addListener((observableValue, oldSceneWidth, newSceneWidth) -> {
+            bounds.x = newSceneWidth.intValue();
+            canvas.setWidth(newSceneWidth.intValue());
+
+            gc = canvas.getGraphicsContext2D();
+            terminal.updateSize();
         });
-        updateThread.start();
+
+        sceneRoot.heightProperty().addListener((observableValue, oldSceneHeight, newSceneHeight) -> {
+            bounds.y = newSceneHeight.intValue();
+            canvas.setHeight(bounds.y);
+
+            gc = canvas.getGraphicsContext2D();
+
+            terminal.updateSize();
+        });
     }
 
 
@@ -72,25 +79,6 @@ public final class JNetVisualFX {
 
         networkVisualizer.draw(gc);
         terminal.draw(gc);
-    }
-
-    private void update() {
-        inputHandler.update();
-
-        int width = (int) sceneRoot.getWidth();
-        int height = (int) sceneRoot.getHeight();
-        if (width != bounds.x || height != bounds.y) {
-            bounds.x = width;
-            bounds.y = height;
-
-            canvas.setWidth(width);
-            canvas.setHeight(height);
-            gc = canvas.getGraphicsContext2D();
-
-            terminal.updateSize();
-
-
-            NetworkVisualizer.updateSize();
-        }
+        log.draw(gc);
     }
 }

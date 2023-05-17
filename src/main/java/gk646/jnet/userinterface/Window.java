@@ -35,23 +35,22 @@ public class Window extends Application {
         stage.setHeight(bounds.y);
 
         stage.setTitle("JNetVisualFX - Playground");
+        stage.setResizable(true);
+        stage.setMinWidth(640);
+        stage.setMinHeight(480);
 
         //VBox root = FXMLLoader.load(Window.class.getResource("/layout.fxml"));
 
-        Canvas canvas = new Canvas(bounds.x, bounds.y);
-
+        Canvas canvas = new Canvas(stage.getWidth(),stage.getHeight());
         Group root = new Group();
         root.getChildren().add(canvas);
 
         final Scene sceneRoot = new Scene(root);
         stage.setScene(sceneRoot);
-
         stage.show();
 
         final var inputHandler = new InputHandler();
-
         new JNetVisualFX(canvas, inputHandler, sceneRoot).run();
-
 
         sceneRoot.setOnKeyTyped(inputHandler::handleKeyType);
         sceneRoot.setOnKeyPressed(inputHandler::handleSpecialKeyType);

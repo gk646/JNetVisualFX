@@ -5,9 +5,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class FXMLController {
-
-
+public final class FXMLController {
     @FXML
     private VBox root;
 
@@ -16,5 +14,4 @@ public class FXMLController {
 
     @FXML
     private TextArea consoleTextArea;
-
 }

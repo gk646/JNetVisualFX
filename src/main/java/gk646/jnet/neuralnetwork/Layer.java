@@ -12,7 +12,7 @@ public final class Layer {
         neurons = Neuron.createNeurons(neuronCount);
     }
 
-    public static Layer[] createLayers(short[] layerInfo, NeuronInitState neuronInit) {
+    public static Layer[] createLayers(int[] layerInfo, NeuronInitState neuronInit) {
         NetworkUtils.logger.info("Creating layers");
 
         byte layerCount = (byte) layerInfo.length;
@@ -28,7 +28,7 @@ public final class Layer {
         return temp;
     }
 
-    public static float[][][] createWeightMatrix(short[] layerInfo, WeightInitState weightInit) {
+    public static float[][][] createWeightMatrix(int[] layerInfo, WeightInitState weightInit) {
         NetworkUtils.logger.info("Creating weight matrix");
 
         short layerCount = (short) layerInfo.length;
