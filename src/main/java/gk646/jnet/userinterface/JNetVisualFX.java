@@ -23,7 +23,7 @@ import java.awt.Point;
 public final class JNetVisualFX {
     static{
         Terminal.containerHelper = new ContainerHelper(60, 0, 42, 105);
-        NetworkVisualizer.containerHelper = new ContainerHelper(0, 0, 70, 105);
+        NetworkVisualizer.containerHelper = new ContainerHelper(0, 0, 60, 100);
     }
     final Canvas canvas;
     public static Point bounds;

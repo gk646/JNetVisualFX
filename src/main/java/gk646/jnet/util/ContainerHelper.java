@@ -1,6 +1,7 @@
 package gk646.jnet.util;
 
 import gk646.jnet.userinterface.JNetVisualFX;
+import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.Point;
 
@@ -45,6 +46,14 @@ public final class ContainerHelper {
 
     public short getHeight() {
         return (short) (bounds.y / 100f * height);
+    }
+
+    public void drawDebugLines(GraphicsContext gc){
+        gc.setLineWidth(4);
+        gc.strokeLine(this.getWidth() / 2, this.getDrawY(), this.getWidth() / 2, this.getHeight());
+
+        gc.strokeLine(this.getDrawX(), this.getHeight() / 2, this.getWidth(), this.getHeight() / 2);
+        gc.setLineWidth(1);
     }
 
 }
