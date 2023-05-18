@@ -3,9 +3,7 @@
 
 JNetVisualFX is a terminal based NeuralNetwork visualizer with the focus on testing, training and playing around with *Neural Networks*. In the end its also meant as an educational application.
 
-<img src="screenshots/defaultNetwork.png" alt="The startup screen with a 10,10,10,2 Layer Network" width="663" height="500">
-
-
+<img src="screenshots/defaultNetwork.png" alt="The startup screen with a 10,10,10,2 Layer Network" width="1000" height="754">
 
 ### Install
 
@@ -30,13 +28,22 @@ It supports:
 
 There's lot of useful commands but these here will get you started:
 - `help` - displays helpful information 
-- `helpall` - will list all commands in the log
+- `helpall` - lists all commands in the log
 - `man` - used as prefix for methods to display their manual page e.g. `man print`
 
 Feel free to experiment around there's a lot of small commands to explore.
 
 
+### Working with data
+...
+
 
 ### Training your Network
-
 ...
+
+
+### Excercises
+...
+
+
+##
