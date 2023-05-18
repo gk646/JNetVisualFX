@@ -33,7 +33,7 @@ public final class JNetVisualFX {
     public static GraphicsContext gc;
     final Terminal terminal;
     final NetworkVisualizer networkVisualizer;
-    public static Log log;
+    public static Log log = new Log();
     final InputHandler inputHandler;
 
     JNetVisualFX(Canvas canvas, InputHandler inputHandler, Scene scene) {

@@ -73,7 +73,8 @@ public final class NetworkUtils {
 
     public void printNetwork(Network network) {
         if (!verbose) return;
-        StringBuilder sb = new StringBuilder("\n");
+        Log.addLogText("");
+        StringBuilder sb = new StringBuilder();
         int max = 0;
         for (int i = 0; i < network.layerCount; i++) {
             if (network.layerInfo[i] > max) {
@@ -135,7 +136,6 @@ public final class NetworkUtils {
             });
 
             logger.addHandler(consoleHandler);
-            JNetVisualFX.log = new Log();
             logger.addHandler(JNetVisualFX.log);
         }
     }

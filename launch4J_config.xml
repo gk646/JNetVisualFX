@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Users\Lukas\Documents\CodingProjects\Java\JNetVisualFX\build\libs\JNetVisualFX-0.9.3.jar</jar>
+  <outfile>C:\Users\Lukas\Desktop\Projects_Data\JNetVisualFX\JNetVisualFX.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl></downloadUrl>
+  <supportUrl>https://github.com/gk646/JNetVisualFX</supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>C:\Users\Lukas\Documents\CodingProjects\Java\JNetVisualFX\src\main\resources\JNetIcon_BIG.ico</icon>
+  <singleInstance>
+    <mutexName>JNetVisualFX</mutexName>
+    <windowTitle></windowTitle>
+  </singleInstance>
+  <jre>
+    <path>Java Runtime Environment</path>
+    <requiresJdk>false</requiresJdk>
+    <requires64Bit>false</requires64Bit>
+    <minVersion></minVersion>
+    <maxVersion></maxVersion>
+  </jre>
+  <versionInfo>
+    <fileVersion>0.9.3.0</fileVersion>
+    <txtFileVersion>Prototype 9.3</txtFileVersion>
+    <fileDescription>JavaFX educational application about neural networks</fileDescription>
+    <copyright>MIT License gk646</copyright>
+    <productVersion>0.9.3.0</productVersion>
+    <txtProductVersion>Prototype 9.3</txtProductVersion>
+    <productName>JNetVisualFX</productName>
+    <companyName></companyName>
+    <internalName>JNetVisualFX</internalName>
+    <originalFilename>JNetVisualFX.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
+</launch4jConfig>

@@ -135,7 +135,7 @@ public enum ArgCommand {
 
                 return "Created new " + functionName;
             }
-            return "Missing arguments: new NetBuiler((<List of numbers>),<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)";
+            return "Missing arguments: new NetBuilder((<List of numbers>),<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)";
         }
     },
 

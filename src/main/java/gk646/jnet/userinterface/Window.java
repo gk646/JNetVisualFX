@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -38,6 +39,7 @@ public class Window extends Application {
         stage.setResizable(true);
         stage.setMinWidth(640);
         stage.setMinHeight(480);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/JNetIcon.png")));
 
         //VBox root = FXMLLoader.load(Window.class.getResource("/layout.fxml"));
 

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'gk646.jnet'
-version = '0.9.1'
+version = '0.9.4'
 
 repositories {
     mavenCentral()
@@ -17,13 +17,17 @@ dependencies {
 }
 javafx {
     version = "21-ea+5"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.base' ]
+    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.base' ]
 }
 
 task runWithTests(type: GradleBuild) {
     tasks = ['clean', 'test', 'run']
 }
-
+jar{
+    manifest {
+        attributes 'Main-Class': "gk646.jnet.Main"
+    }
+}
 shadowJar {
     archiveBaseName.set('JNetVisualFX')
     archiveVersion.set(version)
