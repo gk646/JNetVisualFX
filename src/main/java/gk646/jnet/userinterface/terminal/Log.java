@@ -80,7 +80,8 @@ public final class Log extends Handler {
 
         gc.setFill(backGround);
         gc.fillRoundRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight(), 25, 25);
-        gc.fillText("[Log]", containerHelper.getDrawX() + 25, containerHelper.getDrawY() - 25);
+        gc.setFill(Colors.PHILIPINE_SILVER);
+        gc.fillText("[Log]", containerHelper.getDrawX() + 10, containerHelper.getDrawY() + 20);
     }
 
 

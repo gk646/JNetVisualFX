@@ -50,7 +50,7 @@ public final class CodeCompletion {
         int startX = Terminal.containerHelper.getDrawX();
         for (String text : completions) {
             gc.setFill(backGround);
-            gc.fillRect(startX, startY - 13, 100, Terminal.LINE_HEIGHT);
+            gc.fillRect(startX, startY - 13, 180, Terminal.LINE_HEIGHT);
             gc.setFill(Terminal.text);
             gc.fillText(text, startX, startY);
             startY += Terminal.LINE_HEIGHT;

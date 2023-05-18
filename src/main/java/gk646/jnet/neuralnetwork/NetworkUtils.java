@@ -88,9 +88,9 @@ public final class NetworkUtils {
                     sb.append("  ");
                 }
             }
-            sb.append("\n");
+            Log.addLogText(sb.toString());
+            sb = new StringBuilder();
         }
-        Log.addLogText(sb.toString());
     }
 
     /**
