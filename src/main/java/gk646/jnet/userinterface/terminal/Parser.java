@@ -1,27 +1,23 @@
 package gk646.jnet.userinterface.terminal;
 
-import gk646.jnet.Info;
 import gk646.jnet.neuralnetwork.Network;
 import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
-import gk646.jnet.userinterface.Window;
-import gk646.jnet.userinterface.terminal.commands.Command;
+import gk646.jnet.userinterface.terminal.commands.ArgCommand;
+import gk646.jnet.userinterface.terminal.commands.NoArgCommand;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public final class Parser {
 
-    private static final ArrayList<String> exitStringList = new ArrayList<>(List.of("exit", "logout", "shutdown", "goodbye", "bye", "byebye", "cya"));
-    private static final ArrayList<String> helloList = new ArrayList<>(List.of("hello", "hey"));
     static HashMap<String, Method> methodMap = new HashMap<>();
     static HashMap<String, Constructor> constructorMap = new HashMap<>();
 
-    public static final Command[] commands = Command.values();
+    public static final ArgCommand[] ARGS_COMMANDS = ArgCommand.values();
 
+    public static final NoArgCommand[] NO_ARGS_COMMANDS = NoArgCommand.values();
 
     Parser() {
         for (Method method : NetworkBuilder.class.getMethods()) {
@@ -40,36 +36,10 @@ public final class Parser {
     }
 
     private boolean parseNOARGSCommands(String text) {
-        if (exitStringList.contains(text)) {
-            Terminal.clear();
-            Terminal.addText("Thanks for using JNetVisualFX! - GoodBye");
-            Window.exit();
-            return true;
-        }
-        if (helloList.contains(text)) {
-            Terminal.addText("Hello - good to see you!");
-            return true;
-        }
-        switch (text) {
-            case "clear" -> {
-                Terminal.clear();
-                return true;
-            }
-            case "reset" -> {
-                Playground.reset();
-                Terminal.addText("playground was reset");
-                return true;
-            }
-            case "font" -> {
-                Terminal.addText("Cascadia Code : https://github.com/microsoft/cascadia-code");
-                return true;
-            }
-            case "github" -> {
-                Terminal.addText("JNetVisualFX's github page: https://github.com/gk646/JNetVisualFX");
-                return true;
-            }
-            case "version" -> {
-                Terminal.addText(Info.VERSION);
+        boolean temp;
+        for (NoArgCommand noArgsCmds : NO_ARGS_COMMANDS) {
+            temp = noArgsCmds.cmd(text);
+            if (temp) {
                 return true;
             }
         }
@@ -77,9 +47,9 @@ public final class Parser {
     }
 
     private boolean parseARGSCommands(String prompt) {
-        for (Command command : commands) {
-            if (prompt.startsWith(command.getKeyWord())) {
-                Terminal.addText(command.cmd(prompt));
+        for (ArgCommand argsCommand : ARGS_COMMANDS) {
+            if (prompt.startsWith(argsCommand.getKeyWord())) {
+                Terminal.addText(argsCommand.cmd(prompt));
                 return true;
             }
         }
@@ -94,7 +64,7 @@ public final class Parser {
         return constructorMap;
     }
 
-    public Command[] getCommands() {
-        return commands;
+    public ArgCommand[] getCommands() {
+        return ARGS_COMMANDS;
     }
 }

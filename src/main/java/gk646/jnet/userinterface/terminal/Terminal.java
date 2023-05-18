@@ -4,7 +4,7 @@ import gk646.jnet.userinterface.JNetVisualFX;
 import gk646.jnet.userinterface.graphics.Colors;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.util.ContainerHelper;
-import gk646.jnet.util.LimitedQueue;
+import gk646.jnet.util.datastructures.LimitedQueue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -30,22 +30,24 @@ public final class Terminal {
     private static final Parser parser = new Parser();
     private static Color backGround = Colors.LIGHT_BLACK;
     private static Color text = Colors.WHITE_SMOKE;
+    private static final CodeCompletion codeCompletion = new CodeCompletion();
 
     public Terminal() {
         scrollingText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder((4,4,4),sigmoid)\"");
         commandHistory.add("help");
 
-       changeFontSize(0);
+        changeFontSize(0);
     }
 
     public void updateSize() {
-        MAX_LINES = (byte) (JNetVisualFX.bounds.y / LINE_HEIGHT);
+        MAX_LINES = (byte) (containerHelper.getHeight() / LINE_HEIGHT);
     }
 
     public void draw(GraphicsContext gc) {
         drawBorder(gc);
         drawScrollingText(gc);
         drawActiveLine(gc);
+        codeCompletion.draw(gc);
     }
 
 

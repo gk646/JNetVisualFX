@@ -31,17 +31,17 @@ public final class NetworkUtils {
         StringBuilder sb = new StringBuilder();
         if (!verbose) return;
         for (int i = 0; i < array.length; i++) {
-            System.out.println("Weight Layer Pair: "+i);
+            System.out.println("Weight Layer Pair: " + i);
             sb.append("Weight Layer Pair: ").append(i);
             for (int j = 0; j < array[i].length; j++) {
                 for (int k = 0; k < array[i][j].length; k++) {
                     float num = array[i][j][k];
                     if (num < 0) {
-                        System.out.printf("%.3f | ", array[i][j][k]);
-                        sb.append(String.format("%.3f | ", array[i][j][k]));
+                        System.out.printf("%.2f | ", num);
+                        sb.append(String.format("%.2f | ", num));
                     } else {
-                        System.out.printf(" %.3f | ", array[i][j][k]);
-                        sb.append(String.format("%.3f | ", array[i][j][k]));
+                        System.out.printf(" %.2f | ", num);
+                        sb.append(String.format("%.2f | ", num));
                     }
                 }
                 System.out.println();
