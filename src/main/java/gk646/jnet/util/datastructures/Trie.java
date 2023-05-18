@@ -13,11 +13,9 @@ public class Trie {
         return !text.isEmpty();
     }
 
-
     public Trie getChild(Character c) {
         return children.get(c);
     }
-
 
     public void insert(String word) {
         if (word == null || word.isEmpty()) {
