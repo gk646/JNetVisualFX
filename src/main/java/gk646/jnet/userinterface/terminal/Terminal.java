@@ -93,6 +93,9 @@ public final class Terminal {
 
         gc.setFill(backGround);
         gc.fillRoundRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight() + 3, 25, 25);
+
+        gc.setFill(Colors.PHILIPINE_SILVER);
+        gc.fillText("[Terminal]", containerHelper.getDrawX() + 10, containerHelper.getDrawY() + 20);
     }
 
     private void drawActiveLine(GraphicsContext gc) {
@@ -137,7 +140,7 @@ public final class Terminal {
         LINE_HEIGHT = FONT_SIZE + 4;
     }
 
-    public static void scrollCommandHistory(){
+    public static void scrollCommandHistory() {
         Terminal.cursorOffsetLeft = 0;
         Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(InputHandler.commandHistoryOffset));
     }
