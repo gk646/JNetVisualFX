@@ -3,7 +3,6 @@ package gk646.jnet.userinterface.terminal.commands;
 import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
-import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.Parser;
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.util.Manual;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public enum Command {
+public enum ArgCommand {
 
     PRINT(Pattern.compile("print\\((.*?)\\)"), "print", "print - terminal output // prints out the given value, performs basic arithmetic on numbers // Syntax - print(<args>)") {
         @Override
@@ -49,9 +48,9 @@ public enum Command {
                     return manual.text().replace("\\*", "");
                 }
             }
-            for (Command command : Parser.commands) {
-                if (command.keyWord.equals(prompt)) {
-                    return command.manPage;
+            for (ArgCommand argsCommand : Parser.ARGS_COMMANDS) {
+                if (argsCommand.keyWord.equals(prompt)) {
+                    return argsCommand.manPage;
                 }
             }
             return "no object with manual page named: " + prompt;
@@ -138,13 +137,39 @@ public enum Command {
             }
             return "Missing arguments: new NetBuiler((<List of numbers>),<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)";
         }
+    },
+
+    SET(Pattern.compile(" "), "set", "set - sets a given property // sets properties e.g circlesize, fontsize, bgr_color... // Syntax - set <propertyName>(<value>)") {
+        static final SetCommand[] setCommands = SetCommand.values();
+
+        @Override
+        public String cmd(String prompt) {
+            prompt = prompt.replace("set ", "");
+            if (prompt.isBlank() || prompt.equals("new")) {
+                return "missing argument: set <propertyName>(value) || possible: \"circlesize(25)\",\"bgr_color(123,184,48)\"";
+            }
+            String creatableName = prompt;
+            if (prompt.contains("(")) {
+                creatableName = prompt.substring(0, prompt.indexOf("("));
+                prompt = prompt.replace(creatableName,"");
+            }
+
+            for(SetCommand setCommand: setCommands){
+                if(setCommand.name().equals(creatableName)){
+                    return setCommand.cmd(prompt);
+                }
+            }
+            return "no property named: " + prompt;
+        }
     };
+
+    public static final ArrayList<String> creatableObject = new ArrayList<>(List.of("NetBuilder","Network"));
     Matcher matcher;
     Pattern pattern;
     String keyWord;
     String manPage;
 
-    Command(Pattern pattern, String keyWord, String manPage) {
+    ArgCommand(Pattern pattern, String keyWord, String manPage) {
         this.pattern = pattern;
         this.keyWord = keyWord;
         this.manPage = manPage;
@@ -156,12 +181,4 @@ public enum Command {
         return keyWord;
     }
 
-
-    private boolean missingArgumentCheck(String prompt) {
-        prompt = prompt.replace(keyWord, "");
-        if (prompt.isBlank()) {
-            //return "Missing argument: man <methodName> ";
-        }
-        return true;
-    }
 }

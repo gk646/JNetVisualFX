@@ -14,11 +14,6 @@ public final class InputHandler {
     }
 
 
-    public void update() {
-
-    }
-
-
     public void handleKeyType(KeyEvent event) {
         String activeCharacter = event.getCharacter();
         switch (activeCharacter) {
@@ -54,6 +49,9 @@ public final class InputHandler {
     public void handleSpecialKeyType(KeyEvent event) {
         switch (event.getCode()) {
             case UP -> {
+                if (!Terminal.currentText.isEmpty()) {
+                    return;
+                }
                 if (commandHistoryOffset < Terminal.commandHistory.size() - 1) {
                     commandHistoryOffset++;
                 }
@@ -61,6 +59,9 @@ public final class InputHandler {
                 Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
             }
             case DOWN -> {
+                if (!Terminal.currentText.isEmpty()) {
+                    return;
+                }
                 if (commandHistoryOffset > 0) {
                     commandHistoryOffset--;
                 } else {

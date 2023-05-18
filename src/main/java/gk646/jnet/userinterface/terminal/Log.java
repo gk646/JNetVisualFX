@@ -27,10 +27,9 @@ public final class Log extends Handler {
 
     public Log() {
         Text text = new Text("A");
-        text.setFont(Resources.cascadiaCode12);
+        text.setFont(Resources.cascadiaCode11);
         this.CHARACTER_WIDTH = (int) text.getLayoutBounds().getWidth();
     }
-
 
     public void draw(GraphicsContext gc) {
         drawBackGround(gc);
@@ -40,7 +39,7 @@ public final class Log extends Handler {
     private void drawScrollingText(GraphicsContext gc) {
         gc.setFill(Color.MINTCREAM);
         gc.save();
-        gc.setFont(Resources.cascadiaCode12);
+        gc.setFont(Resources.cascadiaCode11);
         int startX = containerHelper.getDrawX();
         int startY = containerHelper.getDrawY() + containerHelper.getHeight() - LINE_HEIGHT + scrollOffset;
 

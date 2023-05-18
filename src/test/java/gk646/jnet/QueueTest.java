@@ -1,6 +1,6 @@
 package gk646.jnet;
 
-import gk646.jnet.util.LimitedQueue;
+import gk646.jnet.util.datastructures.LimitedQueue;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package gk646.jnet.util;
+package gk646.jnet.util.datastructures;
 
 import java.util.AbstractList;
 import java.util.Iterator;
