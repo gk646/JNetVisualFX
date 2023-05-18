@@ -10,4 +10,5 @@ public final class Colors {
 
     public static Color DARK_GREY = Color.rgb(38, 43, 68);
     public static Color PHILIPINE_SILVER = Color.rgb(179, 179, 179);
+    public static Color INTELLIJ_GREY = Color.rgb(43, 43, 43);
 }

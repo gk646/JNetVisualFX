@@ -49,7 +49,7 @@ public final class NetworkUtils {
             }
             System.out.println();
             sb.append("\n");
-            Log.addLogText(sb.toString());
+            //Log.addLogText(sb.toString());
             sb = new StringBuilder();
         }
     }

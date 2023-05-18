@@ -3,6 +3,7 @@ package gk646.jnet.userinterface.terminal;
 import gk646.jnet.userinterface.JNetVisualFX;
 import gk646.jnet.userinterface.graphics.Colors;
 import gk646.jnet.userinterface.graphics.Resources;
+import gk646.jnet.userinterface.userinput.InputHandler;
 import gk646.jnet.util.ContainerHelper;
 import gk646.jnet.util.datastructures.LimitedQueue;
 import javafx.scene.canvas.GraphicsContext;
@@ -29,7 +30,7 @@ public final class Terminal {
     private static final LimitedQueue<String> scrollingText = new LimitedQueue<>(MAX_LINES);
     private static final Parser parser = new Parser();
     private static Color backGround = Colors.LIGHT_BLACK;
-    private static Color text = Colors.WHITE_SMOKE;
+    public static Color text = Colors.WHITE_SMOKE;
     private static final CodeCompletion codeCompletion = new CodeCompletion();
 
     public Terminal() {
@@ -134,5 +135,10 @@ public final class Terminal {
         text1.setFont(font);
         CHARACTER_WIDTH = (float) (text1.getLayoutBounds().getWidth());
         LINE_HEIGHT = FONT_SIZE + 4;
+    }
+
+    public static void scrollCommandHistory(){
+        Terminal.cursorOffsetLeft = 0;
+        Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(InputHandler.commandHistoryOffset));
     }
 }

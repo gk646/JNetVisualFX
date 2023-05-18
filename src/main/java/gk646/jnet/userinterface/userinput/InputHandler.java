@@ -1,12 +1,15 @@
 package gk646.jnet.userinterface.userinput;
 
+import gk646.jnet.userinterface.terminal.CodeCompletion;
 import gk646.jnet.userinterface.terminal.Terminal;
 import javafx.scene.input.KeyEvent;
 
 public final class InputHandler {
     private final String ENTER = "\r";
     private final String BACKSPACE = "\b";
-    private byte commandHistoryOffset = -1;
+    private final String TAB = "\t";
+    private final String ESCAPE = "\u001B";
+    public static int commandHistoryOffset = -1;
     private boolean CTRLpressed;
     private boolean preventInput;
 
@@ -36,6 +39,9 @@ public final class InputHandler {
                 }
                 return;
             }
+            case TAB, ESCAPE -> {
+                return;
+            }
         }
         if (!CTRLpressed) {
             if (Terminal.cursorOffsetLeft == 0) {
@@ -49,19 +55,16 @@ public final class InputHandler {
     public void handleSpecialKeyType(KeyEvent event) {
         switch (event.getCode()) {
             case UP -> {
-                if (!Terminal.currentText.isEmpty()) {
-                    return;
-                }
+                if (CodeCompletion.blockCommandHistory()) return;
+
                 if (commandHistoryOffset < Terminal.commandHistory.size() - 1) {
                     commandHistoryOffset++;
                 }
-                Terminal.cursorOffsetLeft = 0;
-                Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
+                Terminal.scrollCommandHistory();
             }
             case DOWN -> {
-                if (!Terminal.currentText.isEmpty()) {
-                    return;
-                }
+                if (CodeCompletion.blockCommandHistory()) return;
+
                 if (commandHistoryOffset > 0) {
                     commandHistoryOffset--;
                 } else {
@@ -69,8 +72,7 @@ public final class InputHandler {
                     commandHistoryOffset = -1;
                     return;
                 }
-                Terminal.cursorOffsetLeft = 0;
-                Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(commandHistoryOffset));
+                Terminal.scrollCommandHistory();
             }
 
             case CONTROL -> CTRLpressed = true;
@@ -95,9 +97,26 @@ public final class InputHandler {
                     Terminal.cursorOffsetLeft--;
                 }
             }
+            case TAB -> {
+                if (CodeCompletion.currentCompletions.size() == 1) {
+                    Terminal.cursorOffsetLeft = 0;
+                    Terminal.currentText = new StringBuilder(CodeCompletion.currentCompletions.get(0));
+                }
+            }
         }
     }
+    private void navigateCommandHistory(int direction) {
+        commandHistoryOffset += direction;
 
+        if (direction > 0 && commandHistoryOffset < Terminal.commandHistory.size() - 1) {
+            commandHistoryOffset = Terminal.commandHistory.size() - 1;
+        } else if (direction < 0 && commandHistoryOffset < 0) {
+            Terminal.currentText = new StringBuilder();
+            commandHistoryOffset = -1;
+        }
+
+        Terminal.scrollCommandHistory();
+    }
     public void handleSpecialKeyLift(KeyEvent event) {
         switch (event.getCode()) {
             case CONTROL -> CTRLpressed = false;
