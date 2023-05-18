@@ -25,10 +25,7 @@ public final class NetworkBuilder {
      * @param layerInfo  a list, each entry specifiying the number of neurons for that layer.
      * @param activeFunc the activationFunction for the network
      */
-    @Manual(text = "The NetworkBuilder will internally check for viability of the given arguments\n" +
-            "     \n" +
-            "      @param layerInfo  a list, each entry specifiying the number of neurons for that layer.\n" +
-            "      @param activeFunc the activationFunction for the network")
+    @Manual(text = "Reusable building block for your Networks - Syntax: new NetBuilder((<List of numbers>),<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)")
     public NetworkBuilder(List<Integer> layerInfo, ActivationFunction activeFunc) {
         this.layerInfo = layerInfo;
         this.activeFunc = activeFunc;
