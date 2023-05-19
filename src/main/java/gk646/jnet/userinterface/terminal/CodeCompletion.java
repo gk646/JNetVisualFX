@@ -1,42 +1,28 @@
 package gk646.jnet.userinterface.terminal;
 
 import gk646.jnet.userinterface.graphics.Colors;
-import gk646.jnet.userinterface.terminal.commands.ArgCommand;
-import gk646.jnet.userinterface.terminal.commands.NoArgCommand;
+import gk646.jnet.userinterface.terminal.commands.Command;
 import gk646.jnet.util.datastructures.Trie;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class CodeCompletion {
-    public static Trie trie = new Trie();
-    public static Color backGround = Colors.INTELLIJ_GREY;
-    final ArrayList<String> wordSet = new ArrayList<>(50);
-    public static List<String> currentCompletions;
+    private static final Trie trie = new Trie();
+    private static final Color backGround = Colors.INTELLIJ_GREY;
+    final ArrayList<String> commandList = new ArrayList<>(Arrays.stream(CommandController.COMMANDS).map(Enum::toString).toList());
+    private static List<String> currentCompletions;
 
     CodeCompletion() {
-        for (NoArgCommand noArgCommand : NoArgCommand.values()) {
-            trie.insert(noArgCommand.name());
-            wordSet.add(noArgCommand.name());
-        }
-        for (String string : NoArgCommand.exitStringList) {
-            trie.insert(string);
-            wordSet.add(string);
-        }
-        for (String string : NoArgCommand.helloList) {
-            trie.insert(string);
-            wordSet.add(string);
-        }
-        for (ArgCommand argCommand : ArgCommand.values()) {
-            trie.insert(argCommand.getKeyWord());
-            wordSet.add(argCommand.getKeyWord());
+        for (Command command : CommandController.COMMANDS) {
+            trie.insert(command.toString());
         }
         for (Method method : Parser.getMethodMap().values()) {
             trie.insert(method.getName());
-            wordSet.add(method.getName());
         }
     }
 
@@ -58,16 +44,23 @@ public final class CodeCompletion {
     }
 
 
-    public ArrayList<String> getCodeCompletions() {
+    public List<String> getCodeCompletions() {
         return trie.autoComplete(Terminal.currentText.toString());
     }
 
     public List<String> autoComplete() {
         if (Terminal.currentText.isEmpty()) return new ArrayList<>();
+
         String input = Terminal.currentText.toString();
-        return wordSet.stream()
-                .filter(word -> word.startsWith(input) && !word.equals(input))
-                .toList();
+        if (input.startsWith("set ")) {
+            String newInput = input.replace("set ", "");
+            return CommandController.settableProperties.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
+        } else if (input.startsWith("new ")) {
+            String newInput = input.replace("new ", "");
+            return CommandController.creatableObjects.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
+        } else {
+            return commandList.stream().filter(word -> word.startsWith(input) && !word.equals(input)).toList();
+        }
     }
 
 
@@ -76,5 +69,9 @@ public final class CodeCompletion {
             return !CodeCompletion.currentCompletions.isEmpty();
         }
         return false;
+    }
+
+    public static List<String> getCurrentCompletions() {
+        return currentCompletions;
     }
 }

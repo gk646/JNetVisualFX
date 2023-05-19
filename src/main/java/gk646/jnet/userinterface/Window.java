@@ -9,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.awt.Point;
 import java.io.IOException;
@@ -30,7 +31,8 @@ public class Window extends Application {
      *              primary stages.
      */
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
+        stage.initStyle(StageStyle.UNIFIED);
         Point bounds = setupScreen();
         stage.setWidth(bounds.x);
         stage.setHeight(bounds.y);
@@ -40,8 +42,6 @@ public class Window extends Application {
         stage.setMinWidth(640);
         stage.setMinHeight(480);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/JNetIcon.png")));
-
-        //VBox root = FXMLLoader.load(Window.class.getResource("/layout.fxml"));
 
         Canvas canvas = new Canvas(stage.getWidth(),stage.getHeight());
         Group root = new Group();

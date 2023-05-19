@@ -23,7 +23,7 @@ import java.awt.Point;
 public final class JNetVisualFX {
     static {
         Terminal.containerHelper = new ContainerHelper(65, 50, 35, 50);
-        Log.containerHelper = new ContainerHelper(65, 0, 35, 50);
+
         NetworkVisualizer.containerHelper = new ContainerHelper(0, 0, 60, 100);
     }
 

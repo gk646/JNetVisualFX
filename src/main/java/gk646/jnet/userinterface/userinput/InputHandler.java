@@ -98,9 +98,9 @@ public final class InputHandler {
                 }
             }
             case TAB -> {
-                if (CodeCompletion.currentCompletions.size() == 1) {
+                if (CodeCompletion.getCurrentCompletions().size() == 1) {
                     Terminal.cursorOffsetLeft = 0;
-                    Terminal.currentText = new StringBuilder(CodeCompletion.currentCompletions.get(0));
+                    Terminal.currentText = new StringBuilder(CodeCompletion.getCurrentCompletions().get(0));
                 }
             }
         }

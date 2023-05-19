@@ -6,11 +6,9 @@ import gk646.jnet.userinterface.terminal.Terminal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public enum SetCommand {
+public enum SettableProperties {
 
-    circlesize {
-        private static final Pattern pattern = Pattern.compile("\\((.*?)\\)");
-
+    circlesize("circlesize - settable property with: set<propertyName> // maximum size of the neurons: 0 - 100, Default: 20") {
         @Override
         public String cmd(String prompt) {
             matcher = pattern.matcher(prompt);
@@ -25,15 +23,15 @@ public enum SetCommand {
             return "couldnt parse circlesize: " + prompt;
         }
     },
-    fontsize {
-        private static final Pattern pattern = Pattern.compile("\\((.*?)\\)");
+    fontsize("fontsize - settable property with: set<propertyName> // fontsize of the terminal font: 0 - 50, Default: 15") {
         @Override
         public String cmd(String prompt) {
             matcher = pattern.matcher(prompt);
             if (matcher.find()) {
                 int newFontSize = Integer.parseInt(matcher.group(1));
                 if (newFontSize > 0 && newFontSize < 50) {
-                    Terminal.changeFontSize(newFontSize);
+                    int fontSizeDelta = newFontSize - Terminal.fontSize;
+                    Terminal.changeFontSize(fontSizeDelta);
                     return "set new fontsize: " + newFontSize;
                 }
                 return "invalid fontsize: " + newFontSize;
@@ -41,10 +39,17 @@ public enum SetCommand {
             return "couldnt parse fontsize: " + prompt;
         }
     };
-    public Matcher matcher;
+    private static final Pattern pattern = Pattern.compile("\\((.*?)\\)");
+    Matcher matcher;
+    private final String manPage;
 
-    SetCommand() {
+    SettableProperties(String manPage) {
+        this.manPage = manPage;
     }
 
     public abstract String cmd(String prompt);
+
+    public String getManPage() {
+        return manPage;
+    }
 }
