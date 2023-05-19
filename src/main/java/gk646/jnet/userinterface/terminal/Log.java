@@ -17,18 +17,17 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 public final class Log extends Handler {
-
     private static final Queue<String> logText = new ArrayDeque<>();
-    private static Color backGround = Colors.DARK_GREY;
-    public static ContainerHelper containerHelper;
+    private static final Color backGround = Colors.DARK_GREY;
+    public static final ContainerHelper containerHelper = new ContainerHelper(65, 0, 35, 50);
     public static int scrollOffset = 0;
-    public final int CHARACTER_WIDTH;
-    public final static int LINE_HEIGHT = 14;
+    public final float characterWidth;
+    public static final int LINE_HEIGHT = 14;
 
     public Log() {
         Text text = new Text("A");
         text.setFont(Resources.cascadiaCode11);
-        this.CHARACTER_WIDTH = (int) text.getLayoutBounds().getWidth();
+        this.characterWidth = (float) (text.getLayoutBounds().getWidth()+0.1);
     }
 
     public void draw(GraphicsContext gc) {
@@ -43,7 +42,7 @@ public final class Log extends Handler {
         int startX = containerHelper.getDrawX();
         int startY = containerHelper.getDrawY() + containerHelper.getHeight() - LINE_HEIGHT + scrollOffset;
 
-        int maxCharsPerLine = (containerHelper.getWidth() / CHARACTER_WIDTH);
+        int maxCharsPerLine = (int) (containerHelper.getWidth() / characterWidth);
         for (String string : logText) {
             Text text1 = new Text(string);
             text1.setFont(gc.getFont());

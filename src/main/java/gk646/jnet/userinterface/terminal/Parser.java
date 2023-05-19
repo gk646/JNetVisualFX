@@ -3,8 +3,7 @@ package gk646.jnet.userinterface.terminal;
 import gk646.jnet.neuralnetwork.Network;
 import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
-import gk646.jnet.userinterface.terminal.commands.ArgCommand;
-import gk646.jnet.userinterface.terminal.commands.NoArgCommand;
+import gk646.jnet.userinterface.terminal.commands.Command;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -14,10 +13,6 @@ public final class Parser {
 
     static HashMap<String, Method> methodMap = new HashMap<>();
     static HashMap<String, Constructor> constructorMap = new HashMap<>();
-
-    public static final ArgCommand[] ARGS_COMMANDS = ArgCommand.values();
-
-    public static final NoArgCommand[] NO_ARGS_COMMANDS = NoArgCommand.values();
 
     Parser() {
         for (Method method : NetworkBuilder.class.getMethods()) {
@@ -31,28 +26,16 @@ public final class Parser {
     }
 
     public boolean parse(String text) {
-        if (parseNOARGSCommands(text)) return true;
-        return parseARGSCommands(text);
-    }
-
-    private boolean parseNOARGSCommands(String text) {
-        boolean temp;
-        for (NoArgCommand noArgsCmds : NO_ARGS_COMMANDS) {
-            temp = noArgsCmds.cmd(text);
-            if (temp) {
+        for (Command command : CommandController.COMMANDS) {
+            if (text.startsWith(command.toString())) {
+                command.cmd(text);
                 return true;
             }
         }
-        return false;
+        return parseAliasCommands();
     }
 
-    private boolean parseARGSCommands(String prompt) {
-        for (ArgCommand argsCommand : ARGS_COMMANDS) {
-            if (prompt.startsWith(argsCommand.getKeyWord())) {
-                Terminal.addText(argsCommand.cmd(prompt));
-                return true;
-            }
-        }
+    private boolean parseAliasCommands() {
         return false;
     }
 
@@ -62,9 +45,5 @@ public final class Parser {
 
     public static HashMap<String, Constructor> getConstructorMap() {
         return constructorMap;
-    }
-
-    public ArgCommand[] getCommands() {
-        return ARGS_COMMANDS;
     }
 }

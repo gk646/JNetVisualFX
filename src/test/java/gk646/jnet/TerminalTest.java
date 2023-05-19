@@ -1,6 +1,7 @@
 package gk646.jnet;
 
 import gk646.jnet.userinterface.terminal.Terminal;
+import gk646.jnet.userinterface.terminal.commands.Command;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +35,7 @@ class TerminalTest {
     void testCommandHistory() {
         int commandHistoryOffset = 0;
         int previousSize = 0;
+
 
         //Simulate input
         Terminal.parseText("print(hey)");

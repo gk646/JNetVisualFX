@@ -18,8 +18,8 @@ import java.util.List;
 public final class Terminal {
     public static float CHARACTER_WIDTH;
     private static byte MAX_LINES = 25;
-    private static byte FONT_SIZE = 15;
-    public static int LINE_HEIGHT = FONT_SIZE + 4;
+    public static int fontSize = 15;
+    public static int LINE_HEIGHT = fontSize + 4;
     public static byte cursorOffsetLeft = 0;
     private static final byte COMMAND_HISTORY_LENGTH = 127;
     private int counter = 0;
@@ -106,7 +106,7 @@ public final class Terminal {
         } else {
             activeLine.append(counter % 45 < 20 ? "|" : "");
         }
-        gc.fillText(activeLine.toString(), containerHelper.getDrawX(), containerHelper.getDrawY() + containerHelper.getHeight() - FONT_SIZE);
+        gc.fillText(activeLine.toString(), containerHelper.getDrawX(), containerHelper.getDrawY() + containerHelper.getHeight() - fontSize);
         counter++;
     }
 
@@ -131,13 +131,13 @@ public final class Terminal {
     }
 
     public static void changeFontSize(int value) {
-        FONT_SIZE += value;
-        Font font = Resources.getFontInSize(FONT_SIZE);
+        fontSize += value;
+        Font font = Resources.getFontInSize(fontSize);
         JNetVisualFX.gc.setFont(font);
         Text text1 = new Text("A");
         text1.setFont(font);
         CHARACTER_WIDTH = (float) (text1.getLayoutBounds().getWidth());
-        LINE_HEIGHT = FONT_SIZE + 4;
+        LINE_HEIGHT = fontSize + 4;
     }
 
     public static void scrollCommandHistory() {

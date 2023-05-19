@@ -28,7 +28,6 @@ public final class NetworkVisualizer {
 
     public void draw(GraphicsContext gc) {
         drawBackGround(gc);
-        calculateCircleDiameter();
         drawNetwork(gc);
     }
 
