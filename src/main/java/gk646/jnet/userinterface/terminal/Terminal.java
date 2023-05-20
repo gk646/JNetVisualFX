@@ -20,18 +20,18 @@ public final class Terminal {
 
     static float characterWidth;
     private static int fontSize = 15;
-    public static int LINE_HEIGHT = fontSize + 4;
+    public static int lineHeight = fontSize + 4;
     public static byte cursorOffsetLeft = 0;
     private static final byte COMMAND_HISTORY_LENGTH = 127;
     private int counter = 0;
     public static String terminalRoot = "> ";
     public static StringBuilder currentText = new StringBuilder();
-    public static ContainerHelper containerHelper = new ContainerHelper(65, 50, 35, 50);
+    static ContainerHelper containerHelper = new ContainerHelper(65, 50, 35, 50);
     public static final LimitedQueue<String> commandHistory = new LimitedQueue<>(COMMAND_HISTORY_LENGTH);
     private static final LimitedQueue<String> terminalText = new LimitedQueue<>(35);
     private static final Parser parser = new Parser();
-    private static Color backGround = Colors.LIGHT_BLACK;
-    public static Color text = Colors.WHITE_SMOKE;
+    private static final Color backGround = Colors.LIGHT_BLACK;
+    static final Color text = Colors.WHITE_SMOKE;
     private static final CodeCompletion codeCompletion = new CodeCompletion();
 
     public Terminal() {
@@ -46,7 +46,7 @@ public final class Terminal {
     }
 
     public void updateSize() {
-        terminalText.setLimit(containerHelper.getHeight() / LINE_HEIGHT);
+        terminalText.setLimit(containerHelper.getHeight() / lineHeight);
     }
 
     public void draw(GraphicsContext gc) {
@@ -60,7 +60,7 @@ public final class Terminal {
     private void drawScrollingText(GraphicsContext gc) {
         gc.setFill(Color.MINTCREAM);
         int startX = containerHelper.getDrawX();
-        int startY = containerHelper.getDrawY() + containerHelper.getHeight() - LINE_HEIGHT * 2;
+        int startY = containerHelper.getDrawY() + containerHelper.getHeight() - lineHeight * 2;
         int maxCharsPerLine = (int) (containerHelper.getWidth() / characterWidth);
 
         for (String string : terminalText) {
@@ -81,14 +81,14 @@ public final class Terminal {
                 start += maxCharsPerLine;
             }
 
-            startY -= (lines.size() - 1) * LINE_HEIGHT;
+            startY -= (lines.size() - 1) * lineHeight;
 
             for (String line : lines) {
                 gc.fillText(line, startX, startY);
-                startY += LINE_HEIGHT;
+                startY += lineHeight;
             }
 
-            startY -= (lines.size() + 1) * LINE_HEIGHT;
+            startY -= (lines.size() + 1) * lineHeight;
         }
     }
 
@@ -142,7 +142,7 @@ public final class Terminal {
         Text text1 = new Text("A");
         text1.setFont(font);
         characterWidth = (float) (text1.getLayoutBounds().getWidth());
-        LINE_HEIGHT = fontSize + 4;
+        lineHeight = fontSize + 4;
     }
 
     public static void scrollCommandHistory() {

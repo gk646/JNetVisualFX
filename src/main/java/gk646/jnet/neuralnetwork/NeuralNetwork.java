@@ -60,11 +60,6 @@ public final class NeuralNetwork {
         }
     }
 
-
-    public void changeNetwork(NetworkBuilder netBuilder) {
-        this.network = new Network(netBuilder);
-    }
-
     public Network getNetwork() {
         return network;
     }

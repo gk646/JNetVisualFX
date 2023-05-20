@@ -65,7 +65,6 @@ public final class Network {
                 for (byte k = 0; k < layerInput.length; k++) { // Iterate over neurons in current layer
                     weightedSum += layerInput[k] * weightMatrix[i][k][j];
                 }
-
                 layerInputForNextLayer[j] = weightedSum + layers[i].neurons[j].bias;
                 layerOutput[j] = activeFunc.apply(layerInputForNextLayer[j]);
             }

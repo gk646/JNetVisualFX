@@ -3,6 +3,7 @@ package gk646.jnet.userinterface.graphics;
 import javafx.scene.paint.Color;
 
 public final class Colors {
+    private Colors(){}
     public static final Color LIGHT_BLACK = Color.rgb(24, 20, 37);
     public static final Color MILK = Color.rgb(253, 255, 245);
     public static final Color WHITE_SMOKE = Color.rgb(245, 255, 250);

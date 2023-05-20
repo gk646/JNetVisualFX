@@ -1,11 +1,7 @@
 package gk646.jnet.util.datastructures;
 
-import java.util.AbstractList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * A capacity-restricted queue that internally handles shifting if maximal capacity is reached.
@@ -24,23 +20,26 @@ public final class LimitedQueue<T> implements Iterable<T> {
         elements = (T[]) new Object[maximumCapacity];
         this.maximumCapacity = maximumCapacity;
     }
+
     /**
      * Adds the element to the queue. If the predefined {@link #maximumCapacity} threshold is
      * reached all elements beginning with the second are shifted to the left.
      * The added element is then place at the current at the end.
+     *
      * @param obj element whose presence in this collection is to be ensured
      * @return true if the element was added
      */
     public boolean add(T obj) {
-        if(shift){
+        if (shift) {
             shift();
         }
         if (size == maximumCapacity) {
-            shift  = true;
+            shift = true;
             elements[maximumCapacity - 1] = obj;
             return true;
         }
         elements[size++] = obj;
+        shift = false;
         return false;
     }
 
@@ -53,6 +52,7 @@ public final class LimitedQueue<T> implements Iterable<T> {
     public int size() {
         return size;
     }
+
     /**
      * Returns elements counting from the back.
      * If the index is out of bounds returns null.
@@ -77,6 +77,7 @@ public final class LimitedQueue<T> implements Iterable<T> {
 
     /**
      * Returns a backwards iterator over elements of type {@code T}.
+     *
      * @return an Iterator.
      */
     @Override
@@ -115,8 +116,10 @@ public final class LimitedQueue<T> implements Iterable<T> {
         }
         return string.toString();
     }
+
     /**
      * Sets a new maximum limit. Currently, this method won't extend the list past its creation size, so it only works downwards.
+     *
      * @param newLimit the new maximum limit
      */
     public void setLimit(int newLimit) {
