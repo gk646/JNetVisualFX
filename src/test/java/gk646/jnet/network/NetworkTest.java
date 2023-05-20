@@ -63,15 +63,15 @@ class NetworkTest {
     @Test
     void backPropagationTestXOR() {
         // Create the network with 2 inputs, 2 hidden neurons, and 1 output
-        NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2, 2, 2, 1), ActivationFunction.SIGMOID).
-                setWeightInitState(WeightInitState.RANDOM).setNeuronInitState(NeuronInitState.RANDOM).setLearnRate(0.01f));
+        NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2,2, 2, 1), ActivationFunction.SIGMOID).
+                setWeightInitState(WeightInitState.RANDOM).setNeuronInitState(NeuronInitState.RANDOM).setLearnRate(0.03f));
 
         // XOR input and output pairs
         double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
         double[][] outputs = {{0}, {1}, {1}, {0}};
 
         // Train the network
-        int repetitions = 10000; // adjust this as necessary
+        int repetitions = 1000; // adjust this as necessary
         for (int epoch = 0; epoch < repetitions; epoch++) {
             network.train(inputs, outputs);
         }
