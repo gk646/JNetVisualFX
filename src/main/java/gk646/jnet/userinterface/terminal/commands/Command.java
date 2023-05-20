@@ -5,6 +5,7 @@ import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.userinterface.Window;
+import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.CommandController;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.terminal.Parser;
@@ -165,6 +166,7 @@ public enum Command {
             for (SettableProperties settableProperties : SETTABLE_PROPERTIES) {
                 if (settableProperties.name().equals(creatableName)) {
                     Terminal.addText(settableProperties.cmd(prompt));
+                    return;
                 }
             }
             Terminal.addText("no property named: " + prompt);
@@ -191,14 +193,6 @@ public enum Command {
             Terminal.clear();
         }
     },
-    reset("reset - reset the playground // reset both the NetBuilder and current Network to null // Syntax: reset") {
-        @Override
-        public void cmd(String prompt) {
-
-            Playground.reset();
-            Terminal.addText("playground was reset");
-        }
-    },
     font("font - info about the font // // Syntax: font") {
         @Override
         public void cmd(String prompt) {
@@ -218,6 +212,14 @@ public enum Command {
             Terminal.addText(Info.VERSION);
         }
     },
+    resetall("resetall - resets all properties to default value // // Syntax: resetall") {
+        @Override
+        public void cmd(String prompt) {
+            NetworkVisualizer.MAX_CIRCLE_DIAMETER = 20;
+            Terminal.fontSize = 15;
+            Terminal.addText("reset all value to default state!");
+        }
+    },
     helpall("helpall - lists all commands // lists all commands including their man page // Syntax: helpall") {
         @Override
         public void cmd(String prompt) {
@@ -232,15 +234,41 @@ public enum Command {
             Terminal.addText("man <method or command> for manual the manual page");
         }
     },
+    reset("reset - reset the playground // reset both the NetBuilder and current Network to null // Syntax: reset") {
+        @Override
+        public void cmd(String prompt) {
+
+            Playground.reset();
+            Terminal.addText("playground was reset");
+        }
+    },
     wiki("wiki - opens the wiki // opens the github wiki page about JNetVisualFX // Syntax: wiki") {
         private static final String wiki = "https://github.com/gk646/JNetVisualFX/wiki";
+
         @Override
         public void cmd(String prompt) {
             try {
                 Desktop.getDesktop().browse(URI.create(wiki));
             } catch (IOException e) {
-               Terminal.addText("error opening: "+ wiki);
+                Terminal.addText("error opening: " + wiki);
             }
+        }
+    },
+    name("name - name yourself // adds your name to the terminal root // Syntax: name <name>") {
+        @Override
+        public void cmd(String prompt) {
+            prompt = prompt.replace("name ", "");
+            if (prompt.isBlank()) {
+                Terminal.addText("Missing argument: name <name>");
+                return;
+            }
+        }
+    },
+    quicksetup(""){
+        @Override
+        public void cmd(String prompt){
+            Terminal.parseText("new NetBuilder((4,4,4),sigmoid)");
+            Terminal.parseText("new Network");
         }
     };
     Matcher matcher;

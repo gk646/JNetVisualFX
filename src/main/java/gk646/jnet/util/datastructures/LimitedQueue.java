@@ -1,10 +1,11 @@
 package gk646.jnet.util.datastructures;
 
 import java.util.AbstractList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.RandomAccess;
+import java.util.stream.Collectors;
 
 /**
  * A capacity-restricted queue that internally handles shifting if maximal capacity is reached.
@@ -12,38 +13,35 @@ import java.util.RandomAccess;
  *
  * @param <T> the type
  */
-public final class LimitedQueue<T> extends AbstractList<T> implements RandomAccess, Iterable<T> {
+public final class LimitedQueue<T> implements Iterable<T> {
     private int size = 0;
-    private final int maximumCapacity;
-    private boolean shifting;
-    public T[] elements;
+    private int maximumCapacity;
+    private T[] elements;
+    boolean shift;
 
     @SuppressWarnings("unchecked")
     public LimitedQueue(int maximumCapacity) {
         elements = (T[]) new Object[maximumCapacity];
         this.maximumCapacity = maximumCapacity;
     }
-
     /**
      * Adds the element to the queue. If the predefined {@link #maximumCapacity} threshold is
-     * reached all elements beginning with the first are shifted to the right.
-     * The last element will then be overwritten by the added element.
-     *
+     * reached all elements beginning with the second are shifted to the left.
+     * The added element is then place at the current at the end.
      * @param obj element whose presence in this collection is to be ensured
      * @return true if the element was added
      */
-    @Override
     public boolean add(T obj) {
-        if (shifting) {
+        if(shift){
             shift();
         }
         if (size == maximumCapacity) {
-            shifting = true;
+            shift  = true;
             elements[maximumCapacity - 1] = obj;
             return true;
         }
         elements[size++] = obj;
-        return true;
+        return false;
     }
 
     private void shift() {
@@ -52,21 +50,9 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
         }
     }
 
-    @Override
-    public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        T removedElement = elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[--size] = null;
-        return removedElement;
-    }
-
     public int size() {
         return size;
     }
-
     /**
      * Returns elements counting from the back.
      * If the index is out of bounds returns null.
@@ -83,7 +69,7 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
      * The usual direct access for a list
      *
      * @param index the access index
-     * @return the elemtent at index
+     * @return the element at index
      */
     public T directGet(int index) {
         return elements[index];
@@ -91,7 +77,6 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
 
     /**
      * Returns a backwards iterator over elements of type {@code T}.
-     *
      * @return an Iterator.
      */
     @Override
@@ -111,84 +96,34 @@ public final class LimitedQueue<T> extends AbstractList<T> implements RandomAcce
                 }
                 return elements[currentIndex--];
             }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("remove");
-            }
         };
     }
 
 
-    @Override
     @SuppressWarnings("unchecked")
     public void clear() {
-        shifting = false;
         elements = (T[]) new Object[maximumCapacity];
         size = 0;
     }
 
-    @Override
-    public List<T> subList(int fromIndex, int toIndex) {
-        int span = toIndex - fromIndex;
-        LimitedQueue<T> result = new LimitedQueue<>(span);
-        result.size = span;
-        System.arraycopy(this.elements, fromIndex, result.elements, 0, span);
-        return result;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (!(obj instanceof LimitedQueue<?>)) {
-            return false;
-        }
-
-        LimitedQueue<T> limitedQueue = (LimitedQueue<T>) obj;
-
-        if (limitedQueue.size == size) {
-            for (int i = 0; i < size; i++) {
-                if (!limitedQueue.get(i).equals(elements[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public T set(int index, T element) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        T oldValue = elements[index];
-        elements[index] = element;
-        return oldValue;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size; i++) {
-            result = 31 * result + (elements[i] == null ? 0 : elements[i].hashCode());
-        }
-        return result;
-    }
 
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
-
         for (int i = 0; i < maximumCapacity; i++) {
             string.append(directGet(i)).append("\n");
         }
         return string.toString();
+    }
+    /**
+     * Sets a new maximum limit. Currently, this method won't extend the list past its creation size, so it only works downwards.
+     * @param newLimit the new maximum limit
+     */
+    public void setLimit(int newLimit) {
+        this.maximumCapacity = newLimit;
+        if (size > newLimit) {
+            size = newLimit;
+        }
     }
 }
 

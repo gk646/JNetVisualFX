@@ -13,16 +13,16 @@ import java.util.List;
 @Manual(text = " A helper class to specify the network parameters. Besides layerInfo and the activationFunction customization is optional.\n" +
         "LayerInfo is a list where each entry is the number of neurons for that layer, including input and output layer!.")
 public final class NetworkBuilder {
-    private List<Integer> layerInfo;
-    private ActivationFunction activeFunc;
-    private byte learnRate = 1;
+    private final List<Integer> layerInfo;
+    private final ActivationFunction activeFunc;
+    private float learnRate = 1;
     private NeuronInitState neuronInitState;
     private WeightInitState weightInitState;
 
     /**
      * The NetworkBuilder will internally check for viability of the given arguments
      *
-     * @param layerInfo  a list, each entry specifiying the number of neurons for that layer.
+     * @param layerInfo  a list, each entry specifying the number of neurons for that layer.
      * @param activeFunc the activationFunction for the network
      */
     @Manual(text = "Reusable building block for your Networks - Syntax: new NetBuilder((<List of numbers>),<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)")
@@ -54,22 +54,24 @@ public final class NetworkBuilder {
     }
 
     /**
-     * Sets the learnRate the NeuralNetwork. Learnrate is the multiplier by which the gradient descent step is multiplied each learning iteration.
+     * Sets the learnRate the NeuralNetwork. Learn-rate is the multiplier by which the gradient descent step is multiplied each learning iteration.
      * Making the learnRate too small or too big can have a big impact on the outcome.
      * Recommended values 1-5.
      *
      * @param learnRate an int.
      * @return a reference to this object
      */
-    @Manual(text = " Sets the learnRate the NeuralNetwork. Learnrate is the multiplier by which the gradient descent step is multiplied each learning iteration.\n" +
-            "     * Making the learnRate too small or too big can have a big impact on the outcome.\n" +
-            "     * Recommended values 1-5.\n" +
-            "     *\n" +
-            "     * @param learnRate an int.\n" +
-            "     * @return a reference to this object\n" +
-            "     */")
-    public NetworkBuilder setLearnRate(int learnRate) {
-        this.learnRate = (byte) learnRate;
+    @Manual(text = """
+             Sets the learnRate the NeuralNetwork. Learn-rate is the multiplier by which the gradient descent step is multiplied each learning iteration.
+                  Making the learnRate too small or too big can have a big impact on the outcome.
+                 Recommended values 1-5.
+                 
+                  @param learnRate an int.
+                  @return a reference to this object
+                 
+            """)
+    public NetworkBuilder setLearnRate(float learnRate) {
+        this.learnRate =  learnRate;
         checkBuilderViability();
         return this;
     }
@@ -117,7 +119,7 @@ public final class NetworkBuilder {
     }
 
     public int[] getLayerInfo() {
-       return layerInfo.stream().mapToInt(Integer::intValue).toArray();
+        return layerInfo.stream().mapToInt(Integer::intValue).toArray();
     }
 
     public WeightInitState getWeightInit() {
@@ -128,7 +130,7 @@ public final class NetworkBuilder {
         return activeFunc;
     }
 
-    public byte getLearnRate() {
+    public float getLearnRate() {
         return learnRate;
     }
 

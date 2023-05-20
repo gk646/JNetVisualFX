@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.awt.Point;
-import java.io.IOException;
+import java.util.Objects;
 
 
 public class Window extends Application {
@@ -41,9 +41,9 @@ public class Window extends Application {
         stage.setResizable(true);
         stage.setMinWidth(640);
         stage.setMinHeight(480);
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/JNetIcon.png")));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/JNetIcon.png"))));
 
-        Canvas canvas = new Canvas(stage.getWidth(),stage.getHeight());
+        Canvas canvas = new Canvas(stage.getWidth(), stage.getHeight());
         Group root = new Group();
         root.getChildren().add(canvas);
 
@@ -52,14 +52,15 @@ public class Window extends Application {
         stage.show();
 
         final var inputHandler = new InputHandler();
-        new JNetVisualFX(canvas, inputHandler, sceneRoot).run();
+        new JNetVisualFX(canvas, sceneRoot).run();
 
         sceneRoot.setOnKeyTyped(inputHandler::handleKeyType);
         sceneRoot.setOnKeyPressed(inputHandler::handleSpecialKeyType);
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
     }
-    public static void exit(){
-        new Thread(()->{
+
+    public static void exit() {
+        new Thread(() -> {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -68,6 +69,7 @@ public class Window extends Application {
             Platform.exit();
         }).start();
     }
+
     @Override
     public void stop() {
         System.exit(0);

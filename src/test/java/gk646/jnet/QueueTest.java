@@ -19,7 +19,7 @@ class QueueTest {
         }
         queue.add(10);
 
-        assertEquals(5, queue.get(5));
+        assertEquals(5, queue.get(maxCapacity));
 
 
         for (int i = 0; i < 4; i++) {

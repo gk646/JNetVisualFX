@@ -2,10 +2,11 @@ package gk646.jnet.neuralnetwork;
 
 import gk646.jnet.neuralnetwork.builder.NeuronInitState;
 import gk646.jnet.neuralnetwork.builder.WeightInitState;
+import gk646.jnet.userinterface.terminal.Log;
 
 public final class Layer {
-    byte neuronCount;
-    Neuron[] neurons;
+    final byte neuronCount;
+    public final Neuron[] neurons;
 
     Layer(byte neuronCount) {
         this.neuronCount = neuronCount;
@@ -13,8 +14,7 @@ public final class Layer {
     }
 
     public static Layer[] createLayers(int[] layerInfo, NeuronInitState neuronInit) {
-        NetworkUtils.logger.info("Creating layers");
-
+        Log.logger.info("Creating layers");
         byte layerCount = (byte) layerInfo.length;
         if (layerCount < 1 || layerCount > layerInfo.length) {
             throw new IllegalArgumentException("Invalid layerCount");
@@ -28,24 +28,22 @@ public final class Layer {
         return temp;
     }
 
-    public static float[][][] createWeightMatrix(int[] layerInfo, WeightInitState weightInit) {
-        NetworkUtils.logger.info("Creating weight matrix");
-
+    public static double[][][] createWeightMatrix(int[] layerInfo, WeightInitState weightInit) {
+        Log.logger.info("Creating weight matrix");
         short layerCount = (short) layerInfo.length;
         if (layerCount < 2) {
-            NetworkUtils.logger.severe("Invalid layerCount. There should be at least two layers.");
+            Log.logger.severe("Invalid layerCount. There should be at least two layers.");
             throw new IllegalArgumentException("Invalid layerCount. There should be at least two layers.");
         }
-
         // We have layerCount - 1 weight matrices, because the weights connect pairs of layers
-        float[][][] temp = new float[layerCount - 1][][];
+        double[][][] temp = new double[layerCount - 1][][];
 
         for (byte i = 0; i < layerCount - 1; i++) {
-            temp[i] = new float[layerInfo[i]][layerInfo[i + 1]];
+            temp[i] = new double[layerInfo[i]][layerInfo[i + 1]];
             if (weightInit != WeightInitState.RANDOM) continue;
             for (int j = 0; j < temp[i].length; j++) {
                 for (int k = 0; k < temp[i][j].length; k++) {
-                    temp[i][j][k] = NetworkUtils.rng.nextFloat(weightInit.origin, weightInit.bound);
+                    temp[i][j][k] = NetworkUtils.rng.nextFloat(weightInit.getOrigin(), weightInit.getBound());
                 }
             }
         }

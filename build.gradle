@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.openjfx.javafxplugin' version '0.0.9'
     id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'org.beryx.runtime' version '1.13.0'
 }
 
 group = 'gk646.jnet'
@@ -17,13 +18,14 @@ dependencies {
 }
 javafx {
     version = "21-ea+5"
-    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.base' ]
+    modules = ['javafx.controls', 'javafx.graphics', 'javafx.base']
 }
 
-task runWithTests(type: GradleBuild) {
-    tasks = ['clean', 'test', 'run']
+application {
+    mainClass = "gk646.jnet.Main"
 }
-jar{
+
+jar {
     manifest {
         attributes 'Main-Class': "gk646.jnet.Main"
     }
@@ -36,6 +38,7 @@ shadowJar {
         attributes 'Main-Class': "gk646.jnet.Main"
     }
 }
+
 test {
     useJUnitPlatform()
 }

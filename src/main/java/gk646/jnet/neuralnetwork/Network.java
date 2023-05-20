@@ -13,28 +13,30 @@ import java.util.ArrayList;
  * Allows for various customization through the  {@link  NetworkBuilder}.
  * Supported activation functions: RELU ,SIGMOID.
  */
-@Manual(text = "A java implementation of a NeuralNetwork. Performs the basic {@link Network#forwardPass(float[])} and {@link Network#backPropagation(float[], float[])}\n" +
-        " * to learn from inputData.\n" +
-        " * Allows for various customization through the  {@link  NetworkBuilder}.\n" +
-        " * Supported activation functions: RELU ,SIGMOID.")
+@Manual(text = """
+        A java implementation of a NeuralNetwork. Performs the basic {@link Network#forwardPass(float[])} and {@link Network#backPropagation(float[], float[])}
+         * to learn from inputData.
+         * Allows for various customization through the  {@link  NetworkBuilder}.
+         * Supported activation functions: RELU ,SIGMOID.""")
 public final class Network {
     //VARIABLES
-    byte layerCount;
-    byte learnRate;
-    byte outputLayerSize;
-    float[][][] weightMatrix;
-    public int[] layerInfo;
+    final byte layerCount;
+    final float learnRate;
+    final byte outputLayerSize;
+    final byte inputLayerSize;
+    final double[][][] weightMatrix;
+    public final int[] layerInfo;
     //OBJECTS
-    NetworkUtils netUtils = new NetworkUtils();
-    Layer[] layers;
-    ActivationFunction activeFunc;
-    DerivativeActivationFunction derivativeFunc;
+    final NetworkUtils netUtils = new NetworkUtils(this);
+    final Layer[] layers;
+    final ActivationFunction activeFunc;
+    final DerivativeActivationFunction derivativeFunc;
 
-    @Manual(text = "heya")
     public Network(NetworkBuilder networkBuilder) {
         this.layerInfo = networkBuilder.getLayerInfo();
         this.layerCount = (byte) layerInfo.length;
         this.outputLayerSize = (byte) layerInfo[layerCount - 1];
+        this.inputLayerSize = (byte) layerInfo[0];
         this.activeFunc = networkBuilder.getActiveFunc();
         this.derivativeFunc = DerivativeActivationFunction.valueOf(activeFunc.name());
         this.learnRate = networkBuilder.getLearnRate();
@@ -64,7 +66,7 @@ public final class Network {
                     weightedSum += layerInput[k] * weightMatrix[i][k][j];
                 }
                 layerInputForNextLayer[j] = weightedSum + layers[i + 1].neurons[j].bias;
-                layerOutput[j] = activeFunc.apply(layerInputForNextLayer[j]);
+                layerOutput[j] = (float) activeFunc.apply(layerInputForNextLayer[j]);
             }
             layerOutputsAndInputs.add(new float[][]{layerInputForNextLayer, layerOutput});
             layerInput = layerOutput;
@@ -84,7 +86,7 @@ public final class Network {
 
             for (byte neuronIndex = 0; neuronIndex < layerInfo[layerIndex + 1]; neuronIndex++) {
 
-                float outputGradient = 2 * error[neuronIndex] * derivativeFunc.apply(layerOutputsAndInputs.get(layerIndex)[0][neuronIndex]);
+                double outputGradient = 2 * error[neuronIndex] * derivativeFunc.apply(layerOutputsAndInputs.get(layerIndex)[0][neuronIndex]);
                 for (byte prevNeuronIndex = 0; prevNeuronIndex < layerInfo[layerIndex]; prevNeuronIndex++) {
 
                     // Update weights and compute next layer's error
