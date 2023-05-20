@@ -5,25 +5,24 @@ import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.util.ContainerHelper;
 import gk646.jnet.util.LogHandler;
 import gk646.jnet.util.Logging;
+import gk646.jnet.util.datastructures.LimitedQueue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * The Logger responsible for logging errors, info and exceptions to both the application log and java-terminal.
  */
 public final class Log {
-    public static final Logging logger = new Logging("",null);
+    public static final Logging logger = new Logging("", null);
     /**
      * Controls the visibility of debug messages and logging.
      */
     public static boolean verbose = true;
-    private static final Queue<String> logText = new ArrayDeque<>();
+    private static final LimitedQueue<String> logText = new LimitedQueue<>(50);
     private static final Color backGround = Colors.DARK_GREY;
     public static final ContainerHelper containerHelper = new ContainerHelper(65, 0, 35, 50);
     public static int scrollOffset = 0;
@@ -92,5 +91,10 @@ public final class Log {
         gc.fillRoundRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight(), 25, 25);
         gc.setFill(Colors.PHILIPINE_SILVER);
         gc.fillText("[Log]", containerHelper.getDrawX() + 10, containerHelper.getDrawY() + 20);
+    }
+
+
+    public static void updateSize() {
+        logText.setLimit(containerHelper.getHeight() / LINE_HEIGHT);
     }
 }

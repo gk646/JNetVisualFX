@@ -53,49 +53,52 @@ public final class Network {
      * @param inputs a float Array
      * @return a List of both pre- and postActivation values for each Layer (in that order).
      */
-    ArrayList<float[][]> forwardPass(float[] inputs) {
-        float[] layerInput = inputs;
-        ArrayList<float[][]> layerOutputsAndInputs = new ArrayList<>(layerCount);
+    ArrayList<double[][]> forwardPass(double[] inputs) {
+        double[] layerInput = inputs;
+        ArrayList<double[][]> layerOutputsAndInputs = new ArrayList<>(layerCount);
         for (byte i = 0; i < layerCount - 1; i++) {
-            float[] layerOutput = new float[layerInfo[i + 1]];
-            float[] layerInputForNextLayer = new float[layerInfo[i + 1]]; //Pre-activation values for next layer
+            double[] layerOutput = new double[layerInfo[i + 1]];
+            double[] layerInputForNextLayer = new double[layerInfo[i + 1]]; //Pre-activation values for next layer
 
             for (byte j = 0; j < layerOutput.length; j++) {  // Iterate over neurons in next layer
-                float weightedSum = 0;
+                double weightedSum = 0;
                 for (byte k = 0; k < layerInput.length; k++) { // Iterate over neurons in current layer
                     weightedSum += layerInput[k] * weightMatrix[i][k][j];
                 }
-                layerInputForNextLayer[j] = weightedSum + layers[i + 1].neurons[j].bias;
-                layerOutput[j] = (float) activeFunc.apply(layerInputForNextLayer[j]);
+
+                layerInputForNextLayer[j] = weightedSum + layers[i].neurons[j].bias;
+                layerOutput[j] = activeFunc.apply(layerInputForNextLayer[j]);
             }
-            layerOutputsAndInputs.add(new float[][]{layerInputForNextLayer, layerOutput});
+            layerOutputsAndInputs.add(new double[][]{layerInputForNextLayer, layerOutput});
             layerInput = layerOutput;
         }
         return layerOutputsAndInputs;
     }
 
-    void backPropagation(float[] input, float[] target) {
-        ArrayList<float[][]> layerOutputsAndInputs = forwardPass(input);
-        float[] error = new float[layerOutputsAndInputs.get(layerOutputsAndInputs.size() - 1)[1].length];
+    void backPropagation(double[] input, double[] target) {
+        ArrayList<double[][]> layerOutputsAndInputs = forwardPass(input);
+        double[] error = new double[layerOutputsAndInputs.get(layerOutputsAndInputs.size() - 1)[1].length];
         for (byte i = 0; i < error.length; i++) {
             error[i] = layerOutputsAndInputs.get(layerOutputsAndInputs.size() - 1)[1][i] - target[i];
         }
 
-        for (int layerIndex = layerCount - 2; layerIndex >= 0; layerIndex--) {
-            float[] nextError = new float[layerInfo[layerIndex]]; // Error for the next layer
+        for (int layerIndex = layerCount - 2; layerIndex > -1; layerIndex--) {
 
-            for (byte neuronIndex = 0; neuronIndex < layerInfo[layerIndex + 1]; neuronIndex++) {
+            double[] nextError = new double[layerInfo[layerIndex]];
 
-                double outputGradient = 2 * error[neuronIndex] * derivativeFunc.apply(layerOutputsAndInputs.get(layerIndex)[0][neuronIndex]);
-                for (byte prevNeuronIndex = 0; prevNeuronIndex < layerInfo[layerIndex]; prevNeuronIndex++) {
+            for (byte currentLayer = 0; currentLayer < layerInfo[layerIndex + 1]; currentLayer++) {
 
-                    // Update weights and compute next layer's error
-                    nextError[prevNeuronIndex] += weightMatrix[layerIndex][prevNeuronIndex][neuronIndex] * outputGradient;
-                    weightMatrix[layerIndex][prevNeuronIndex][neuronIndex]
-                            -= learnRate * outputGradient * layerOutputsAndInputs.get(layerIndex - 1 >= 0 ? layerIndex - 1 : layerIndex)[1][prevNeuronIndex];
+                double outputGradient = error[currentLayer] * derivativeFunc.apply(layerOutputsAndInputs.get(layerIndex)[0][currentLayer]);
+
+                for (byte nextLayer = 0; nextLayer < layerInfo[layerIndex]; nextLayer++) {
+
+                    nextError[nextLayer] += weightMatrix[layerIndex][nextLayer][currentLayer] * outputGradient;
+
+                    double weightGradient = outputGradient * layerOutputsAndInputs.get(Math.max(0, layerIndex - 1))[1][nextLayer];
+
+                    weightMatrix[layerIndex][nextLayer][currentLayer] -= learnRate * weightGradient;
                 }
-                // Update biases
-                layers[layerIndex + 1].neurons[neuronIndex].bias -= learnRate * outputGradient;
+                layers[layerIndex + 1].neurons[currentLayer].bias -= learnRate * outputGradient;
             }
 
             error = nextError;

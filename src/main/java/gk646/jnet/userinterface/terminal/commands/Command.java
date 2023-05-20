@@ -216,7 +216,8 @@ public enum Command {
         @Override
         public void cmd(String prompt) {
             NetworkVisualizer.MAX_CIRCLE_DIAMETER = 20;
-            Terminal.fontSize = 15;
+            SettableProperties.fontsize.cmd("(15)");
+            Terminal.terminalRoot = ">";
             Terminal.addText("reset all value to default state!");
         }
     },
@@ -254,19 +255,25 @@ public enum Command {
             }
         }
     },
-    name("name - name yourself // adds your name to the terminal root // Syntax: name <name>") {
+    name("name - name yourself // adds your name to the terminal root; \"reset\" to reset // Syntax: name <name>") {
         @Override
         public void cmd(String prompt) {
             prompt = prompt.replace("name ", "");
-            if (prompt.isBlank()) {
+            if (prompt.isEmpty()) {
                 Terminal.addText("Missing argument: name <name>");
+
                 return;
             }
+            if (prompt.equals("reset")) {
+                Terminal.terminalRoot = ">";
+                return;
+            }
+            Terminal.terminalRoot = prompt + ">";
         }
     },
-    quicksetup(""){
+    quicksetup("quicksetup - quickly generates a basic Network((4,4,4), sigmoid)// Syntax: quicksetup") {
         @Override
-        public void cmd(String prompt){
+        public void cmd(String prompt) {
             Terminal.parseText("new NetBuilder((4,4,4),sigmoid)");
             Terminal.parseText("new Network");
         }

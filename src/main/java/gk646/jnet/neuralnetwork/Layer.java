@@ -8,9 +8,9 @@ public final class Layer {
     final byte neuronCount;
     public final Neuron[] neurons;
 
-    Layer(byte neuronCount) {
+    Layer(byte neuronCount, NeuronInitState neuronInitState) {
         this.neuronCount = neuronCount;
-        neurons = Neuron.createNeurons(neuronCount);
+        neurons = Neuron.createNeurons(neuronCount,neuronInitState);
     }
 
     public static Layer[] createLayers(int[] layerInfo, NeuronInitState neuronInit) {
@@ -23,7 +23,7 @@ public final class Layer {
         Layer[] temp = new Layer[layerCount];
 
         for (byte i = 0; i < layerCount; i++) {
-            temp[i] = new Layer((byte) layerInfo[i]);
+            temp[i] = new Layer((byte) layerInfo[i], neuronInit);
         }
         return temp;
     }
