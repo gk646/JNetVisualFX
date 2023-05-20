@@ -2,19 +2,19 @@ package gk646.jnet.userinterface.userinput;
 
 import gk646.jnet.userinterface.terminal.CodeCompletion;
 import gk646.jnet.userinterface.terminal.Terminal;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public final class InputHandler {
-    private final String ENTER = "\r";
-    private final String BACKSPACE = "\b";
-    private final String TAB = "\t";
-    private final String ESCAPE = "\u001B";
-    public static int commandHistoryOffset = -1;
-    private boolean CTRLpressed;
-    private boolean preventInput;
+import java.util.Objects;
 
-    public InputHandler() {
-    }
+public final class InputHandler {
+    private static final String ENTER = "\r";
+    private static final String BACKSPACE = "\b";
+    private static final String TAB = "\t";
+    private static final String ESCAPE = "\u001B";
+    public static int commandHistoryOffset = -1;
+    private static boolean controlPressed;
+    public InputHandler() {}
 
 
     public void handleKeyType(KeyEvent event) {
@@ -43,7 +43,7 @@ public final class InputHandler {
                 return;
             }
         }
-        if (!CTRLpressed) {
+        if (!controlPressed) {
             if (Terminal.cursorOffsetLeft == 0) {
                 Terminal.currentText.append(event.getCharacter());
             } else {
@@ -75,15 +75,15 @@ public final class InputHandler {
                 Terminal.scrollCommandHistory();
             }
 
-            case CONTROL -> CTRLpressed = true;
+            case CONTROL -> controlPressed = true;
 
             case PLUS -> {
-                if (CTRLpressed) {
+                if (controlPressed) {
                     Terminal.changeFontSize(1);
                 }
             }
             case MINUS -> {
-                if (CTRLpressed) {
+                if (controlPressed) {
                     Terminal.changeFontSize(-1);
                 }
             }
@@ -100,26 +100,21 @@ public final class InputHandler {
             case TAB -> {
                 if (CodeCompletion.getCurrentCompletions().size() == 1) {
                     Terminal.cursorOffsetLeft = 0;
+                    if (CodeCompletion.isInSpecialNameSpace()) {
+                        Terminal.currentText = new StringBuilder(Terminal.currentText.substring(0, Terminal.currentText.indexOf(" ")+1));
+                        Terminal.currentText.append(CodeCompletion.getCurrentCompletions().get(0));
+                        return;
+                    }
                     Terminal.currentText = new StringBuilder(CodeCompletion.getCurrentCompletions().get(0));
                 }
             }
         }
     }
-    private void navigateCommandHistory(int direction) {
-        commandHistoryOffset += direction;
 
-        if (direction > 0 && commandHistoryOffset < Terminal.commandHistory.size() - 1) {
-            commandHistoryOffset = Terminal.commandHistory.size() - 1;
-        } else if (direction < 0 && commandHistoryOffset < 0) {
-            Terminal.currentText = new StringBuilder();
-            commandHistoryOffset = -1;
-        }
 
-        Terminal.scrollCommandHistory();
-    }
     public void handleSpecialKeyLift(KeyEvent event) {
-        switch (event.getCode()) {
-            case CONTROL -> CTRLpressed = false;
+        if (Objects.requireNonNull(event.getCode()) == KeyCode.CONTROL) {
+            controlPressed = false;
         }
     }
 }

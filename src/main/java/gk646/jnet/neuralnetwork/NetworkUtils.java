@@ -1,41 +1,28 @@
 package gk646.jnet.neuralnetwork;
 
 import gk646.jnet.neuralnetwork.exceptions.NetworkIntegrityException;
-import gk646.jnet.userinterface.JNetVisualFX;
 import gk646.jnet.userinterface.terminal.Log;
 
+import java.util.InputMismatchException;
 import java.util.Random;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 public final class NetworkUtils {
+    final Network network;
     public static final Random rng = new Random(System.nanoTime());
-    public static final Logger logger = Logger.getLogger(NetworkUtils.class.getName());
-    /**
-     * Controls the visibility of debug messages and logging.
-     */
-    public static boolean verbose = true;
 
-    static {
-        initLogger();
+    public NetworkUtils(Network network) {
+        this.network = network;
     }
 
-    NetworkUtils() {
-    }
-
-    public void print3DArray(float[][][] array) {
+    public void print3DArray(double[][][] array) {
         StringBuilder sb = new StringBuilder();
-        if (!verbose) return;
+        if (!Log.verbose) return;
         for (int i = 0; i < array.length; i++) {
             System.out.println("Weight Layer Pair: " + i);
             sb.append("Weight Layer Pair: ").append(i);
             for (int j = 0; j < array[i].length; j++) {
                 for (int k = 0; k < array[i][j].length; k++) {
-                    float num = array[i][j][k];
+                    double num = array[i][j][k];
                     if (num < 0) {
                         System.out.printf("%.2f | ", num);
                         sb.append(String.format("%.2f | ", num));
@@ -57,12 +44,12 @@ public final class NetworkUtils {
 
     /**
      * Performs {@link Thread#sleep(long)} for the given time.
-     * Skips the duration if  {@link NetworkUtils#verbose} is false:
+     * Skips the duration if  {@link Log#verbose} is false:
      *
      * @param millis amount of milliseconds as int.
      */
     public void sleep(int millis) {
-        if (!verbose) return;
+        if (!Log.verbose) return;
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
@@ -71,8 +58,8 @@ public final class NetworkUtils {
     }
 
 
-    public void printNetwork(Network network) {
-        if (!verbose) return;
+    public void printNetwork() {
+        if (!Log.verbose) return;
         Log.addLogText("");
         StringBuilder sb = new StringBuilder();
         int max = 0;
@@ -98,45 +85,40 @@ public final class NetworkUtils {
      * Performs various checks regarding the structural integrity of the network.
      */
     void networkIntegrityCheck(Network network) {
-        logger.info("Performing network integrity checks");
+        Log.logger.info("Performing network integrity checks");
         for (int i = 0; i < network.layerCount - 1; i++) {
             if (network.weightMatrix[i].length != network.layerInfo[i] || network.weightMatrix[i][0].length != network.layerInfo[i + 1]) {
-                logger.severe("Weight matrix dimensions don't match layerInfo!");
+                Log.logger.severe("Weight matrix dimensions don't match layerInfo!");
                 throw new NetworkIntegrityException("Weight matrix dimensions don't match layerInfo!");
             }
         }
-        logger.info("Printing network structure:");
-        printNetwork(network);
+        Log.logger.info("Printing network structure:");
+        printNetwork();
         sleep(20);
 
-        logger.info("Printing weight matrix structure: \n");
+        Log.logger.info("Printing weight matrix structure: \n");
         network.netUtils.print3DArray(network.weightMatrix);
         network.netUtils.sleep(20);
 
-        logger.info("Network integrity checks successful!\n");
+        Log.logger.info("Network integrity checks successful!\n");
     }
 
-
-    private static void initLogger() {
-        Logger rootLogger = Logger.getLogger("");
-        Handler[] handlers = rootLogger.getHandlers();
-        if (handlers[0] instanceof ConsoleHandler) {
-            rootLogger.removeHandler(handlers[0]);
+    public boolean arrayShapeCheck(float[][] input, float[][] target) {
+        if (input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
+            return Log.logger.logException(InputMismatchException.class, "Given input matrix does not match shape of target matrix");
         }
-        if (verbose) {
-            Handler consoleHandler = new ConsoleHandler();
-            consoleHandler.setLevel(Level.ALL);
-            consoleHandler.setFormatter(new Formatter() {
-                @Override
-                public String format(LogRecord logRecord) {
-                    return
-                            " [" + logRecord.getLevel() + "] " +
-                                    logRecord.getMessage() + "\n";
-                }
-            });
-
-            logger.addHandler(consoleHandler);
-            logger.addHandler(JNetVisualFX.log);
+        for (int i = 0; i < input.length; i++) {
+            if (input[i].length != network.inputLayerSize && target[i].length != network.outputLayerSize) {
+                return Log.logger.logException(InputMismatchException.class, "Given input matrix does not match shape of target matrix");
+            }
         }
+        return true;
+    }
+
+    public boolean arrayShapeCheck(float[] input, float[] target) {
+        if (input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
+            return Log.logger.logException(InputMismatchException.class, "Given input matrix does not match shape of target matrix");
+        }
+        return true;
     }
 }

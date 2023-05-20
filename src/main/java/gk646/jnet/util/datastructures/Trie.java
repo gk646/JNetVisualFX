@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Trie {
-    private HashMap<Character, Trie> children = new HashMap<>();
+    private final HashMap<Character, Trie> children = new HashMap<>();
     private String text = "";
 
 

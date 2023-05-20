@@ -16,6 +16,7 @@ public final class CodeCompletion {
     private static final Color backGround = Colors.INTELLIJ_GREY;
     final ArrayList<String> commandList = new ArrayList<>(Arrays.stream(CommandController.COMMANDS).map(Enum::toString).toList());
     private static List<String> currentCompletions;
+    private static boolean inSpecialNameSpace;
 
     CodeCompletion() {
         for (Command command : CommandController.COMMANDS) {
@@ -54,11 +55,14 @@ public final class CodeCompletion {
         String input = Terminal.currentText.toString();
         if (input.startsWith("set ")) {
             String newInput = input.replace("set ", "");
+            inSpecialNameSpace= true;
             return CommandController.settableProperties.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
         } else if (input.startsWith("new ")) {
+            inSpecialNameSpace= true;
             String newInput = input.replace("new ", "");
             return CommandController.creatableObjects.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
         } else {
+            inSpecialNameSpace= false;
             return commandList.stream().filter(word -> word.startsWith(input) && !word.equals(input)).toList();
         }
     }
@@ -73,5 +77,9 @@ public final class CodeCompletion {
 
     public static List<String> getCurrentCompletions() {
         return currentCompletions;
+    }
+
+    public static boolean isInSpecialNameSpace() {
+        return inSpecialNameSpace;
     }
 }

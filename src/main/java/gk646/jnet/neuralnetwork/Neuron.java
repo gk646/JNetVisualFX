@@ -2,7 +2,7 @@ package gk646.jnet.neuralnetwork;
 
 public final class Neuron {
 
-    byte bias;
+    public byte bias;
 
     Neuron() {
 

@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 public final class Parser {
 
-    static HashMap<String, Method> methodMap = new HashMap<>();
-    static HashMap<String, Constructor> constructorMap = new HashMap<>();
+    static final HashMap<String, Method> methodMap = new HashMap<>();
+    static final HashMap<String, Constructor> constructorMap = new HashMap<>();
 
     Parser() {
         for (Method method : NetworkBuilder.class.getMethods()) {

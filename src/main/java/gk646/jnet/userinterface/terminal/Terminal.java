@@ -16,8 +16,7 @@ import java.util.List;
 
 
 public final class Terminal {
-    public static float CHARACTER_WIDTH;
-    private static byte MAX_LINES = 25;
+    static float characterWidth;
     public static int fontSize = 15;
     public static int LINE_HEIGHT = fontSize + 4;
     public static byte cursorOffsetLeft = 0;
@@ -27,21 +26,21 @@ public final class Terminal {
     public static StringBuilder currentText = new StringBuilder();
     public static ContainerHelper containerHelper;
     public static final LimitedQueue<String> commandHistory = new LimitedQueue<>(COMMAND_HISTORY_LENGTH);
-    private static final LimitedQueue<String> scrollingText = new LimitedQueue<>(MAX_LINES);
+    private static final LimitedQueue<String> terminalText = new LimitedQueue<>(35);
     private static final Parser parser = new Parser();
     private static Color backGround = Colors.LIGHT_BLACK;
     public static Color text = Colors.WHITE_SMOKE;
     private static final CodeCompletion codeCompletion = new CodeCompletion();
 
     public Terminal() {
-        scrollingText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder((4,4,4),sigmoid)\"");
+        terminalText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder((4,4,4),sigmoid)\"");
         commandHistory.add("help");
 
         changeFontSize(0);
     }
 
     public void updateSize() {
-        MAX_LINES = (byte) (containerHelper.getHeight() / LINE_HEIGHT);
+        terminalText.setLimit(containerHelper.getHeight() / LINE_HEIGHT);
     }
 
     public void draw(GraphicsContext gc) {
@@ -56,9 +55,9 @@ public final class Terminal {
         gc.setFill(Color.MINTCREAM);
         int startX = containerHelper.getDrawX();
         int startY = containerHelper.getDrawY() + containerHelper.getHeight() - LINE_HEIGHT * 2;
-        int maxCharsPerLine = (int) (containerHelper.getWidth() / CHARACTER_WIDTH);
+        int maxCharsPerLine = (int) (containerHelper.getWidth() / characterWidth);
 
-        for (String string : scrollingText) {
+        for (String string : terminalText) {
             Text text1 = new Text(string);
             text1.setFont(gc.getFont());
 
@@ -112,22 +111,22 @@ public final class Terminal {
 
     public static void parseText(String text) {
         if (text.isBlank()) {
-            scrollingText.add(terminalRoot);
+            terminalText.add(terminalRoot);
             return;
         }
         if (!parser.parse(text)) {
-            scrollingText.add(text + " :was not found to be a command");
+            terminalText.add(text + " :was not found to be a command");
         } else {
             commandHistory.add(text);
         }
     }
 
     public static void addText(String text) {
-        scrollingText.add(text);
+        terminalText.add(text);
     }
 
     public static void clear() {
-        scrollingText.clear();
+        terminalText.clear();
     }
 
     public static void changeFontSize(int value) {
@@ -136,7 +135,7 @@ public final class Terminal {
         JNetVisualFX.gc.setFont(font);
         Text text1 = new Text("A");
         text1.setFont(font);
-        CHARACTER_WIDTH = (float) (text1.getLayoutBounds().getWidth());
+        characterWidth = (float) (text1.getLayoutBounds().getWidth());
         LINE_HEIGHT = fontSize + 4;
     }
 

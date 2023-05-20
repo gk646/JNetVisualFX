@@ -20,7 +20,7 @@ public enum SettableProperties {
                 }
                 return "invalid circlesize: " + newCircleSize;
             }
-            return "couldnt parse circlesize: " + prompt;
+            return "couldnt parse circlesize (<circlesize): " + prompt;
         }
     },
     fontsize("fontsize - settable property with: set<propertyName> // fontsize of the terminal font: 0 - 50, Default: 15") {
@@ -36,7 +36,7 @@ public enum SettableProperties {
                 }
                 return "invalid fontsize: " + newFontSize;
             }
-            return "couldnt parse fontsize: " + prompt;
+            return "couldnt parse " + fontsize + "(<" + fontsize + ">): " + prompt;
         }
     };
     private static final Pattern pattern = Pattern.compile("\\((.*?)\\)");

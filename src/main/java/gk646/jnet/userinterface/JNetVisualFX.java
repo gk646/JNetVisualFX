@@ -4,7 +4,6 @@ import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.terminal.Terminal;
-import gk646.jnet.userinterface.userinput.InputHandler;
 import gk646.jnet.util.ContainerHelper;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -33,13 +32,10 @@ public final class JNetVisualFX {
     public static GraphicsContext gc;
     final Terminal terminal;
     final NetworkVisualizer networkVisualizer;
-    public static Log log = new Log();
-    final InputHandler inputHandler;
-
-    JNetVisualFX(Canvas canvas, InputHandler inputHandler, Scene scene) {
+    public static final Log log = new Log();
+    JNetVisualFX(Canvas canvas, Scene scene) {
         bounds = new Point((int) scene.getWidth(), (int) scene.getHeight());
         gc = canvas.getGraphicsContext2D();
-        this.inputHandler = inputHandler;
         this.canvas = canvas;
         this.sceneRoot = scene;
 

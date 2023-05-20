@@ -3,8 +3,6 @@ package gk646.jnet.util;
 import gk646.jnet.userinterface.JNetVisualFX;
 import javafx.scene.canvas.GraphicsContext;
 
-import java.awt.Point;
-
 import static gk646.jnet.userinterface.JNetVisualFX.bounds;
 
 /**
@@ -40,6 +38,7 @@ public final class ContainerHelper {
     public short getDrawY() {
         return (short) (bounds.y / 100f * percentY);
     }
+
     public short getWidth() {
         return (short) (bounds.x / 100f * width);
     }
@@ -48,12 +47,11 @@ public final class ContainerHelper {
         return (short) (bounds.y / 100f * height);
     }
 
-    public void drawDebugLines(GraphicsContext gc){
+    public void drawDebugLines(GraphicsContext gc) {
         gc.setLineWidth(4);
         gc.strokeLine(this.getWidth() / 2, this.getDrawY(), this.getWidth() / 2, this.getHeight());
 
         gc.strokeLine(this.getDrawX(), this.getHeight() / 2, this.getWidth(), this.getHeight() / 2);
         gc.setLineWidth(1);
     }
-
 }
