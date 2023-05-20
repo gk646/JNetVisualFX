@@ -31,16 +31,16 @@ public final class CodeCompletion {
         List<String> completions = autoComplete();
         currentCompletions = completions;
         int length = completions.size();
-        int startY = Terminal.containerHelper.getDrawY() + Terminal.containerHelper.getHeight() - Terminal.LINE_HEIGHT;
-        startY -= length * Terminal.LINE_HEIGHT;
+        int startY = Terminal.containerHelper.getDrawY() + Terminal.containerHelper.getHeight() - Terminal.lineHeight;
+        startY -= length * Terminal.lineHeight;
 
         int startX = Terminal.containerHelper.getDrawX();
         for (String text : completions) {
             gc.setFill(backGround);
-            gc.fillRect(startX, startY - 13, 180, Terminal.LINE_HEIGHT);
+            gc.fillRect(startX, startY - 13, 180, Terminal.lineHeight);
             gc.setFill(Terminal.text);
             gc.fillText(text, startX, startY);
-            startY += Terminal.LINE_HEIGHT;
+            startY += Terminal.lineHeight;
         }
     }
 

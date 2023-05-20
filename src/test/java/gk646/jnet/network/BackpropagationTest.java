@@ -18,7 +18,7 @@ import java.util.List;
 class BackpropagationTest {
     static int[] layerInfo = new int[]{2, 2, 1};
     static double[][][] weightMatrix = Layer.createWeightMatrix(layerInfo, WeightInitState.RANDOM);
-    double learnRate = 1f;
+    double learnRate = 0.01f;
     int layerCount = layerInfo.length;
     ActivationFunction activeFunc = ActivationFunction.SIGMOID;
     DerivativeActivationFunction derivativeFunc = DerivativeActivationFunction.SIGMOID;
@@ -44,7 +44,6 @@ class BackpropagationTest {
                 for (byte k = 0; k < layerInput.length; k++) { // Iterate over neurons in current layer
                     weightedSum += layerInput[k] * weightMatrix[i][k][j];
                 }
-
                 layerInputForNextLayer[j] = weightedSum + layers[i].neurons[j].bias;
                 layerOutput[j] = activeFunc.apply(layerInputForNextLayer[j]);
             }
@@ -130,7 +129,7 @@ class BackpropagationTest {
 
 
         utils.printNeuronBias(layers);
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 5000; i++) {
             for (int j = 0; j < inputs.length; j++) {
                 backPropagation(inputs[j], outputs[j]);
             }
