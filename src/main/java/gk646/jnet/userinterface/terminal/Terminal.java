@@ -16,15 +16,17 @@ import java.util.List;
 
 
 public final class Terminal {
+
+
     static float characterWidth;
-    public static int fontSize = 15;
+    private static int fontSize = 15;
     public static int LINE_HEIGHT = fontSize + 4;
     public static byte cursorOffsetLeft = 0;
     private static final byte COMMAND_HISTORY_LENGTH = 127;
     private int counter = 0;
-    private static String terminalRoot = "> ";
+    public static String terminalRoot = "> ";
     public static StringBuilder currentText = new StringBuilder();
-    public static ContainerHelper containerHelper;
+    public static ContainerHelper containerHelper = new ContainerHelper(65, 50, 35, 50);
     public static final LimitedQueue<String> commandHistory = new LimitedQueue<>(COMMAND_HISTORY_LENGTH);
     private static final LimitedQueue<String> terminalText = new LimitedQueue<>(35);
     private static final Parser parser = new Parser();
@@ -37,6 +39,10 @@ public final class Terminal {
         commandHistory.add("help");
 
         changeFontSize(0);
+    }
+
+    public static int getFontSize() {
+        return fontSize;
     }
 
     public void updateSize() {

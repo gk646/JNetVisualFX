@@ -1,5 +1,6 @@
 package gk646.jnet.userinterface.terminal.commands;
 
+import gk646.jnet.userinterface.JNetVisualFX;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.Terminal;
 
@@ -30,7 +31,7 @@ public enum SettableProperties {
             if (matcher.find()) {
                 int newFontSize = Integer.parseInt(matcher.group(1));
                 if (newFontSize > 0 && newFontSize < 50) {
-                    int fontSizeDelta = newFontSize - Terminal.fontSize;
+                    int fontSizeDelta = newFontSize - Terminal.getFontSize();
                     Terminal.changeFontSize(fontSizeDelta);
                     return "set new fontsize: " + newFontSize;
                 }

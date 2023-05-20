@@ -41,6 +41,15 @@ public final class NetworkUtils {
         }
     }
 
+    public void printNeuronBias(Layer[] layers) {
+        for (int i = 0; i < layers.length; i++) {
+            System.out.println("NeuronLayer: "+i);
+            for (int j = 0; j < layers[i].neuronCount; j++) {
+                System.out.println("|"+layers[i].neurons[j].bias+"|");
+            }
+            System.out.println();
+        }
+    }
 
     /**
      * Performs {@link Thread#sleep(long)} for the given time.
@@ -103,7 +112,7 @@ public final class NetworkUtils {
         Log.logger.info("Network integrity checks successful!\n");
     }
 
-    public boolean arrayShapeCheck(float[][] input, float[][] target) {
+    public boolean arrayShapeCheck(double[][] input, double[][] target) {
         if (input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
             return Log.logger.logException(InputMismatchException.class, "Given input matrix does not match shape of target matrix");
         }

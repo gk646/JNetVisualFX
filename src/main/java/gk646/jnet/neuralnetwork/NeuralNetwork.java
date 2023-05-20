@@ -27,30 +27,30 @@ public final class NeuralNetwork {
      * @param inputs a float array.
      * @return the output array form the forwardPass
      */
-    public float[] testInput(float[] inputs) {
+    public double[] testInput(double[] inputs) {
         if (inputs.length != network.layers[0].neuronCount) {
             throw new InputMismatchException("Input array doesn't match the size of the input layer!");
         }
-        float[] temp = network.forwardPass(inputs).get(network.layerCount - 2)[1];
+        double[] temp = network.forwardPass(inputs).get(network.layerCount - 2)[1];
         if (!Log.verbose) return temp;
         System.out.println(Arrays.toString(temp));
         return temp;
     }
 
-    public void train(float[][] input, float[][] target) {
+    public void train(double[][] input, double[][] target) {
         if (!network.netUtils.arrayShapeCheck(input, target)) return;
         for (int i = 0; i < input.length; i++) {
             network.backPropagation(input[i], target[i]);
         }
     }
 
-    public void train(int repetitions, float[] input, float[] target) {
+    public void train(int repetitions, double[] input, double[] target) {
         for (int i = 0; i < repetitions; i++) {
             network.backPropagation(input, target);
         }
     }
 
-    public void train(float[] input, float[] target) {
+    public void train(double[] input, double[] target) {
         network.backPropagation(input, target);
     }
 

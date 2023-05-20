@@ -17,8 +17,8 @@ import java.util.List;
 
 class BackpropagationTest {
     static int[] layerInfo = new int[]{2, 2, 1};
-    static double[][][] weightMatrix = Layer.createWeightMatrix(layerInfo, WeightInitState.random(-1, 1));
-    double learnRate = 0.4f;
+    static double[][][] weightMatrix = Layer.createWeightMatrix(layerInfo, WeightInitState.RANDOM);
+    double learnRate = 1f;
     int layerCount = layerInfo.length;
     ActivationFunction activeFunc = ActivationFunction.SIGMOID;
     DerivativeActivationFunction derivativeFunc = DerivativeActivationFunction.SIGMOID;
@@ -44,7 +44,8 @@ class BackpropagationTest {
                 for (byte k = 0; k < layerInput.length; k++) { // Iterate over neurons in current layer
                     weightedSum += layerInput[k] * weightMatrix[i][k][j];
                 }
-                layerInputForNextLayer[j] = weightedSum + layers[i + 1].neurons[j].bias;
+
+                layerInputForNextLayer[j] = weightedSum + layers[i].neurons[j].bias;
                 layerOutput[j] = activeFunc.apply(layerInputForNextLayer[j]);
             }
             layerOutputsAndInputs.add(new double[][]{layerInputForNextLayer, layerOutput});
@@ -57,31 +58,37 @@ class BackpropagationTest {
         ArrayList<double[][]> layerOutputsAndInputs = forwardPass(input);
         double[] error = new double[layerOutputsAndInputs.get(layerOutputsAndInputs.size() - 1)[1].length];
         for (byte i = 0; i < error.length; i++) {
-            error[i] = (layerOutputsAndInputs.get(layerOutputsAndInputs.size() - 1)[1][i] - target[i]);
+            error[i] = layerOutputsAndInputs.get(layerOutputsAndInputs.size() - 1)[1][i] - target[i];
         }
+
         for (int layerIndex = layerCount - 2; layerIndex > -1; layerIndex--) {
-            double[] nextError = new double[layerInfo[layerIndex]]; // Error for the next layer
-            for (byte neuronIndex = 0; neuronIndex < layerInfo[layerIndex + 1]; neuronIndex++) {
-                double outputGradient = 2 * error[neuronIndex] * derivativeFunc.apply(layerOutputsAndInputs.get(layerIndex)[0][neuronIndex]);
-                for (byte activeLayer = 0; activeLayer < layerInfo[layerIndex]; activeLayer++) {
-                    // Update weights and compute next layer's error
-                    nextError[activeLayer] += weightMatrix[layerIndex][activeLayer][neuronIndex] * outputGradient;
-                    double weightGradient = outputGradient * layerOutputsAndInputs.get(layerIndex - 1 >= 0 ? layerIndex - 1 : layerIndex)[1][activeLayer];
-                    gradientsMatrix[layerIndex][activeLayer][neuronIndex] = weightGradient;
-                    weightMatrix[layerIndex][activeLayer][neuronIndex] -= learnRate * weightGradient;
+
+            double[] nextError = new double[layerInfo[layerIndex]];
+
+            for (byte currentLayer = 0; currentLayer < layerInfo[layerIndex + 1]; currentLayer++) {
+
+                double outputGradient = error[currentLayer] * derivativeFunc.apply(layerOutputsAndInputs.get(layerIndex)[0][currentLayer]);
+
+                for (byte nextLayer = 0; nextLayer < layerInfo[layerIndex]; nextLayer++) {
+
+                    nextError[nextLayer] += weightMatrix[layerIndex][nextLayer][currentLayer] * outputGradient;
+
+                    double weightGradient = outputGradient * layerOutputsAndInputs.get(Math.max(0, layerIndex - 1))[1][nextLayer];
+
+                    weightMatrix[layerIndex][nextLayer][currentLayer] -= learnRate * weightGradient;
                 }
-                // Update biases
-                layers[layerIndex + 1].neurons[neuronIndex].bias -= learnRate * outputGradient;
+                layers[layerIndex + 1].neurons[currentLayer].bias -= learnRate * outputGradient;
             }
+
             error = nextError;
         }
     }
 
     private void newBack(double[] input, double[] target) {
         ArrayList<double[][]> layerOutputsAndInputs = forwardPass(input);
-
         for (int layerIndex = layerCount - 2; layerIndex > -1; layerIndex--) {
             double[] nextError = new double[layerInfo[layerIndex]];
+
             for (int prevNIndex = 0; prevNIndex < layerInfo[layerIndex + 1]; prevNIndex++) {
                 double outputGradient = LossFunction.MEAN_SQUARED.apply(layerOutputsAndInputs.get(layerOutputsAndInputs.size() - 1)[1][prevNIndex], target[prevNIndex])
                         * derivativeFunc.apply(layerOutputsAndInputs.get(layerIndex)[0][prevNIndex]);
@@ -93,42 +100,63 @@ class BackpropagationTest {
         }
     }
 
+
     @Test
     void gradientTests() {
-        var utils = new NetworkUtils(new Network(new NetworkBuilder(List.of(2, 3, 2), ActivationFunction.SIGMOID)));
-        double[] input = new double[]{1, 1};
-        /*
-        forwardPass(input).forEach(array -> {
-            for (int i = 0; i < array.length; i++) {
-                System.out.println(Arrays.toString(array[i]) + " Layer: " + i);
-            }
-        });
-
-         */
-
-        double[] output = new double[]{0};
+        var utils = new NetworkUtils(new Network(new NetworkBuilder(List.of(1, 1), ActivationFunction.SIGMOID)));
+/*
+        var list = forwardPass(new double[]{1});
+        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
+        for (int i = 0; i < 100; i++) {
+            backPropagation(new double[]{1}, new double[]{0});
+        }
 
 
+        list = forwardPass(new double[]{1});
+        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
+        */
         utils.print3DArray(weightMatrix);
+        System.out.println("result");
+        var list = forwardPass(new double[]{1, 1});
+        list.forEach(array -> {
+                    for (final double[] doubles : array) {
+                        System.out.println(Arrays.toString(doubles));
+                    }
+                }
+        );
+        System.out.println("--------");
         double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
         double[][] outputs = {{0}, {1}, {1}, {0}};
 
-        for (int i = 0; i < 100; i++) {
+
+        utils.printNeuronBias(layers);
+        for (int i = 0; i < 500; i++) {
             for (int j = 0; j < inputs.length; j++) {
                 backPropagation(inputs[j], outputs[j]);
             }
-            var list = forwardPass(input);
-            System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
         }
         utils.print3DArray(weightMatrix);
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < inputs.length; j++) {
-                backPropagation(inputs[j], outputs[j]);
-            }
-            var list = forwardPass(input);
-            System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
-        }
-        utils.print3DArray(weightMatrix);
+
+
+        list = forwardPass(new double[]{1, 1});
+        System.out.println("should be 0");
+        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
+        System.out.println();
+
+        System.out.println("should be 1");
+        list = forwardPass(new double[]{1, 0});
+        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
+        System.out.println();
+
+        System.out.println("should be 1");
+        list = forwardPass(new double[]{0, 1});
+        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
+
+
+        System.out.println();
+        System.out.println("should be 0");
+        list = forwardPass(new double[]{0, 0});
+        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
     }
 
     double computeCost(double[] output, double[] target) {
