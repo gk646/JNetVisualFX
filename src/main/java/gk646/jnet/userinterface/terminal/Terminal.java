@@ -120,6 +120,9 @@ public final class Terminal {
             terminalText.add(terminalRoot);
             return;
         }
+
+        if (Parser.numberParser.parse(text)) return;
+
         if (!parser.parse(text)) {
             terminalText.add(text + " :was not found to be a command");
         } else {

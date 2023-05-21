@@ -29,6 +29,13 @@ public enum Command {
 
         @Override
         public void cmd(String prompt) {
+            if (!prompt.contains(")")) {
+                Terminal.addText("missing closing bracket: " + prompt);
+                return;
+            }
+
+            if (Parser.numberParser.parse(prompt)) return;
+
             matcher = pattern.matcher(prompt);
             if (matcher.find()) {
                 Terminal.addText(matcher.group(1));
@@ -61,7 +68,7 @@ public enum Command {
     },
     new1("new - create new object // works with either \"Network\" or \"NetBuilder\" // Syntax - new <ObjectName>") {
 
-        private final Pattern pattern = Pattern.compile("(\\w+)\\(\\(([^)]+)\\),([^)]+)\\)");
+        private final Pattern pattern = Pattern.compile("(\\w+)\\[\\(([^)]+)],([^)]+)\\)");
 
         @Override
         public String toString() {

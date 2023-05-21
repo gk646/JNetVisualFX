@@ -32,7 +32,7 @@ public class Window extends Application {
      */
     @Override
     public void start(Stage stage) {
-        stage.initStyle(StageStyle.UNIFIED);
+        //stage.initStyle(StageStyle.UNIFIED);    // can cause window to go white ?
         Point bounds = setupScreen();
         stage.setWidth(bounds.x);
         stage.setHeight(bounds.y);
