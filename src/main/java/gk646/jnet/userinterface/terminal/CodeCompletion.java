@@ -15,8 +15,9 @@ public final class CodeCompletion {
     private static final Trie trie = new Trie();
     private static final Color backGround = Colors.INTELLIJ_GREY;
     final ArrayList<String> commandList = new ArrayList<>(Arrays.stream(CommandController.COMMANDS).map(Enum::toString).toList());
-    private static List<String> currentCompletions;
+    private static List<String> currentCompletions = new ArrayList<>();
     private static boolean inSpecialNameSpace;
+    private String previousPrompt = "";
 
     CodeCompletion() {
         for (Command command : CommandController.COMMANDS) {
@@ -28,14 +29,15 @@ public final class CodeCompletion {
     }
 
     public void draw(GraphicsContext gc) {
-        List<String> completions = autoComplete();
-        currentCompletions = completions;
-        int length = completions.size();
+        if (isNewPrompt()) {
+            currentCompletions = autoComplete();
+        }
+        int length = currentCompletions.size();
         int startY = Terminal.containerHelper.getDrawY() + Terminal.containerHelper.getHeight() - Terminal.lineHeight;
         startY -= length * Terminal.lineHeight;
 
         int startX = Terminal.containerHelper.getDrawX();
-        for (String text : completions) {
+        for (String text : currentCompletions) {
             gc.setFill(backGround);
             gc.fillRect(startX, startY - 13, 180, Terminal.lineHeight);
             gc.setFill(Terminal.text);
@@ -55,14 +57,14 @@ public final class CodeCompletion {
         String input = Terminal.currentText.toString();
         if (input.startsWith("set ")) {
             String newInput = input.replace("set ", "");
-            inSpecialNameSpace= true;
+            inSpecialNameSpace = true;
             return CommandController.settableProperties.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
         } else if (input.startsWith("new ")) {
-            inSpecialNameSpace= true;
+            inSpecialNameSpace = true;
             String newInput = input.replace("new ", "");
             return CommandController.creatableObjects.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
         } else {
-            inSpecialNameSpace= false;
+            inSpecialNameSpace = false;
             return commandList.stream().filter(word -> word.startsWith(input) && !word.equals(input)).toList();
         }
     }
@@ -81,5 +83,13 @@ public final class CodeCompletion {
 
     public static boolean isInSpecialNameSpace() {
         return inSpecialNameSpace;
+    }
+
+    private boolean isNewPrompt() {
+        if (previousPrompt.contentEquals(Terminal.currentText)) {
+            return false;
+        }
+        this.previousPrompt = Terminal.currentText.toString();
+        return true;
     }
 }

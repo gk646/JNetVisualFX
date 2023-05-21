@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class ArithmeticParser {
 
 

@@ -3,16 +3,15 @@ package gk646.jnet.util;
 import gk646.jnet.userinterface.JNetVisualFX;
 import javafx.scene.canvas.GraphicsContext;
 
-import static gk646.jnet.userinterface.JNetVisualFX.bounds;
 
 /**
  * Helper class to scale containers to the windows size according to the global {@link JNetVisualFX#bounds}.
  */
 public final class ContainerHelper {
-    private short percentX;
-    private short percentY;
-    private short width;
-    private short height;
+    private int percentX;
+    private int percentY;
+    private int width;
+    private int height;
 
 
     /**
@@ -24,27 +23,27 @@ public final class ContainerHelper {
      * @param heightPercent         the height in percent of the bounds
      */
     public ContainerHelper(int beginPositionPercentX, int beginPositionPercentY, int widthPercent, int heightPercent) {
-        this.percentX = (short) beginPositionPercentX;
-        this.percentY = (short) beginPositionPercentY;
-        this.width = (short) widthPercent;
-        this.height = (short) heightPercent;
+        this.percentX = beginPositionPercentX;
+        this.percentY = beginPositionPercentY;
+        this.width = widthPercent;
+        this.height = heightPercent;
     }
 
 
-    public short getDrawX() {
-        return (short) (bounds.x / 100f * percentX);
+    public int getDrawX() {
+        return (int) (JNetVisualFX.bounds.x / 100f * percentX);
     }
 
-    public short getDrawY() {
-        return (short) (bounds.y / 100f * percentY);
+    public int getDrawY() {
+        return (int) (JNetVisualFX.bounds.y / 100f * percentY);
     }
 
-    public short getWidth() {
-        return (short) (bounds.x / 100f * width);
+    public int getWidth() {
+        return (int) (JNetVisualFX.bounds.x / 100f * width);
     }
 
-    public short getHeight() {
-        return (short) (bounds.y / 100f * height);
+    public int getHeight() {
+        return (int) (JNetVisualFX.bounds.y / 100f * height);
     }
 
     public void drawDebugLines(GraphicsContext gc) {

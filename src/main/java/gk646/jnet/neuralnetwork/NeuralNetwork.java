@@ -12,7 +12,7 @@ import java.util.InputMismatchException;
  */
 
 public final class NeuralNetwork {
-    private Network network;
+    private final Network network;
 
     @Manual(text = "The NeuralNetwork. Can be built using \"new Network\" after you made a NetBuilder. All the attributes like learn-rate and activation function are changed through the NetBuilder." +
             "This is the intended behavior because once a network is built its in a final state and can only be rebuilt completely.")

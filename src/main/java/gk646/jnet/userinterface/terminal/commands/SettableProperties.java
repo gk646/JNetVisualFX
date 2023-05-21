@@ -1,6 +1,5 @@
 package gk646.jnet.userinterface.terminal.commands;
 
-import gk646.jnet.userinterface.JNetVisualFX;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.Terminal;
 

@@ -8,19 +8,18 @@ import javafx.scene.paint.Color;
 import java.util.Arrays;
 
 public final class NetworkVisualizer {
-    public static ContainerHelper containerHelper;
+    public static final ContainerHelper containerHelper = new ContainerHelper(0, 0, 60, 100);
     public static float MAX_CIRCLE_DIAMETER = 30;
-    public static float circleDiameter = 15;
-    public static float MIN_CIRCLE_DIAMETER = 7;
-    public static short offsetX = 0;
-    public static int offsetY = 0;
-    public static short verticalSpacing = 50;
-    public static short horizontalSpacing = 75;
-    private static int drawStartX = 500;
-    private static int drawStartY = 500;
-    private Color neuronColor = Colors.ICE_BERG;
-
-    private Color backGround = Colors.MILK;
+    float circleDiameter = 15;
+    final float MIN_CIRCLE_DIAMETER = 7;
+    static short offsetX = 0;
+    static int offsetY = 0;
+    static short verticalSpacing = 50;
+    static short horizontalSpacing = 75;
+    int drawStartX = 500;
+    int drawStartY = 500;
+    static final Color neuronColor = Colors.ICE_BERG;
+    static final Color backGround = Colors.MILK;
 
     public NetworkVisualizer() {
     }

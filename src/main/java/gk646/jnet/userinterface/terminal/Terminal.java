@@ -26,13 +26,14 @@ public final class Terminal {
     private int counter = 0;
     public static String terminalRoot = "> ";
     public static StringBuilder currentText = new StringBuilder();
-    static ContainerHelper containerHelper = new ContainerHelper(65, 50, 35, 50);
+    static final ContainerHelper containerHelper = new ContainerHelper(65, 50, 35, 50);
     public static final LimitedQueue<String> commandHistory = new LimitedQueue<>(COMMAND_HISTORY_LENGTH);
     private static final LimitedQueue<String> terminalText = new LimitedQueue<>(35);
     private static final Parser parser = new Parser();
     private static final Color backGround = Colors.LIGHT_BLACK;
     static final Color text = Colors.WHITE_SMOKE;
     private static final CodeCompletion codeCompletion = new CodeCompletion();
+    final List<String> lines = new ArrayList<>();
 
     public Terminal() {
         terminalText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder((4,4,4),sigmoid)\"");
@@ -64,12 +65,9 @@ public final class Terminal {
         int maxCharsPerLine = (int) (containerHelper.getWidth() / characterWidth);
 
         for (String string : terminalText) {
-            Text text1 = new Text(string);
-            text1.setFont(gc.getFont());
 
-            List<String> lines = new ArrayList<>();
+            lines.clear();
             int start = 0;
-
             while (start < string.length()) {
                 String substring;
                 if (start + maxCharsPerLine > string.length()) {
@@ -105,14 +103,19 @@ public final class Terminal {
 
     private void drawActiveLine(GraphicsContext gc) {
         gc.setFill(text);
-        StringBuilder activeLine = new StringBuilder(terminalRoot + currentText.toString());
-        if (cursorOffsetLeft > 0) {
-            activeLine.insert(activeLine.length() - cursorOffsetLeft, (counter % 45 < 20 ? "|" : " "));
+        String activeLine = terminalRoot + currentText.toString();
+        int activeLineLength = activeLine.length();
+        int insertionPoint = activeLineLength - cursorOffsetLeft;
+
+        String cursorDisplay = (counter++ % 45 < 20) ? "|" : " ";
+
+        if (cursorOffsetLeft > 0 && insertionPoint <= activeLineLength) {
+            activeLine = new StringBuilder(activeLine).insert(insertionPoint, cursorDisplay).toString();
         } else {
-            activeLine.append(counter % 45 < 20 ? "|" : "");
+            activeLine += cursorDisplay;
         }
-        gc.fillText(activeLine.toString(), containerHelper.getDrawX(), containerHelper.getDrawY() + containerHelper.getHeight() - fontSize);
-        counter++;
+        gc.fillText(activeLine, containerHelper.getDrawX(), containerHelper.getDrawY() + containerHelper.getHeight() - fontSize);
+
     }
 
     public static void parseText(String text) {

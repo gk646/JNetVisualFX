@@ -27,20 +27,18 @@ public final class LimitedQueue<T> implements Iterable<T> {
      * The added element is then place at the current at the end.
      *
      * @param obj element whose presence in this collection is to be ensured
-     * @return true if the element was added
      */
-    public boolean add(T obj) {
+    public void add(T obj) {
         if (shift) {
             shift();
         }
         if (size == maximumCapacity) {
             shift = true;
             elements[maximumCapacity - 1] = obj;
-            return true;
+            return;
         }
         elements[size++] = obj;
         shift = false;
-        return false;
     }
 
     private void shift() {
