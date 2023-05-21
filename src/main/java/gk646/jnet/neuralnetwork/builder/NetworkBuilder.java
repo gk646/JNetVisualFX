@@ -107,7 +107,7 @@ public final class NetworkBuilder {
 
         if (activeFunc == null) throw new IllegalNetworkArguments("No activation function!");
 
-        if (learnRate <= 0) throw new IllegalNetworkArguments("Learnrate must be in the range: 1-127");
+        if (learnRate <= 0) throw new IllegalNetworkArguments("Learn-rate must be in the range: 1-127");
 
         if (weightInitState == WeightInitState.RANDOM && (weightInitState.bound > 10 || weightInitState.origin < -10)) {
             throw new IllegalNetworkArguments("Weight initialization bounds are too big! origin: " + weightInitState.origin + " - bound: " + weightInitState.bound);

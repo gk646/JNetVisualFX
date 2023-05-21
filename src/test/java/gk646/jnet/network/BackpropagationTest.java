@@ -1,19 +1,14 @@
 package gk646.jnet.network;
 
 import gk646.jnet.neuralnetwork.Layer;
-import gk646.jnet.neuralnetwork.Network;
-import gk646.jnet.neuralnetwork.NetworkUtils;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.neuralnetwork.builder.DerivativeActivationFunction;
 import gk646.jnet.neuralnetwork.builder.LossFunction;
-import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.neuralnetwork.builder.NeuronInitState;
 import gk646.jnet.neuralnetwork.builder.WeightInitState;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 class BackpropagationTest {
     static int[] layerInfo = new int[]{2, 2, 1};
@@ -97,65 +92,6 @@ class BackpropagationTest {
                 }
             }
         }
-    }
-
-
-    @Test
-    void gradientTests() {
-        var utils = new NetworkUtils(new Network(new NetworkBuilder(List.of(1, 1), ActivationFunction.SIGMOID)));
-/*
-        var list = forwardPass(new double[]{1});
-        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
-        for (int i = 0; i < 100; i++) {
-            backPropagation(new double[]{1}, new double[]{0});
-        }
-
-
-        list = forwardPass(new double[]{1});
-        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
-        */
-        utils.print3DArray(weightMatrix);
-        System.out.println("result");
-        var list = forwardPass(new double[]{1, 1});
-        list.forEach(array -> {
-                    for (final double[] doubles : array) {
-                        System.out.println(Arrays.toString(doubles));
-                    }
-                }
-        );
-        System.out.println("--------");
-        double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
-        double[][] outputs = {{0}, {1}, {1}, {0}};
-
-
-        utils.printNeuronBias(layers);
-        for (int i = 0; i < 5000; i++) {
-            for (int j = 0; j < inputs.length; j++) {
-                backPropagation(inputs[j], outputs[j]);
-            }
-        }
-        utils.print3DArray(weightMatrix);
-
-
-        list = forwardPass(new double[]{1, 1});
-        System.out.println("should be 0");
-        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
-        System.out.println();
-
-        System.out.println("should be 1");
-        list = forwardPass(new double[]{1, 0});
-        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
-        System.out.println();
-
-        System.out.println("should be 1");
-        list = forwardPass(new double[]{0, 1});
-        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
-
-
-        System.out.println();
-        System.out.println("should be 0");
-        list = forwardPass(new double[]{0, 0});
-        System.out.println(Arrays.toString(list.get(list.size() - 1)[1]));
     }
 
     double computeCost(double[] output, double[] target) {

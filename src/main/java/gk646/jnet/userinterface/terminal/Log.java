@@ -28,6 +28,7 @@ public final class Log {
     public static int scrollOffset = 0;
     public final float characterWidth;
     public static final int LINE_HEIGHT = 14;
+    final List<String> lines = new ArrayList<>();
 
     public Log() {
         logger.addHandler(new LogHandler());
@@ -46,18 +47,16 @@ public final class Log {
     }
 
     private void drawScrollingText(GraphicsContext gc) {
-        gc.setFill(Color.MINTCREAM);
         gc.save();
+
+        gc.setFill(Color.MINTCREAM);
         gc.setFont(Resources.cascadiaCode11);
         int startX = containerHelper.getDrawX() + 3;
         int startY = containerHelper.getDrawY() + containerHelper.getHeight() - LINE_HEIGHT + scrollOffset;
 
         int maxCharsPerLine = (int) (containerHelper.getWidth() / characterWidth);
         for (String string : logText) {
-            Text text1 = new Text(string);
-            text1.setFont(gc.getFont());
-
-            List<String> lines = new ArrayList<>();
+            lines.clear();
             int start = 0;
 
             while (start < string.length()) {
@@ -80,6 +79,7 @@ public final class Log {
 
             startY -= (lines.size() + 1) * LINE_HEIGHT;
         }
+
         gc.restore();
     }
 
@@ -94,7 +94,7 @@ public final class Log {
     }
 
 
-    public static void updateSize() {
+    public void updateSize() {
         logText.setLimit(containerHelper.getHeight() / LINE_HEIGHT);
     }
 }

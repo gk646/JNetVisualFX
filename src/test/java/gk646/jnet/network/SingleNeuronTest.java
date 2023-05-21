@@ -32,7 +32,7 @@ class SingleNeuronTest {
         }
     }
 
-    class Layer {
+    static class Layer {
         Neuron[] neurons;
         float[] output;
         float[] input;
@@ -141,9 +141,7 @@ class SingleNeuronTest {
 
         for (int i = 0; i < 220; i++) {
             for (int j = 0; j < input.length; j++) {
-                double weightedSum = input[j] * weight + bias;
-                double output = weightedSum;
-                double error = output - target[j];
+                double error = input[j] * weight + bias - target[j];
                 double outputGradient = error * 1;
 
                 weight -= outputGradient * learnRate * input[j];

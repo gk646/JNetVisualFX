@@ -4,7 +4,6 @@ import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.terminal.Terminal;
-import gk646.jnet.util.ContainerHelper;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,25 +19,24 @@ import java.awt.Point;
  * {@link #networkVisualizer} and a {@link #log}.
  */
 public final class JNetVisualFX {
-    static {
-        NetworkVisualizer.containerHelper = new ContainerHelper(0, 0, 60, 100);
-    }
     final Canvas canvas;
-    public static Point bounds;
+    public static final Point bounds = new Point();
     final Scene sceneRoot;
     public static GraphicsContext gc;
     final Terminal terminal;
     final NetworkVisualizer networkVisualizer;
-    public static final Log log = new Log();
+    final Log log = new Log();
+
     JNetVisualFX(Canvas canvas, Scene scene) {
-        bounds = new Point((int) scene.getWidth(), (int) scene.getHeight());
+        bounds.x = (int) scene.getWidth();
+        bounds.y = (int) scene.getHeight();
+
         gc = canvas.getGraphicsContext2D();
         this.canvas = canvas;
         this.sceneRoot = scene;
 
         terminal = new Terminal();
         networkVisualizer = new NetworkVisualizer();
-
 
         gc.setFont(Resources.cascadiaCode);
     }
@@ -53,6 +51,7 @@ public final class JNetVisualFX {
             canvas.setWidth(newSceneWidth.intValue());
 
             gc = canvas.getGraphicsContext2D();
+            log.updateSize();
             terminal.updateSize();
         });
 
@@ -62,6 +61,7 @@ public final class JNetVisualFX {
 
             gc = canvas.getGraphicsContext2D();
 
+            log.updateSize();
             terminal.updateSize();
         });
     }
@@ -74,4 +74,5 @@ public final class JNetVisualFX {
         terminal.draw(gc);
         log.draw(gc);
     }
+
 }

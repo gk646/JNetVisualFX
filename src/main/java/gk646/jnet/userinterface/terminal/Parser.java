@@ -9,12 +9,14 @@ import gk646.jnet.util.ArithmeticParser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
 public final class Parser {
 
     static final HashMap<String, Method> methodMap = new HashMap<>();
     static final HashMap<String, Constructor> constructorMap = new HashMap<>();
     public static final ArithmeticParser numberParser = new ArithmeticParser();
+
     Parser() {
         for (Method method : NetworkBuilder.class.getMethods()) {
             methodMap.put(method.getName(), method);
@@ -40,11 +42,11 @@ public final class Parser {
         return false;
     }
 
-    public static HashMap<String, Method> getMethodMap() {
+    public static Map<String, Method> getMethodMap() {
         return methodMap;
     }
 
-    public static HashMap<String, Constructor> getConstructorMap() {
+    public static Map<String, Constructor> getConstructorMap() {
         return constructorMap;
     }
 }

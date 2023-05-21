@@ -1,0 +1,1 @@
+jpackage --type deb --name JNetVisualFX --input . --main-jar JNetVisualFX-0.9.5.jar --main-class gk646.jnet.Main --module-path ./lib --add-modules javafx.controls,javafx.graphics, javafx.base
