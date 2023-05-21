@@ -9,15 +9,13 @@ import java.util.Arrays;
 
 public final class NetworkVisualizer {
     public static final ContainerHelper containerHelper = new ContainerHelper(0, 0, 60, 100);
-    public static float MAX_CIRCLE_DIAMETER = 30;
+    public static float maxCircleDiameter = 30;
     float circleDiameter = 15;
-    final float MIN_CIRCLE_DIAMETER = 7;
+    static final float MIN_CIRCLE_DIAMETER = 7;
     static short offsetX = 0;
     static int offsetY = 0;
     static short verticalSpacing = 50;
     static short horizontalSpacing = 75;
-    int drawStartX = 500;
-    int drawStartY = 500;
     static final Color neuronColor = Colors.ICE_BERG;
     static final Color backGround = Colors.MILK;
 
@@ -32,14 +30,14 @@ public final class NetworkVisualizer {
 
 
     private void calculateCircleDiameter() {
-        circleDiameter = Math.max(MIN_CIRCLE_DIAMETER, Math.min(MAX_CIRCLE_DIAMETER, containerHelper.getWidth() / 30));
+        circleDiameter = Math.max(MIN_CIRCLE_DIAMETER, Math.min(maxCircleDiameter, containerHelper.getWidth() / 30));
     }
 
     private void calculateSpacing() {
-        int maxNeurons = Arrays.stream(Playground.neuralNetwork.getNetwork().layerInfo).max().orElse(0);
+        int maxNeurons = Arrays.stream(Playground.neuralNetwork.getBounds()).max().orElse(0);
 
         verticalSpacing = (short) ((containerHelper.getHeight() - circleDiameter) / (maxNeurons + 1));
-        horizontalSpacing = (short) ((containerHelper.getWidth() - circleDiameter) / (Playground.neuralNetwork.getNetwork().layerInfo.length + 1));
+        horizontalSpacing = (short) ((containerHelper.getWidth() - circleDiameter) / (Playground.neuralNetwork.getBounds().length + 1));
     }
 
     private int getLayerStartY(int neuronCount) {
@@ -59,7 +57,7 @@ public final class NetworkVisualizer {
         calculateSpacing();
 
         gc.setFill(neuronColor);
-        int[] netDimensions = Playground.neuralNetwork.getNetwork().layerInfo;
+        int[] netDimensions = Playground.neuralNetwork.getBounds();
 
         for (int i = 0; i < netDimensions.length; i++) {
             int neuronCount = netDimensions[i];

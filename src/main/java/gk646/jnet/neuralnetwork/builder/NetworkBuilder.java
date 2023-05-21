@@ -1,6 +1,7 @@
 package gk646.jnet.neuralnetwork.builder;
 
 import gk646.jnet.neuralnetwork.exceptions.IllegalNetworkArguments;
+import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.util.Manual;
 
 import java.util.List;
@@ -10,14 +11,16 @@ import java.util.List;
  * A helper class to specify the network parameters. Besides layerInfo and the activationFunction customization is optional.
  * LayerInfo is a list where each entry is the number of neurons for that layer, including input and output layer!.
  */
-@Manual(text = " A helper class to specify the network parameters. Besides layerInfo and the activationFunction customization is optional.\n" +
-        "LayerInfo is a list where each entry is the number of neurons for that layer, including input and output layer!.")
+
 public final class NetworkBuilder {
-    private final List<Integer> layerInfo;
-    private final ActivationFunction activeFunc;
-    private float learnRate = 1;
+    private List<Integer> layerInfo;
+    private ActivationFunction activeFunc;
+    private double learnRate = 0.5;
     private NeuronInitState neuronInitState;
     private WeightInitState weightInitState;
+    private LossFunction lossFunction;
+    private double momentum = 0.5;
+    private ActivationFunction layerLayerActivationFunction = ActivationFunction.LINEAR;
 
     /**
      * The NetworkBuilder will internally check for viability of the given arguments
@@ -25,7 +28,7 @@ public final class NetworkBuilder {
      * @param layerInfo  a list, each entry specifying the number of neurons for that layer.
      * @param activeFunc the activationFunction for the network
      */
-    @Manual(text = "Reusable building block for your Networks - Syntax: new NetBuilder((<List of numbers>),<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)")
+    @Manual(text = "Reusable building block for your Networks - Syntax: new NetBuilder([<List of numbers>],<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)")
     public NetworkBuilder(List<Integer> layerInfo, ActivationFunction activeFunc) {
         this.layerInfo = layerInfo;
         this.activeFunc = activeFunc;
@@ -65,8 +68,8 @@ public final class NetworkBuilder {
                   @return a reference to this object
                  
             """)
-    public NetworkBuilder setLearnRate(float learnRate) {
-        this.learnRate =  learnRate;
+    public NetworkBuilder setLearnRate(double learnRate) {
+        this.learnRate = learnRate;
         checkBuilderViability();
         return this;
     }
@@ -94,23 +97,54 @@ public final class NetworkBuilder {
         return this;
     }
 
+    /**
+     * Sets the loss function which controls the inital error calculation which is propagated back through the network.
+     *
+     * @param lossFunction the new loss function
+     * @return a reference to this object
+     */
+    public NetworkBuilder setLossFunction(LossFunction lossFunction) {
+        this.lossFunction = lossFunction;
+        checkBuilderViability();
+        return this;
+    }
+
+    public NetworkBuilder setMomentum(double momentum) {
+        this.momentum = momentum;
+        checkBuilderViability();
+        return this;
+    }
+
+
+    public NetworkBuilder setLayerLayerFunction(ActivationFunction function) {
+        this.layerLayerActivationFunction = function;
+        checkBuilderViability();
+        return this;
+    }
+
     private void checkBuilderViability() {
-        if (layerInfo.size() > 127) throw new IllegalNetworkArguments("Amount of layers must be less than 128");
+        if (layerInfo.size() > 127) {
+            Log.logger.logException(IllegalNetworkArguments.class, "Amount of layers must be less than 128");
+        }
 
         for (int num : layerInfo) {
             if (num <= 0) {
-                throw new IllegalNetworkArguments("Layer size must be greater than 0");
+                Log.logger.logException(IllegalNetworkArguments.class, "Layer size must be greater than 0");
             } else if (num > 127) {
-                throw new IllegalNetworkArguments("Layer size must be less than 128");
+                Log.logger.logException(IllegalNetworkArguments.class, "Layer size must be less than 128");
             }
         }
 
-        if (activeFunc == null) throw new IllegalNetworkArguments("No activation function!");
+        if (activeFunc == null) {
+            Log.logger.logException(IllegalNetworkArguments.class, "No activation function!");
+        }
 
-        if (learnRate <= 0) throw new IllegalNetworkArguments("Learn-rate must be in the range: 1-127");
+        if (learnRate <= 0) {
+            Log.logger.logException(IllegalNetworkArguments.class, "Learn-rate must be in the range: 1-127");
+        }
 
         if (weightInitState == WeightInitState.RANDOM && (weightInitState.bound > 10 || weightInitState.origin < -10)) {
-            throw new IllegalNetworkArguments("Weight initialization bounds are too big! origin: " + weightInitState.origin + " - bound: " + weightInitState.bound);
+            Log.logger.logException(IllegalNetworkArguments.class, "Weight initialization bounds are too big! origin: " + weightInitState.origin + " - bound: " + weightInitState.bound);
         }
     }
 
@@ -126,11 +160,23 @@ public final class NetworkBuilder {
         return activeFunc;
     }
 
-    public float getLearnRate() {
+    public double getLearnRate() {
         return learnRate;
     }
 
     public NeuronInitState getNeuronInitState() {
         return neuronInitState;
+    }
+
+    public LossFunction getLossFunction() {
+        return lossFunction;
+    }
+
+    public double getMomentum() {
+        return momentum;
+    }
+
+    public ActivationFunction getLastLayerFunction() {
+        return layerLayerActivationFunction;
     }
 }

@@ -1,8 +1,7 @@
-package gk646.jnet.network;
-class BackpropagationTest {
-}
-/*
+package gk646.jnet.retired;
 
+public class OldNetworkTests {
+    /*
     static int[] layerInfo = new int[]{2, 2, 1};
     static double[][][] weightMatrix = Layer.createWeightMatrix(layerInfo, WeightInitState.RANDOM);
     double learnRate = 0.01f;
@@ -152,3 +151,4 @@ class BackpropagationTest {
 
 
  */
+}

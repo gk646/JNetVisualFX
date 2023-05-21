@@ -18,7 +18,7 @@ public enum ActivationFunction {
     LINEAR {
         @Override
         public double apply(double x) {
-            return factor * x;
+            return linearFactor * x;
         }
     },
 
@@ -32,17 +32,15 @@ public enum ActivationFunction {
     TANH {
         @Override
         public double apply(double x) {
-            //TODO
-            return x;
+            return Math.tanh(x);
         }
     };
-    int factor;
 
-    ActivationFunction(int... factor) {
-        this.factor = 1;
-        if (factor.length!= 0) {
-            this.factor = factor[0];
-        }
+
+    static int linearFactor = 1;
+
+    static void setLinearFactor(int f) {
+        linearFactor = f;
     }
 
     public abstract double apply(double x);

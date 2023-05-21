@@ -32,7 +32,7 @@ jar {
 }
 shadowJar {
     archiveBaseName.set('JNetVisualFX')
-    archiveVersion.set(version as Provider<? extends String>)
+    archiveVersion.set(version)
     archiveClassifier.set('')
     manifest {
         attributes 'Main-Class': "gk646.jnet.Main"

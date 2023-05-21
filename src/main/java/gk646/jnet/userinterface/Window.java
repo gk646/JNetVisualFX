@@ -56,6 +56,8 @@ public class Window extends Application {
         sceneRoot.setOnKeyTyped(inputHandler::handleKeyType);
         sceneRoot.setOnKeyPressed(inputHandler::handleSpecialKeyType);
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
+
+        System.out.println(System.getenv("TEST_KEY"));
     }
 
     public static void exit() {
@@ -77,8 +79,8 @@ public class Window extends Application {
     private Point setupScreen() {
         Point temp = new Point();
         Screen screen = Screen.getPrimary();
-        temp.x = screen.getBounds().getMaxX() > 1280 ? 1280 : (int) screen.getBounds().getMaxX();
-        temp.y = screen.getBounds().getMaxY() > 960 ? 960 : (int) screen.getBounds().getMaxY();
+        temp.x = screen.getBounds().getMaxX() >= 1440 ? 1440 : (int) screen.getBounds().getMaxX();
+        temp.y = screen.getBounds().getMaxY() >= 1080 ? 1080 : (int) screen.getBounds().getMaxY();
 
         return temp;
     }

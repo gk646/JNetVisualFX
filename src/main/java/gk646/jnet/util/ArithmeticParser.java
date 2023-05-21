@@ -114,13 +114,16 @@ public class ArithmeticParser {
         prompt = prompt.replace(")", "");
 
         var list = lexer.lex(prompt);
-        double parsedNum = evaluateExpression(list);
+        Number parsedNum = evaluateExpression(list);
 
-        if (Double.isNaN(parsedNum)) {
-            Terminal.addText("invalid arithmetic expr: " + prompt.replace("print(", ""));
+        parsedNum = formatNumber(parsedNum);
+
+        if (Double.isNaN(parsedNum.doubleValue())) {
+            Terminal.addText("invalid arithmetic expr: " + prompt);
         } else {
             Terminal.addText(String.valueOf(parsedNum));
         }
+
         return true;
     }
 
@@ -197,6 +200,13 @@ public class ArithmeticParser {
             }
         }
         return true;
+    }
+
+    private Number formatNumber(Number number) {
+        if (number.intValue() == number.doubleValue()) {
+            return number.intValue();
+        }
+        return number.doubleValue();
     }
 
     public double test(String prompt) {

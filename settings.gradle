@@ -1,2 +1,4 @@
 rootProject.name = 'JNetVisualFX'
+include 'server'
+include 'server'
 
