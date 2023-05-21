@@ -4,6 +4,7 @@ import gk646.jnet.neuralnetwork.Network;
 import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.userinterface.terminal.commands.Command;
+import gk646.jnet.util.ArithmeticParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -13,7 +14,7 @@ public final class Parser {
 
     static final HashMap<String, Method> methodMap = new HashMap<>();
     static final HashMap<String, Constructor> constructorMap = new HashMap<>();
-
+    public static final ArithmeticParser numberParser = new ArithmeticParser();
     Parser() {
         for (Method method : NetworkBuilder.class.getMethods()) {
             methodMap.put(method.getName(), method);

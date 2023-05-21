@@ -14,8 +14,9 @@ public final class InputHandler {
     private static final String ESCAPE = "\u001B";
     public static int commandHistoryOffset = -1;
     private static boolean controlPressed;
-    public InputHandler() {}
 
+    public InputHandler() {
+    }
 
     public void handleKeyType(KeyEvent event) {
         String activeCharacter = event.getCharacter();
@@ -25,7 +26,6 @@ public final class InputHandler {
                 Terminal.currentText = new StringBuilder();
                 commandHistoryOffset = -1;
                 Terminal.cursorOffsetLeft = 0;
-
                 return;
             }
             case BACKSPACE -> {
@@ -101,7 +101,7 @@ public final class InputHandler {
                 if (CodeCompletion.getCurrentCompletions().size() == 1) {
                     Terminal.cursorOffsetLeft = 0;
                     if (CodeCompletion.isInSpecialNameSpace()) {
-                        Terminal.currentText = new StringBuilder(Terminal.currentText.substring(0, Terminal.currentText.indexOf(" ")+1));
+                        Terminal.currentText = new StringBuilder(Terminal.currentText.substring(0, Terminal.currentText.indexOf(" ") + 1));
                         Terminal.currentText.append(CodeCompletion.getCurrentCompletions().get(0));
                         return;
                     }
