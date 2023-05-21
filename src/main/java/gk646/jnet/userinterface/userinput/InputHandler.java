@@ -5,6 +5,9 @@ import gk646.jnet.userinterface.terminal.Terminal;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLOutput;
+import java.util.Arrays;
 import java.util.Objects;
 
 public final class InputHandler {
@@ -14,13 +17,16 @@ public final class InputHandler {
     private static final String ESCAPE = "\u001B";
     public static int commandHistoryOffset = -1;
     private static boolean controlPressed;
-
     public InputHandler() {
     }
 
     public void handleKeyType(KeyEvent event) {
+        //System.out.println(Arrays.toString(event.getCharacter().getBytes(StandardCharsets.UTF_8)));
         String activeCharacter = event.getCharacter();
         switch (activeCharacter) {
+            case TAB, ESCAPE,"\u001D"  -> {
+                return;
+            }
             case ENTER -> {
                 Terminal.parseText(Terminal.currentText.toString());
                 Terminal.currentText = new StringBuilder();
@@ -39,16 +45,12 @@ public final class InputHandler {
                 }
                 return;
             }
-            case TAB, ESCAPE -> {
-                return;
-            }
+
         }
-        if (!controlPressed) {
-            if (Terminal.cursorOffsetLeft == 0) {
-                Terminal.currentText.append(event.getCharacter());
-            } else {
-                Terminal.currentText.insert(Terminal.currentText.length() - Terminal.cursorOffsetLeft, event.getCharacter());
-            }
+        if (Terminal.cursorOffsetLeft == 0) {
+            Terminal.currentText.append(event.getCharacter());
+        } else {
+            Terminal.currentText.insert(Terminal.currentText.length() - Terminal.cursorOffsetLeft, event.getCharacter());
         }
     }
 

@@ -28,36 +28,38 @@ public final class NeuralNetwork {
      * @return the output array form the forwardPass
      */
     public double[] testInput(double[] inputs) {
-        if (inputs.length != network.layers[0].neuronCount) {
-            throw new InputMismatchException("Input array doesn't match the size of the input layer!");
+        if (inputs.length != network.layers[0].layerSize) {
+            Log.logger.logException(InputMismatchException.class, "Input array doesn't match the size of the input layer!");
         }
-        double[] temp = network.forwardPass(inputs).get(network.layerCount - 2)[1];
+
+        double[] temp = network.forwardPass(inputs);
         if (!Log.verbose) return temp;
-        System.out.println(Arrays.toString(temp));
+        Log.logger.info(Arrays.toString(temp));
         return temp;
     }
 
-    public void train(double[][] input, double[][] target) {
-        if (!network.netUtils.arrayShapeCheck(input, target)) return;
-        for (int i = 0; i < input.length; i++) {
-            network.backPropagation(input[i], target[i]);
+    public void train(double[][] input, double[][] target, int repetitions) {
+        //if (!network.netUtils.arrayShapeCheck(input, target)) return;
+
+        for (int i = 0; i < repetitions; i++) {
+            for (int j = 0; j < input.length; j++) {
+                network.backPropagation(input[j], target[j]);
+            }
         }
     }
 
     public void train(int repetitions, double[] input, double[] target) {
         for (int i = 0; i < repetitions; i++) {
-            network.backPropagation(input, target);
+            // network.backPropagation(input, target);
         }
     }
 
     public void train(double[] input, double[] target) {
-        network.backPropagation(input, target);
+        // network.backPropagation(input, target);
     }
 
-    public void train(int repetitions, float[][][] data) {
-        for (int i = 0; i < repetitions; i++) {
-            //network.backPropagation();
-        }
+    public int[] getBounds() {
+        return network.layerInfo;
     }
 
     public Network getNetwork() {

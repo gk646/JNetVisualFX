@@ -14,6 +14,7 @@
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
   <icon>C:\Users\Lukas\Documents\CodingProjects\Java\JNetVisualFX\src\main\resources\JNetIcon_BIG.ico</icon>
+  <var>TEST_KEY=your_secret_key</var>
   <singleInstance>
     <mutexName>JNetVisualFX</mutexName>
     <windowTitle></windowTitle>
@@ -24,6 +25,13 @@
     <requires64Bit>false</requires64Bit>
     <minVersion></minVersion>
     <maxVersion></maxVersion>
+    <opt>-XX:+UnlockExperimentalVMOptions</opt>
+    <opt>-XX:+UseZGC</opt>
+    <opt>-XX:+OptimizeStringConcat</opt>
+    <opt>-XX:CompileThreshold=1000</opt>
+    <opt>-XX:+UseCompressedOops</opt>
+    <opt>-XX:+UseStringDeduplication</opt>
+    <opt>-XX:ReservedCodeCacheSize=256m</opt>
   </jre>
   <versionInfo>
     <fileVersion>0.9.5.0</fileVersion>

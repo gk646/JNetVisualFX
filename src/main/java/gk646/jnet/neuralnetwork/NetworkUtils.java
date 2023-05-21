@@ -1,12 +1,13 @@
 package gk646.jnet.neuralnetwork;
 
-import gk646.jnet.neuralnetwork.exceptions.NetworkIntegrityException;
 import gk646.jnet.userinterface.terminal.Log;
 
 import java.util.InputMismatchException;
 import java.util.Random;
 
 public final class NetworkUtils {
+
+    static final String SHAPE_ERROR = "Given input matrix does not match shape of target matrix";
     final Network network;
     public static final Random rng = new Random(System.nanoTime());
 
@@ -44,7 +45,7 @@ public final class NetworkUtils {
     public void printNeuronBias(Layer[] layers) {
         for (int i = 0; i < layers.length; i++) {
             System.out.println("NeuronLayer: "+i);
-            for (int j = 0; j < layers[i].neuronCount; j++) {
+            for (int j = 0; j < layers[i].layerSize; j++) {
                 System.out.println("|"+layers[i].neurons[j].bias+"|");
             }
             System.out.println();
@@ -94,31 +95,16 @@ public final class NetworkUtils {
      * Performs various checks regarding the structural integrity of the network.
      */
     void networkIntegrityCheck(Network network) {
-        Log.logger.info("Performing network integrity checks");
-        for (int i = 0; i < network.layerCount - 1; i++) {
-            if (network.weightMatrix[i].length != network.layerInfo[i] || network.weightMatrix[i][0].length != network.layerInfo[i + 1]) {
-                Log.logger.severe("Weight matrix dimensions don't match layerInfo!");
-                throw new NetworkIntegrityException("Weight matrix dimensions don't match layerInfo!");
-            }
-        }
-        Log.logger.info("Printing network structure:");
-        printNetwork();
-        sleep(20);
 
-        Log.logger.info("Printing weight matrix structure: \n");
-        network.netUtils.print3DArray(network.weightMatrix);
-        network.netUtils.sleep(20);
-
-        Log.logger.info("Network integrity checks successful!\n");
     }
 
     public boolean arrayShapeCheck(double[][] input, double[][] target) {
         if (input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
-            return Log.logger.logException(InputMismatchException.class, "Given input matrix does not match shape of target matrix");
+            return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
         }
         for (int i = 0; i < input.length; i++) {
             if (input[i].length != network.inputLayerSize && target[i].length != network.outputLayerSize) {
-                return Log.logger.logException(InputMismatchException.class, "Given input matrix does not match shape of target matrix");
+                return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
             }
         }
         return true;
@@ -126,7 +112,7 @@ public final class NetworkUtils {
 
     public boolean arrayShapeCheck(float[] input, float[] target) {
         if (input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
-            return Log.logger.logException(InputMismatchException.class, "Given input matrix does not match shape of target matrix");
+            return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
         }
         return true;
     }

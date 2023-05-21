@@ -16,8 +16,6 @@ import java.util.List;
 
 
 public final class Terminal {
-
-
     static float characterWidth;
     private static int fontSize = 15;
     public static int lineHeight = fontSize + 4;
@@ -39,7 +37,6 @@ public final class Terminal {
         terminalText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder((4,4,4),sigmoid)\"");
         commandHistory.add("help");
 
-        changeFontSize(0);
     }
 
     public static int getFontSize() {
@@ -115,7 +112,6 @@ public final class Terminal {
             activeLine += cursorDisplay;
         }
         gc.fillText(activeLine, containerHelper.getDrawX(), containerHelper.getDrawY() + containerHelper.getHeight() - fontSize);
-
     }
 
     public static void parseText(String text) {
@@ -124,12 +120,10 @@ public final class Terminal {
             return;
         }
 
-        if (Parser.numberParser.parse(text)) return;
-
-        if (!parser.parse(text)) {
-            terminalText.add(text + " :was not found to be a command");
-        } else {
+        if (parser.parse(text) || Parser.numberParser.parse(text)) {
             commandHistory.add(text);
+        } else {
+            terminalText.add(text + " :was not found to be a command");
         }
     }
 
@@ -154,5 +148,11 @@ public final class Terminal {
     public static void scrollCommandHistory() {
         Terminal.cursorOffsetLeft = 0;
         Terminal.currentText = new StringBuilder(Terminal.commandHistory.get(InputHandler.commandHistoryOffset));
+    }
+
+
+    public String testCommand(String command){
+        Terminal.parseText(command);
+        return terminalText.get(0);
     }
 }

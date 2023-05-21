@@ -26,7 +26,7 @@ class SingleNeuronTest {
         public static Neuron[] layer(int size, Supplier<Float> method) {
             var temp = new Neuron[size];
             for (int i = 0; i < temp.length; i++) {
-                temp[i] = new Neuron(method.get());
+                temp[i] = new Neuron(0);
             }
             return temp;
         }
@@ -66,6 +66,7 @@ class SingleNeuronTest {
                     output[i] = (float) (1 / (1 + Math.exp(-output[i])));
                 }
             }
+            System.out.println(Arrays.toString(output));
             return Arrays.copyOf(output, output.length);
         }
 
@@ -90,16 +91,17 @@ class SingleNeuronTest {
     Layer[] layers = new Layer[]{new Layer(2, 2), new Layer(2, 1)};
 
 
-    private float[] run(float[] input) {
+     float[] run(float[] input) {
         float[] referenceInput = input;
         for (int i = 0; i < layers.length; i++) {
             referenceInput = layers[i].forwardPass(referenceInput);
         }
+
         return referenceInput;
     }
 
 
-    private void train(float[] input, float[] target, float learnRate, float momentum) {
+     void train(float[] input, float[] target, float learnRate, float momentum) {
         float[] calcError = run(input);
         float[] error = new float[calcError.length];
         for (int i = 0; i < error.length; i++) {
@@ -121,7 +123,7 @@ class SingleNeuronTest {
         for (int reps = 0; reps < repses; reps++) {
             for (int i = 0; i < input.length; i++) {
                 int randomIndex = (int) (Math.random() * input.length);
-                train(input[randomIndex], target[randomIndex], learnRate, momentum);
+                train(input[i], target[i], learnRate, momentum);
             }
         }
         System.out.println(Arrays.toString(run(new float[]{1, 1})));

@@ -68,7 +68,7 @@ public enum Command {
     },
     new1("new - create new object // works with either \"Network\" or \"NetBuilder\" // Syntax - new <ObjectName>") {
 
-        private final Pattern pattern = Pattern.compile("(\\w+)\\[\\(([^)]+)],([^)]+)\\)");
+        private final Pattern pattern = Pattern.compile("(\\w+)\\(\\[([^)]+)],([^)]+)\\)");
 
         @Override
         public String toString() {
@@ -124,14 +124,14 @@ public enum Command {
                     return "no creatable object named: " + functionName;
                 }
 
-                String[] numbers = matcher.group(2).split(",");  // ["1", "2", "3"]
+                String[] numbers = matcher.group(2).split(",");
                 List<Integer> numList = new ArrayList<>();
                 for (String number : numbers) {
                     numList.add(Integer.parseInt(number));
                 }
 
                 if (numbers.length == 0 || invalidDimensions(numList)) {
-                    return "networkDimensions are illegal // (4,4,4) -> creates a network with 3 layers and 4 neurons each";
+                    return "networkDimensions are illegal // [4,4,4] -> creates a network with 3 layers and 4 neurons each";
                 }
 
                 String activationFunctionString = matcher.group(3).toUpperCase();  // "SIGMOID"
@@ -149,9 +149,9 @@ public enum Command {
                     return "error creating new object: " + e.getMessage();
                 }
 
-                return "Created new " + functionName;
+                return "created new " + functionName;
             }
-            return "Missing arguments: new NetBuilder((<List of numbers>),<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)";
+            return "Missing arguments: new NetBuilder([<List of numbers>],<activationFunction>)  || e.g NetBuilder([3,3,3],sigmoid)";
         }
     },
     set("set - sets a given property // sets properties e.g circlesize, fontsize, bgr_color... // Syntax - set <propertyName>(<value>)") {
@@ -161,13 +161,13 @@ public enum Command {
         public void cmd(String prompt) {
             prompt = prompt.replace("set ", "");
             if (prompt.isBlank() || prompt.equals("set")) {
-                Terminal.addText("missing argument: set <propertyName>(value) || e.g. \"set circlesize(25)\"");
+                Terminal.addText("missing argument: set <propertyName> value || e.g. \"set circlesize 25\"");
                 return;
             }
             String creatableName = prompt;
-            if (prompt.contains("(")) {
-                creatableName = prompt.substring(0, prompt.indexOf("("));
-                prompt = prompt.replace(creatableName, "");
+            if (prompt.contains(" ")) {
+                creatableName = prompt.substring(0, prompt.indexOf(" "));
+                prompt = prompt.replace(creatableName, "").trim();
             }
 
             for (SettableProperties settableProperties : SETTABLE_PROPERTIES) {
@@ -176,7 +176,7 @@ public enum Command {
                     return;
                 }
             }
-            Terminal.addText("no property named: " + prompt);
+            Terminal.addText("no property named:" + creatableName);
         }
     },
     exit("exit - exits the application // // Syntax: <any exit word>") {
@@ -222,7 +222,7 @@ public enum Command {
     resetall("resetall - resets all properties to default value // // Syntax: resetall") {
         @Override
         public void cmd(String prompt) {
-            NetworkVisualizer.MAX_CIRCLE_DIAMETER = 20;
+            NetworkVisualizer.maxCircleDiameter = 20;
             SettableProperties.fontsize.cmd("(15)");
             Terminal.terminalRoot = ">";
             Terminal.addText("reset all value to default state!");

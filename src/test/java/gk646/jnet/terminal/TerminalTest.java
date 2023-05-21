@@ -57,8 +57,24 @@ class TerminalTest {
         if (commandHistoryOffset < Terminal.commandHistory.size() - 1) {
             commandHistoryOffset++;
         }
-        System.out.println(Terminal.commandHistory);
         Terminal.commandHistory.add("2");
         assertEquals("help", Terminal.commandHistory.get(commandHistoryOffset));
+    }
+
+
+    @Test
+    void testCommands() {
+        var terminal = new Terminal();
+        assertEquals("5", terminal.testCommand("2+3"));
+
+        assertEquals("invalid arithmetic expr: 2+", terminal.testCommand("2+"));
+
+        assertEquals("created new NetBuilder", terminal.testCommand("new NetBuilder([3,3,3],sigmoid)"));
+
+        assertEquals("hey", terminal.testCommand("print(hey)"));
+
+        assertEquals("> ", terminal.testCommand(" "));
+
+
     }
 }

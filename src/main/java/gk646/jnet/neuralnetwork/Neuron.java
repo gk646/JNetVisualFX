@@ -4,20 +4,16 @@ import gk646.jnet.neuralnetwork.builder.NeuronInitState;
 
 public final class Neuron {
 
-    public float bias;
+    float bias;
 
     Neuron(float bias) {
         this.bias = bias;
     }
 
-    public static Neuron[] createNeurons(byte neuronCount, NeuronInitState state) {
+    public static Neuron[] layer(int neuronCount, NeuronInitState neuronInitState) {
         Neuron[] temp = new Neuron[neuronCount];
         for (byte i = 0; i < neuronCount; i++) {
-            if (state == NeuronInitState.RANDOM) {
-                temp[i] = new Neuron(NetworkUtils.rng.nextFloat(-0.1f, 0.1f));
-            } else {
-                temp[i] = new Neuron(0);
-            }
+            temp[i] = new Neuron(NetworkUtils.rng.nextFloat(neuronInitState.getOrigin(), neuronInitState.getBound()));
         }
         return temp;
     }

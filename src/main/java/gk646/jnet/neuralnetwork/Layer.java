@@ -1,52 +1,98 @@
 package gk646.jnet.neuralnetwork;
 
+import gk646.jnet.neuralnetwork.builder.ActivationFunction;
+import gk646.jnet.neuralnetwork.builder.DerivativeActivationFunction;
+import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.neuralnetwork.builder.NeuronInitState;
-import gk646.jnet.neuralnetwork.builder.WeightInitState;
 import gk646.jnet.userinterface.terminal.Log;
 
+import java.util.Arrays;
+
 public final class Layer {
-    final byte neuronCount;
-    public final Neuron[] neurons;
+    final ActivationFunction activeFunc;
+    final DerivativeActivationFunction derivativeFunc;
+    final int layerSize;
+    Neuron[] neurons;
+    private final double[] output;
+    private final double[] input;
+    private final double[][] weights;
+    private final double[][] dweights;
+    final double[] wSums;
+    boolean isLastLayer = false;
 
-    Layer(byte neuronCount, NeuronInitState neuronInitState) {
-        this.neuronCount = neuronCount;
-        neurons = Neuron.createNeurons(neuronCount,neuronInitState);
-    }
+    Layer(int inputNeurons, int outputNeurons, ActivationFunction activeFunc, NeuronInitState neuronInitState) {
+        this.activeFunc = activeFunc;
+        this.derivativeFunc = DerivativeActivationFunction.valueOf(activeFunc.name());
 
-    public static Layer[] createLayers(int[] layerInfo, NeuronInitState neuronInit) {
-        Log.logger.info("Creating layers");
-        byte layerCount = (byte) layerInfo.length;
-        if (layerCount < 1 || layerCount > layerInfo.length) {
-            throw new IllegalArgumentException("Invalid layerCount");
-        }
+        this.layerSize = outputNeurons;
 
-        Layer[] temp = new Layer[layerCount];
 
-        for (byte i = 0; i < layerCount; i++) {
-            temp[i] = new Layer((byte) layerInfo[i], neuronInit);
-        }
-        return temp;
-    }
+        this.output = new double[outputNeurons];
+        this.input = new double[inputNeurons + 1];
+        this.wSums = new double[outputNeurons];
 
-    public static double[][][] createWeightMatrix(int[] layerInfo, WeightInitState weightInit) {
-        Log.logger.info("Creating weight matrix");
-        short layerCount = (short) layerInfo.length;
-        if (layerCount < 2) {
-            Log.logger.severe("Invalid layerCount. There should be at least two layers.");
-            throw new IllegalArgumentException("Invalid layerCount. There should be at least two layers.");
-        }
-        // We have layerCount - 1 weight matrices, because the weights connect pairs of layers
-        double[][][] temp = new double[layerCount - 1][][];
+        this.neurons = Neuron.layer(outputNeurons, neuronInitState);
 
-        for (byte i = 0; i < layerCount - 1; i++) {
-            temp[i] = new double[layerInfo[i]][layerInfo[i + 1]];
-            if (weightInit != WeightInitState.RANDOM) continue;
-            for (int j = 0; j < temp[i].length; j++) {
-                for (int k = 0; k < temp[i][j].length; k++) {
-                    temp[i][j][k] = NetworkUtils.rng.nextFloat(weightInit.getOrigin(), weightInit.getBound());
-                }
+        this.weights = new double[inputNeurons + 1][outputNeurons];
+        this.dweights = new double[weights.length][outputNeurons];
+        for (int i = 0; i < outputNeurons; i++) {
+            for (int j = 0; j < inputNeurons + 1; j++) {
+                this.weights[j][i] = ((Math.random() - 0.5f) * 4f);
             }
         }
+    }
+
+
+    double[] forwardPass(double[] in) {
+        System.arraycopy(in, 0, this.input, 0, in.length);
+        input[input.length - 1] = 1;
+        Arrays.fill(output, 0);
+        for (int i = 0; i < output.length; i++) {
+            for (int j = 0; j < input.length; j++) {
+                output[i] += weights[j][i] * input[j];
+            }
+            //output[i] += neurons[i].bias;
+            if (!isLastLayer) {
+                output[i] =  (1 / (1 + Math.exp(-output[i])));
+            }
+        }
+        return Arrays.copyOf(output, output.length);
+    }
+
+    double[] backwardPass(double[] error, double learnRate, double momentum) {
+        double[] nextError = new double[input.length];
+        for (int i = 0; i < output.length; i++) {
+            double d = error[i];
+            if (!isLastLayer) {
+                d *= output[i] * (1 - output[i]);
+            }
+            for (int j = 0; j < input.length; j++) {
+                nextError[j] += weights[j][i] * d;
+                double dw = input[j] * d * learnRate;
+                weights[j][i] += dweights[j][i] * momentum + dw;
+                dweights[j][i] = dw;
+            }
+        }
+        return nextError;
+    }
+
+    public static Layer[] createLayers(int[] layerInfo, NetworkBuilder networkBuilder) {
+        int layerCount = layerInfo.length;
+        if (layerCount < 1) {
+            Log.logger.logException(IllegalArgumentException.class, "invalid layer-count");
+        }
+
+        Layer[] temp = new Layer[layerCount - 1];
+
+        for (int i = 0; i < layerCount - 1; i++) {
+            if (i == layerCount - 2) {
+                temp[i] = new Layer(layerInfo[i], layerInfo[i + 1], networkBuilder.getLastLayerFunction(), networkBuilder.getNeuronInitState());
+                temp[i].isLastLayer = true;
+                break;
+            }
+            temp[i] = new Layer(layerInfo[i], layerInfo[i + 1], networkBuilder.getActiveFunc(), networkBuilder.getNeuronInitState());
+        }
+
         return temp;
     }
 }

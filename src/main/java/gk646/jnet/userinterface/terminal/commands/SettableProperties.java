@@ -15,7 +15,7 @@ public enum SettableProperties {
             if (matcher.find()) {
                 int newCircleSize = Integer.parseInt(matcher.group(1));
                 if (newCircleSize > 0 && newCircleSize < 100) {
-                    NetworkVisualizer.MAX_CIRCLE_DIAMETER = newCircleSize;
+                    NetworkVisualizer.maxCircleDiameter = newCircleSize;
                     return "set new circleSize: " + newCircleSize;
                 }
                 return "invalid circlesize: " + newCircleSize;
@@ -26,17 +26,20 @@ public enum SettableProperties {
     fontsize("fontsize - settable property with: set<propertyName> // fontsize of the terminal font: 0 - 50, Default: 15") {
         @Override
         public String cmd(String prompt) {
-            matcher = pattern.matcher(prompt);
-            if (matcher.find()) {
-                int newFontSize = Integer.parseInt(matcher.group(1));
-                if (newFontSize > 0 && newFontSize < 50) {
-                    int fontSizeDelta = newFontSize - Terminal.getFontSize();
-                    Terminal.changeFontSize(fontSizeDelta);
-                    return "set new fontsize: " + newFontSize;
-                }
-                return "invalid fontsize: " + newFontSize;
+            int parsedNum;
+            try {
+                parsedNum = Integer.parseInt(prompt);
+            } catch (NumberFormatException ignored) {
+                return "couldnt parse " + fontsize + " <" + fontsize + ">: " + prompt;
             }
-            return "couldnt parse " + fontsize + "(<" + fontsize + ">): " + prompt;
+
+            if (parsedNum > 0 && parsedNum < 50) {
+                int fontSizeDelta = parsedNum - Terminal.getFontSize();
+                Terminal.changeFontSize(fontSizeDelta);
+                return "set new fontsize: " + parsedNum;
+            }
+            return "invalid fontsize: " + parsedNum;
+
         }
     };
     private static final Pattern pattern = Pattern.compile("\\((.*?)\\)");
