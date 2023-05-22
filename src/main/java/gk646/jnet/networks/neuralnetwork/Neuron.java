@@ -1,6 +1,6 @@
-package gk646.jnet.neuralnetwork;
+package gk646.jnet.networks.neuralnetwork;
 
-import gk646.jnet.neuralnetwork.builder.NeuronInitState;
+import gk646.jnet.networks.neuralnetwork.builder.NeuronInitState;
 
 public final class Neuron {
 

@@ -1,7 +1,7 @@
 package gk646.jnet.userinterface.terminal;
 
-import gk646.jnet.neuralnetwork.NeuralNetwork;
-import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
+import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.util.datastructures.Matrix;
 
 import java.util.HashMap;
@@ -15,6 +15,8 @@ public final class Playground {
 
     public static final Map<String, Matrix> playgroundLists = new HashMap<>();
 
+    public static final Map<String, Double> variables = new HashMap<>();
+
     private Playground() {
     }
 
@@ -22,5 +24,7 @@ public final class Playground {
     public static void reset() {
         networkBuilder = null;
         neuralNetwork = null;
+        variables.clear();
+        playgroundLists.clear();
     }
 }

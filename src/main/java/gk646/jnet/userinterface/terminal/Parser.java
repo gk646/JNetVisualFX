@@ -1,8 +1,8 @@
 package gk646.jnet.userinterface.terminal;
 
-import gk646.jnet.neuralnetwork.Network;
-import gk646.jnet.neuralnetwork.NeuralNetwork;
-import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.networks.neuralnetwork.Network;
+import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
+import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.userinterface.terminal.commands.Command;
 import gk646.jnet.util.parser.ArithmeticParser;
 import gk646.jnet.util.parser.ArrayParser;

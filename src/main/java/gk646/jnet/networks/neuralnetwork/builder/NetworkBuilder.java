@@ -1,6 +1,6 @@
-package gk646.jnet.neuralnetwork.builder;
+package gk646.jnet.networks.neuralnetwork.builder;
 
-import gk646.jnet.neuralnetwork.exceptions.IllegalNetworkArguments;
+import gk646.jnet.networks.neuralnetwork.exceptions.IllegalNetworkArguments;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.util.Manual;
 

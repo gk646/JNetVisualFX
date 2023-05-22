@@ -1,10 +1,9 @@
 package gk646.jnet.userinterface.terminal.commands;
 
-import com.sun.javafx.geom.Matrix3f;
 import gk646.jnet.Info;
-import gk646.jnet.neuralnetwork.NeuralNetwork;
-import gk646.jnet.neuralnetwork.builder.ActivationFunction;
-import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
+import gk646.jnet.networks.neuralnetwork.builder.ActivationFunction;
+import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.userinterface.Window;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.CommandController;
@@ -16,13 +15,10 @@ import gk646.jnet.util.datastructures.Matrix;
 
 import java.awt.Desktop;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,6 +55,7 @@ public enum Command {
             for (Command command : CommandController.COMMANDS) {
                 if (command.toString().equals(prompt)) {
                     Terminal.addText(command.manPage);
+                    return;
                 }
             }
             for (SettableProperties property : CommandController.SETTABLE_PROPERTIES) {
@@ -123,7 +120,7 @@ public enum Command {
             if (matcher.find()) {
                 String functionName = matcher.group(1);  // "Network"
 
-                Constructor constructor = Parser.getConstructorMap().get(functionName);
+                var constructor = Parser.getConstructorMap().get(functionName);
                 if (constructor == null) {
                     return "no creatable object named: " + functionName;
                 }
@@ -158,7 +155,7 @@ public enum Command {
             return "Missing arguments: new NetBuilder([<List of numbers>],<activationFunction>)  || e.g NetBuilder([3,3,3],sigmoid)";
         }
     },
-    set("set - sets a given property // sets properties e.g circlesize, fontsize, bgr_color... // Syntax - set <propertyName>(<value>)") {
+    set("set - sets a given property // sets properties e.g circlesize, fontsize, bgr_color... // Syntax: set <propertyName>(<value>)") {
         static final SettableProperties[] SETTABLE_PROPERTIES = SettableProperties.values();
 
         @Override
@@ -289,31 +286,47 @@ public enum Command {
             Terminal.parseText("new Network");
         }
     },
+    listget("") {
+        @Override
+        public void cmd(String prompt) {
+            prompt = prompt.replace("listget ", "");
+            if (prompt.isBlank() || prompt.equals("listget")) {
+                Terminal.addText("missing list name: " + this + " <list-name>");
+                return;
+            }
+            Matrix matrix = Playground.playgroundLists.get(prompt);
+            if (matrix != null) {
+                Terminal.currentText.setLength(0);
+                Terminal.currentText.append("list ").append(prompt).append(" ").append(matrix);
+            } else {
+                Terminal.addText("no list named: " + prompt);
+            }
+        }
+    },
     listall("listall - displays a list of lists created ") {
         @Override
         public void cmd(String prompt) {
-            Playground.playgroundLists.put("he", Matrix.fromArray(new double[][]{{2},{2}}));
             Playground.playgroundLists.forEach((s, matrix) -> Terminal.addText(s + ": " + matrix));
         }
     },
-    list("list - creates a list out of the given input; can be floating points ; max depth is 2 ; any bracket type // Syntax: list <name> <[list ( of [ numbers })}> ") {
+    list("list - creates and saves a named list out of the given input; can be floating points ; max depth is 2 ; bracket type = [] // Syntax: list <name> <[[list,of][num,bers]]> ") {
         static final String syntax = " <name> <[array type]>";
 
         @Override
         public void cmd(String prompt) {
             prompt = prompt.replace("list ", "");
             if (prompt.isBlank() || prompt.equals("list")) {
-                Terminal.addText("missing argument: " + this + syntax);
+                Terminal.addText("missing list name: " + this + syntax);
                 return;
             }
 
             String listName;
-            listName = prompt.substring(0, prompt.indexOf(" "));
-
-            if (listName.isBlank()) {
-                Terminal.addText("missing list name: " + this + syntax);
+            if (!prompt.contains(" ")) {
+                Terminal.addText("missing whitespace: " + this + syntax);
                 return;
             }
+            listName = prompt.substring(0, prompt.indexOf(" "));
+
 
             prompt = prompt.replace(listName + " ", "");
             if (prompt.isBlank()) {
@@ -321,6 +334,19 @@ public enum Command {
                 return;
             }
             Parser.arrayParser.parseList(prompt, listName);
+        }
+    },
+
+    $("% - denotes a variable// Syntax: $<variable-Name>") {
+        @Override
+        public void cmd(String prompt) {
+            prompt = prompt.substring(1);
+            Matrix matrix = Playground.playgroundLists.get(prompt);
+            if (matrix != null) {
+                Terminal.addText(matrix.toString());
+            } else {
+                Terminal.addText("no variable named: " + prompt);
+            }
         }
     };
 
