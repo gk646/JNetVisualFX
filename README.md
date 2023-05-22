@@ -6,6 +6,9 @@ JNetVisualFX is a terminal based NeuralNetwork visualizer with the focus on test
 <!--suppress CheckImageSize -->
 <img src="screenshots/defaultNetwork.png" alt="The startup screen with a 10,10,10,2 Layer Network" width="850" height="641">
 
+### *Disclaimer*
+Iam in no way a expert on machine learning or artificial intelligence. All information provided or gained through using JNetVisualFX is not guaranteed to be right nor do i guarantee it.
+
 ### Install
 
 The application comes already prepackaged in a .zip-archive with a runtime included. Just unzip it and start `JNetVisualFX.exe`.
