@@ -7,7 +7,7 @@ import gk646.jnet.util.datastructures.Matrix;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArrayParser {
+public final class ArrayParser {
     private static final String invalidDeclaration = "invalid array declaration:";
 
     public ArrayParser() {
@@ -16,7 +16,7 @@ public class ArrayParser {
     public void parseList(String prompt, String listName) {
         int depth = 0;
         boolean twoDimensional = prompt.charAt(0) == '[' && prompt.charAt(1) == '[';  // still couldnt go wrong [23,[]
-        if(twoDimensional && !(prompt.charAt(prompt.length()-1) == ']' && prompt.charAt(prompt.length()-2) == ']')){
+        if (twoDimensional && !(prompt.charAt(prompt.length() - 1) == ']' && prompt.charAt(prompt.length() - 2) == ']')) {
             Terminal.addText(invalidDeclaration + prompt);
             return;
         }

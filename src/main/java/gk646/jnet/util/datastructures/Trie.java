@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Trie {
+public final class Trie {
     private final HashMap<Character, Trie> children = new HashMap<>();
     private String text = "";
 
@@ -37,7 +37,7 @@ public class Trie {
         }
     }
 
-    public ArrayList<String> autoComplete(String prefix) {
+    public List<String> autoComplete(String prefix) {
         ArrayList<String> results = new ArrayList<>();
 
         if (prefix == null || prefix.isEmpty()) {

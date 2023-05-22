@@ -16,8 +16,8 @@ public final class NetworkBuilder {
     private List<Integer> layerInfo;
     private ActivationFunction activeFunc;
     private double learnRate = 0.5;
-    private NeuronInitState neuronInitState;
-    private WeightInitState weightInitState;
+    private NeuronInitState neuronInitState = NeuronInitState.RANDOM;
+    private WeightInitState weightInitState = WeightInitState.RANDOM;
     private LossFunction lossFunction = LossFunction.MEAN_AVERAGE_ERROR;
     private double momentum = 0.5;
     private ActivationFunction layerLayerActivationFunction = ActivationFunction.LINEAR;
