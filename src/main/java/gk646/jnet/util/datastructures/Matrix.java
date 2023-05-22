@@ -2,7 +2,7 @@ package gk646.jnet.util.datastructures;
 
 import java.util.Arrays;
 
-public class Matrix {
+public final class Matrix {
     private static final double epsilon = 1e-10;
     private final int rows;
     private final int cols;

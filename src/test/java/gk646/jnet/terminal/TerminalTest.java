@@ -33,7 +33,7 @@ class TerminalTest {
     @Test
     void testCommandHistory() {
         int commandHistoryOffset = 0;
-        int previousSize = 0;
+        int previousSize =Terminal.commandHistory.size();
 
 
         //Simulate input

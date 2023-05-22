@@ -25,7 +25,7 @@ public final class JNetVisualFX {
     public static GraphicsContext gc;
     final Terminal terminal;
     final NetworkVisualizer networkVisualizer;
-    final Log log = new Log();
+    final Log log;
 
     JNetVisualFX(Canvas canvas, Scene scene) {
         bounds.x = (int) scene.getWidth();
@@ -36,6 +36,7 @@ public final class JNetVisualFX {
         this.sceneRoot = scene;
 
         terminal = new Terminal();
+        log = new Log();
         networkVisualizer = new NetworkVisualizer();
 
         gc.setFont(Resources.cascadiaCode);
@@ -74,5 +75,4 @@ public final class JNetVisualFX {
         terminal.draw(gc);
         log.draw(gc);
     }
-
 }

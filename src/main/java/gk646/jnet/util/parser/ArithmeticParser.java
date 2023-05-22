@@ -8,7 +8,7 @@ import java.util.Deque;
 import java.util.List;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-public class ArithmeticParser {
+public final class ArithmeticParser {
 
 
     enum ArithmeticToken {

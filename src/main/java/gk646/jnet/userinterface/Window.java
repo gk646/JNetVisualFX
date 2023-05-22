@@ -1,5 +1,6 @@
 package gk646.jnet.userinterface;
 
+import gk646.jnet.localdata.LocalFileSaver;
 import gk646.jnet.userinterface.userinput.InputHandler;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 
 public class Window extends Application {
+    private LocalFileSaver localFileSaver;
     /**
      * The main entry point for all JavaFX applications.
      * The start method is called after the init method has returned,
@@ -58,6 +60,7 @@ public class Window extends Application {
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
 
         System.out.println(System.getenv("TEST_KEY"));
+        localFileSaver = new LocalFileSaver();
     }
 
     public static void exit() {
@@ -73,6 +76,7 @@ public class Window extends Application {
 
     @Override
     public void stop() {
+        localFileSaver.saveLocalFiles();
         System.exit(0);
     }
 
