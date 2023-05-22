@@ -18,7 +18,7 @@ public final class NetworkBuilder {
     private double learnRate = 0.5;
     private NeuronInitState neuronInitState;
     private WeightInitState weightInitState;
-    private LossFunction lossFunction;
+    private LossFunction lossFunction = LossFunction.MEAN_AVERAGE_ERROR;
     private double momentum = 0.5;
     private ActivationFunction layerLayerActivationFunction = ActivationFunction.LINEAR;
 
@@ -34,6 +34,28 @@ public final class NetworkBuilder {
         this.activeFunc = activeFunc;
 
         checkBuilderViability();
+    }
+
+    /**
+     * Sets the layerStructure of the NeuralNetwork. The first layer is always treated as input and the last always as output layer.
+     * Valid in the range 1 - 127.
+     *
+     * @param layerInfo a new list
+     * @return a reference to this object
+     */
+    public NetworkBuilder setNetworkSize(List<Integer> layerInfo) {
+        this.layerInfo = layerInfo;
+        checkBuilderViability();
+        return this;
+    }
+
+    /**
+     * Sets the activationFunction for all layers except the last. By default, the last layer is {@link ActivationFunction#LINEAR}.
+     */
+    public NetworkBuilder setActivationFunction(ActivationFunction activeFunc) {
+        this.activeFunc = activeFunc;
+        checkBuilderViability();
+        return this;
     }
 
     /**

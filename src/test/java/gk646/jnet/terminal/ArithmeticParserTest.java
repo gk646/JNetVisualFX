@@ -1,6 +1,6 @@
 package gk646.jnet.terminal;
 
-import gk646.jnet.util.ArithmeticParser;
+import gk646.jnet.util.parser.ArithmeticParser;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

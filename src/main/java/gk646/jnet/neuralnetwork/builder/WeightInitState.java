@@ -1,28 +1,28 @@
 package gk646.jnet.neuralnetwork.builder;
 
 public enum WeightInitState {
-    RANDOM(-2f, 2f), ZERO(0, 0);
+    RANDOM(-0.2f, 0.2f), ZERO(0, 0.0000000000001);
 
-    float origin;
-    float bound;
+    double origin;
+    double bound;
 
-    WeightInitState(float origin, float bound) {
+    WeightInitState(double origin, double bound) {
         this.origin = origin;
         this.bound = bound;
     }
 
-    public static WeightInitState random(float origin, float bound) {
+    public static WeightInitState random(double origin, double bound) {
         WeightInitState randomState = RANDOM;
         randomState.origin = origin;
         randomState.bound = bound;
         return randomState;
     }
 
-    public float getBound() {
+    public double getBound() {
         return bound;
     }
 
-    public float getOrigin() {
+    public double getOrigin() {
         return origin;
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 
 public final class Terminal {
-    static float characterWidth;
+    static double characterWidth = ContainerHelper.initCharacterWidth(15);
     private static int fontSize = 15;
     public static int lineHeight = fontSize + 4;
     public static byte cursorOffsetLeft = 0;
@@ -36,7 +36,6 @@ public final class Terminal {
     public Terminal() {
         terminalText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder((4,4,4),sigmoid)\"");
         commandHistory.add("help");
-
     }
 
     public static int getFontSize() {

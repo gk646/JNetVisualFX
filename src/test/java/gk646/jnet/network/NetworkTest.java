@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +20,7 @@ class NetworkTest {
 
     static {
         ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Level.ALL);
         handler.setFormatter(new Formatter() {
             @Override
             public String format(LogRecord logRecord) {
@@ -62,24 +64,38 @@ class NetworkTest {
      */
     @Test
     void backPropagationTestXOR() {
-        // Create the network with 2 inputs, 2 hidden neurons, and 1 output
-        NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2, 2, 1), ActivationFunction.SIGMOID).
-                setWeightInitState(WeightInitState.ZERO).setNeuronInitState(NeuronInitState.ZERO).setLearnRate(0.4).setMomentum(0.6));
+        for (int p = 0; p < 1; p++) {
+            // Create the network with 2 inputs, 2 hidden neurons, and 1 output
+            NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2, 2, 1), ActivationFunction.SIGMOID).
+                    setWeightInitState(WeightInitState.RANDOM).setNeuronInitState(NeuronInitState.RANDOM).setLearnRate(0.3).setMomentum(0.6));
 
-        // XOR input and output pairs
-        double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
-        double[][] outputs = {{0}, {1}, {1}, {0}};
+            // XOR input and output pairs
+            double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+            double[][] outputs = {{0}, {1}, {1}, {0}};
 
+            // Train the network
+            int repetitions = 1000; // adjust this as necessary
+            network.trainRandom(inputs, outputs, repetitions);
 
-        // Train the network
-        int repetitions = 1000; // adjust this as necessary
-        network.train(inputs, outputs, repetitions);
-
-        // Test the network
-        double epsilon = 1f; // tolerance for the test
-        for (int i = 0; i < inputs.length; i++) {
-            double[] networkOutput = network.testInput(inputs[i]);
-            assertTrue(networkOutput[0] - outputs[i][0] < epsilon);
+            // Test the network
+            double epsilon = 0.1f; // tolerance for the test
+            for (int i = 0; i < inputs.length; i++) {
+                double[] networkOutput = network.testInput(inputs[i]);
+                assertTrue(Math.abs(networkOutput[0] - outputs[i][0]) < epsilon);
+            }
         }
+    }
+
+
+    @Test
+    void networkInputTest() {
+        NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2, 2, 1), ActivationFunction.SIGMOID).
+                setWeightInitState(WeightInitState.RANDOM).setNeuronInitState(NeuronInitState.RANDOM).setLearnRate(0.3).setMomentum(0.6));
+
+
+        double[] in = new double[]{2, 2, 2};
+        double[] out = new double[]{2, 2, 2};
+
+        network.train(in, out,1);
     }
 }

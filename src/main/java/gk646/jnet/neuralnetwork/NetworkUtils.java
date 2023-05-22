@@ -44,9 +44,9 @@ public final class NetworkUtils {
 
     public void printNeuronBias(Layer[] layers) {
         for (int i = 0; i < layers.length; i++) {
-            System.out.println("NeuronLayer: "+i);
+            System.out.println("NeuronLayer: " + i);
             for (int j = 0; j < layers[i].layerSize; j++) {
-                System.out.println("|"+layers[i].neurons[j].bias+"|");
+                System.out.println("|" + layers[i].neurons[j].bias + "|");
             }
             System.out.println();
         }
@@ -99,19 +99,19 @@ public final class NetworkUtils {
     }
 
     public boolean arrayShapeCheck(double[][] input, double[][] target) {
-        if (input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
+        if (input.length != target.length) {
             return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
         }
         for (int i = 0; i < input.length; i++) {
-            if (input[i].length != network.inputLayerSize && target[i].length != network.outputLayerSize) {
+            if (input[i].length != network.inputLayerSize || target[i].length != network.outputLayerSize) {
                 return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
             }
         }
         return true;
     }
 
-    public boolean arrayShapeCheck(float[] input, float[] target) {
-        if (input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
+    public boolean arrayShapeCheck(double[] input, double[] target) {
+        if (input.length != target.length ||input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
             return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
         }
         return true;

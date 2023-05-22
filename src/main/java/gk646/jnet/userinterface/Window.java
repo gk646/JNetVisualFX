@@ -80,7 +80,7 @@ public class Window extends Application {
         Point temp = new Point();
         Screen screen = Screen.getPrimary();
         temp.x = screen.getBounds().getMaxX() >= 1440 ? 1440 : (int) screen.getBounds().getMaxX();
-        temp.y = screen.getBounds().getMaxY() >= 1080 ? 1080 : (int) screen.getBounds().getMaxY();
+        temp.y = screen.getBounds().getMaxY() >= 960 ? 960 : (int) screen.getBounds().getMaxY();
 
         return temp;
     }

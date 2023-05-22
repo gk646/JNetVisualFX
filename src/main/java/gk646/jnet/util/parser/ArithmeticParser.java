@@ -1,4 +1,4 @@
-package gk646.jnet.util;
+package gk646.jnet.util.parser;
 
 import gk646.jnet.userinterface.terminal.Terminal;
 

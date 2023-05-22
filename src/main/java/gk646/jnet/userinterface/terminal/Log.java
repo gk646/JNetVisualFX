@@ -4,7 +4,7 @@ import gk646.jnet.userinterface.graphics.Colors;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.util.ContainerHelper;
 import gk646.jnet.util.LogHandler;
-import gk646.jnet.util.Logging;
+import gk646.jnet.util.NetLogger;
 import gk646.jnet.util.datastructures.LimitedQueue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -17,7 +17,7 @@ import java.util.List;
  * The Logger responsible for logging errors, info and exceptions to both the application log and java-terminal.
  */
 public final class Log {
-    public static final Logging logger = new Logging("", null);
+    public static final NetLogger logger = new NetLogger("", null);
     /**
      * Controls the visibility of debug messages and logging.
      */
@@ -26,15 +26,12 @@ public final class Log {
     private static final Color backGround = Colors.DARK_GREY;
     public static final ContainerHelper containerHelper = new ContainerHelper(65, 0, 35, 50);
     public static int scrollOffset = 0;
-    public final float characterWidth;
+    public final double characterWidth = ContainerHelper.initCharacterWidth(11);
     public static final int LINE_HEIGHT = 14;
     final List<String> lines = new ArrayList<>();
 
     public Log() {
         logger.addHandler(new LogHandler());
-        Text text = new Text("A");
-        text.setFont(Resources.cascadiaCode11);
-        this.characterWidth = (float) (text.getLayoutBounds().getWidth() + 0.1);
     }
 
     public static void addLogText(String text) {

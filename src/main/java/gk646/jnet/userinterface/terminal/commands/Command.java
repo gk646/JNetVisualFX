@@ -1,5 +1,6 @@
 package gk646.jnet.userinterface.terminal.commands;
 
+import com.sun.javafx.geom.Matrix3f;
 import gk646.jnet.Info;
 import gk646.jnet.neuralnetwork.NeuralNetwork;
 import gk646.jnet.neuralnetwork.builder.ActivationFunction;
@@ -11,6 +12,7 @@ import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.terminal.Parser;
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
+import gk646.jnet.util.datastructures.Matrix;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -18,7 +20,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -281,10 +285,45 @@ public enum Command {
     quicksetup("quicksetup - quickly generates a basic Network((4,4,4), sigmoid)// Syntax: quicksetup") {
         @Override
         public void cmd(String prompt) {
-            Terminal.parseText("new NetBuilder((4,4,4),sigmoid)");
+            Terminal.parseText("new NetBuilder([4,4,4],sigmoid)");
             Terminal.parseText("new Network");
         }
+    },
+    listall("listall - displays a list of lists created ") {
+        @Override
+        public void cmd(String prompt) {
+            Playground.playgroundLists.put("he", Matrix.fromArray(new double[][]{{2},{2}}));
+            Playground.playgroundLists.forEach((s, matrix) -> Terminal.addText(s + ": " + matrix));
+        }
+    },
+    list("list - creates a list out of the given input; can be floating points ; max depth is 2 ; any bracket type // Syntax: list <name> <[list ( of [ numbers })}> ") {
+        static final String syntax = " <name> <[array type]>";
+
+        @Override
+        public void cmd(String prompt) {
+            prompt = prompt.replace("list ", "");
+            if (prompt.isBlank() || prompt.equals("list")) {
+                Terminal.addText("missing argument: " + this + syntax);
+                return;
+            }
+
+            String listName;
+            listName = prompt.substring(0, prompt.indexOf(" "));
+
+            if (listName.isBlank()) {
+                Terminal.addText("missing list name: " + this + syntax);
+                return;
+            }
+
+            prompt = prompt.replace(listName + " ", "");
+            if (prompt.isBlank()) {
+                Terminal.addText("missing array declaration: " + this + syntax);
+                return;
+            }
+            Parser.arrayParser.parseList(prompt, listName);
+        }
     };
+
     Matcher matcher;
     private final String manPage;
 
