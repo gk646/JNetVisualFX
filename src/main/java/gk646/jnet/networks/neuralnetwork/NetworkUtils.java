@@ -1,4 +1,4 @@
-package gk646.jnet.neuralnetwork;
+package gk646.jnet.networks.neuralnetwork;
 
 import gk646.jnet.userinterface.terminal.Log;
 

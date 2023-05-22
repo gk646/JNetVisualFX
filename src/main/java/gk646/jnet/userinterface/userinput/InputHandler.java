@@ -2,12 +2,10 @@ package gk646.jnet.userinterface.userinput;
 
 import gk646.jnet.userinterface.terminal.CodeCompletion;
 import gk646.jnet.userinterface.terminal.Terminal;
+import javafx.scene.input.Clipboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLOutput;
-import java.util.Arrays;
 import java.util.Objects;
 
 public final class InputHandler {
@@ -17,21 +15,23 @@ public final class InputHandler {
     private static final String ESCAPE = "\u001B";
     public static int commandHistoryOffset = -1;
     private static boolean controlPressed;
+
     public InputHandler() {
     }
 
     public void handleKeyType(KeyEvent event) {
-        //System.out.println(Arrays.toString(event.getCharacter().getBytes(StandardCharsets.UTF_8)));
+        // System.out.println(Arrays.toString(event.getCharacter().getBytes(StandardCharsets.UTF_8)));
         String activeCharacter = event.getCharacter();
         switch (activeCharacter) {
-            case TAB, ESCAPE,"\u001D"  -> {
+            case TAB, ESCAPE, "\u001D", "\u0016" -> {
                 return;
             }
             case ENTER -> {
-                Terminal.parseText(Terminal.currentText.toString());
-                Terminal.currentText = new StringBuilder();
                 commandHistoryOffset = -1;
                 Terminal.cursorOffsetLeft = 0;
+                String prompt =  Terminal.currentText.toString();
+                Terminal.currentText.setLength(0);
+                Terminal.parseText(prompt);
                 return;
             }
             case BACKSPACE -> {
@@ -45,7 +45,6 @@ public final class InputHandler {
                 }
                 return;
             }
-
         }
         if (Terminal.cursorOffsetLeft == 0) {
             Terminal.currentText.append(event.getCharacter());
@@ -108,6 +107,14 @@ public final class InputHandler {
                         return;
                     }
                     Terminal.currentText = new StringBuilder(CodeCompletion.getCurrentCompletions().get(0));
+                }
+            }
+            case V -> {
+                if (controlPressed) {
+                    String content = Clipboard.getSystemClipboard().getString();
+                    if (content != null) {
+                        Terminal.currentText.append(content);
+                    }
                 }
             }
         }

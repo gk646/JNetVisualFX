@@ -1,6 +1,6 @@
 package gk646.jnet.network;
 
-import gk646.jnet.neuralnetwork.builder.ActivationFunction;
+import gk646.jnet.networks.neuralnetwork.builder.ActivationFunction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

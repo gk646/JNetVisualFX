@@ -1,6 +1,6 @@
-package gk646.jnet.neuralnetwork;
+package gk646.jnet.networks.neuralnetwork;
 
-import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.util.Manual;
 

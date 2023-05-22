@@ -1,10 +1,10 @@
 package gk646.jnet.network;
 
-import gk646.jnet.neuralnetwork.NeuralNetwork;
-import gk646.jnet.neuralnetwork.builder.ActivationFunction;
-import gk646.jnet.neuralnetwork.builder.NetworkBuilder;
-import gk646.jnet.neuralnetwork.builder.NeuronInitState;
-import gk646.jnet.neuralnetwork.builder.WeightInitState;
+import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
+import gk646.jnet.networks.neuralnetwork.builder.ActivationFunction;
+import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.networks.neuralnetwork.builder.NeuronInitState;
+import gk646.jnet.networks.neuralnetwork.builder.WeightInitState;
 import gk646.jnet.userinterface.terminal.Log;
 import org.junit.jupiter.api.Test;
 

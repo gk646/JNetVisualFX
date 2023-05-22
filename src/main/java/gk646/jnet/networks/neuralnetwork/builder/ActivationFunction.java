@@ -1,4 +1,4 @@
-package gk646.jnet.neuralnetwork.builder;
+package gk646.jnet.networks.neuralnetwork.builder;
 
 
 public enum ActivationFunction {
