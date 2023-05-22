@@ -39,24 +39,58 @@ public final class NeuralNetwork {
     }
 
     public void train(double[][] input, double[][] target, int repetitions) {
-        //if (!network.netUtils.arrayShapeCheck(input, target)) return;
+        if (!network.netUtils.arrayShapeCheck(input, target)) return;
 
-        for (int i = 0; i < repetitions; i++) {
-            for (int j = 0; j < input.length; j++) {
-                network.backPropagation(input[j], target[j]);
+        var worker = new Thread(() -> {
+            for (int i = 0; i < repetitions; i++) {
+                for (int j = 0; j < input.length; j++) {
+                    network.backPropagation(input[j], target[j]);
+                }
             }
+        });
+        worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
-    public void train(int repetitions, double[] input, double[] target) {
-        for (int i = 0; i < repetitions; i++) {
-            // network.backPropagation(input, target);
+    public void trainRandom(double[][] input, double[][] target, int repetitions) {
+        if (!network.netUtils.arrayShapeCheck(input, target)) return;
+
+        var worker = new Thread(() -> {
+            for (int i = 0; i < repetitions; i++) {
+                for (int j = 0; j < input.length; j++) {
+                    int number = NetworkUtils.rng.nextInt(input.length);
+                    network.backPropagation(input[number], target[number]);
+                }
+            }
+        });
+        worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
-    public void train(double[] input, double[] target) {
-        // network.backPropagation(input, target);
+    public void train(double[] input, double[] target, int repetitions) {
+        if (!network.netUtils.arrayShapeCheck(input, target)) return;
+
+        var worker = new Thread(() -> {
+            for (int i = 0; i < repetitions; i++) {
+                network.backPropagation(input, target);
+            }
+        });
+        worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
+
 
     public int[] getBounds() {
         return network.layerInfo;

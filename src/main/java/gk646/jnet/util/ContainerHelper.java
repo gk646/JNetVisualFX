@@ -1,7 +1,9 @@
 package gk646.jnet.util;
 
 import gk646.jnet.userinterface.JNetVisualFX;
+import gk646.jnet.userinterface.graphics.Resources;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.Text;
 
 
 /**
@@ -52,5 +54,12 @@ public final class ContainerHelper {
 
         gc.strokeLine(this.getDrawX(), this.getHeight() / 2, this.getWidth(), this.getHeight() / 2);
         gc.setLineWidth(1);
+    }
+
+
+    public static double initCharacterWidth(int size) {
+        Text text = new Text("A");
+        text.setFont(Resources.getFontInSize(size));
+        return (float) (text.getLayoutBounds().getWidth() + 0.1);
     }
 }

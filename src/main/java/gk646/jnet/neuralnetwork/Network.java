@@ -50,25 +50,23 @@ public final class Network {
      * @return a List of both pre- and postActivation values for each Layer (in that order).
      */
 
-     double[] forwardPass(double[] input) {
+    double[] forwardPass(double[] input) {
         double[] referenceInput = input;
-        for (int i = 0; i < layers.length; i++) {
-            referenceInput = layers[i].forwardPass(referenceInput);
+        for (final Layer layer : layers) {
+            referenceInput = layer.forwardPass(referenceInput);
         }
         return referenceInput;
     }
 
 
-     void backPropagation(double[] input, double[] target) {
+    void backPropagation(double[] input, double[] target) {
         double[] calcError = forwardPass(input);
         double[] error = new double[calcError.length];
         for (int i = 0; i < error.length; i++) {
-            error[i] = target[i] - calcError[i];
+            error[i] = lossFunction.apply(calcError[i], target[i]);
         }
         for (int i = layers.length - 1; i >= 0; i--) {
             error = layers[i].backwardPass(error, learnRate, momentum);
         }
     }
-    
-    
 }

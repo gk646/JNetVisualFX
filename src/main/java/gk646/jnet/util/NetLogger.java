@@ -3,7 +3,7 @@ package gk646.jnet.util;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-public class Logging extends java.util.logging.Logger {
+public class NetLogger extends java.util.logging.Logger {
     /**
      * Protected method to construct a logger for a named subsystem.
      * <p>
@@ -21,14 +21,14 @@ public class Logging extends java.util.logging.Logger {
      * @throws MissingResourceException if the resourceBundleName is non-null and
      *                                  no corresponding resource can be found.
      */
-    public Logging(String name, String resourceBundleName) {
+    public NetLogger(String name, String resourceBundleName) {
         super(name, resourceBundleName);
         this.setUseParentHandlers(false);
     }
 
 
     public boolean logException(Class<? extends Exception> exceptionClass, String text) {
-        log(new LogRecord(Level.ALL, "[" + exceptionClass.getName() + "] " + text));
+        log(new LogRecord(Level.SEVERE, exceptionClass.getSimpleName() + ": " + text));
         return false;
     }
 }
