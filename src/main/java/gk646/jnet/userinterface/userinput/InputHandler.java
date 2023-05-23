@@ -13,6 +13,7 @@ public final class InputHandler {
     private static final String BACKSPACE = "\b";
     private static final String TAB = "\t";
     private static final String ESCAPE = "\u001B";
+    private static final String DEL = "\u007F";
     public static int commandHistoryOffset = -1;
     private static boolean controlPressed;
 
@@ -20,7 +21,7 @@ public final class InputHandler {
     }
 
     public void handleKeyType(KeyEvent event) {
-        // System.out.println(Arrays.toString(event.getCharacter().getBytes(StandardCharsets.UTF_8)));
+        //System.out.println(Arrays.toString(event.getCharacter().getBytes(StandardCharsets.UTF_8)));
         String activeCharacter = event.getCharacter();
         switch (activeCharacter) {
             case TAB, ESCAPE, "\u001D", "\u0016" -> {
@@ -29,27 +30,30 @@ public final class InputHandler {
             case ENTER -> {
                 commandHistoryOffset = -1;
                 Terminal.cursorOffsetLeft = 0;
-                String prompt =  Terminal.currentText.toString();
+                String prompt = Terminal.currentText.toString();
                 Terminal.currentText.setLength(0);
                 Terminal.parseText(prompt);
                 return;
             }
             case BACKSPACE -> {
                 int length = Terminal.currentText.length();
-                if (length > 0) {
-                    if (Terminal.cursorOffsetLeft == 0) {
-                        Terminal.currentText.deleteCharAt(length - 1);
-                    } else if (Terminal.cursorOffsetLeft != length) {
-                        Terminal.currentText.deleteCharAt(length - 1 - Terminal.cursorOffsetLeft);
-                    }
+                if (length > 0 && Terminal.cursorOffsetLeft < length) {
+                    Terminal.currentText.deleteCharAt(length - 1 - Terminal.cursorOffsetLeft);
+                }
+                return;
+            }
+            case DEL -> {
+                if (Terminal.cursorOffsetLeft > 0 && Terminal.cursorOffsetLeft <= Terminal.currentText.length()) {
+                    Terminal.currentText.deleteCharAt(Terminal.currentText.length() - Terminal.cursorOffsetLeft);
                 }
                 return;
             }
         }
-        if (Terminal.cursorOffsetLeft == 0) {
-            Terminal.currentText.append(event.getCharacter());
-        } else {
+
+        if (Terminal.cursorOffsetLeft > 0 && Terminal.cursorOffsetLeft <= Terminal.currentText.length()) {
             Terminal.currentText.insert(Terminal.currentText.length() - Terminal.cursorOffsetLeft, event.getCharacter());
+        } else {
+            Terminal.currentText.append(event.getCharacter());
         }
     }
 
@@ -79,24 +83,16 @@ public final class InputHandler {
             case CONTROL -> controlPressed = true;
 
             case PLUS -> {
-                if (controlPressed) {
-                    Terminal.changeFontSize(1);
-                }
+                if (controlPressed) Terminal.changeFontSize(1);
             }
             case MINUS -> {
-                if (controlPressed) {
-                    Terminal.changeFontSize(-1);
-                }
+                if (controlPressed) Terminal.changeFontSize(-1);
             }
             case LEFT -> {
-                if (Terminal.cursorOffsetLeft < Terminal.currentText.length()) {
-                    Terminal.cursorOffsetLeft++;
-                }
+                if (Terminal.cursorOffsetLeft < Terminal.currentText.length()) Terminal.cursorOffsetLeft++;
             }
             case RIGHT -> {
-                if (Terminal.cursorOffsetLeft >= 1) {
-                    Terminal.cursorOffsetLeft--;
-                }
+                if (Terminal.cursorOffsetLeft >= 1) Terminal.cursorOffsetLeft--;
             }
             case TAB -> {
                 if (CodeCompletion.getCurrentCompletions().size() == 1) {
