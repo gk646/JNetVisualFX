@@ -66,7 +66,7 @@ class NetworkTest {
     void backPropagationTestXOR() {
         for (int p = 0; p < 1; p++) {
             // Create the network with 2 inputs, 2 hidden neurons, and 1 output
-            NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2, 2, 1), ActivationFunction.SIGMOID).
+            NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(new int[]{2, 2, 1}, ActivationFunction.SIGMOID).
                     setWeightInitState(WeightInitState.RANDOM).setNeuronInitState(NeuronInitState.RANDOM).setLearnRate(0.3).setMomentum(0.6));
 
             // XOR input and output pairs
@@ -89,7 +89,7 @@ class NetworkTest {
 
     @Test
     void networkInputTest() {
-        NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(List.of(2, 2, 1), ActivationFunction.SIGMOID).
+        NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(new int[]{2, 2, 1}, ActivationFunction.SIGMOID).
                 setWeightInitState(WeightInitState.RANDOM).setNeuronInitState(NeuronInitState.RANDOM).setLearnRate(0.3).setMomentum(0.6));
 
 

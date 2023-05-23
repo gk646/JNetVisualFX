@@ -22,7 +22,7 @@ public final class JNetVisualFX {
     final Canvas canvas;
     public static final Point bounds = new Point();
     final Scene sceneRoot;
-    public static GraphicsContext gc;
+    private GraphicsContext gc;
     final Terminal terminal;
     final NetworkVisualizer networkVisualizer;
     final Log log;

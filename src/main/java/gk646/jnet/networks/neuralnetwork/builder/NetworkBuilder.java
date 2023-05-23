@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 public final class NetworkBuilder {
-    private List<Integer> layerInfo;
+    private int[] layerInfo;
     private ActivationFunction activeFunc;
     private double learnRate = 0.5;
     private NeuronInitState neuronInitState = NeuronInitState.RANDOM;
@@ -29,7 +29,7 @@ public final class NetworkBuilder {
      * @param activeFunc the activationFunction for the network
      */
     @Manual(text = "Reusable building block for your Networks - Syntax: new NetBuilder([<List of numbers>],<activationFunction>)  || e.g NetBuilder((3,3,3),sigmoid)")
-    public NetworkBuilder(List<Integer> layerInfo, ActivationFunction activeFunc) {
+    public NetworkBuilder(int[] layerInfo, ActivationFunction activeFunc) {
         this.layerInfo = layerInfo;
         this.activeFunc = activeFunc;
 
@@ -43,7 +43,7 @@ public final class NetworkBuilder {
      * @param layerInfo a new list
      * @return a reference to this object
      */
-    public NetworkBuilder setNetworkSize(List<Integer> layerInfo) {
+    public NetworkBuilder setNetworkSize(int [] layerInfo) {
         this.layerInfo = layerInfo;
         checkBuilderViability();
         return this;
@@ -137,7 +137,6 @@ public final class NetworkBuilder {
         return this;
     }
 
-
     public NetworkBuilder setLayerLayerFunction(ActivationFunction function) {
         this.layerLayerActivationFunction = function;
         checkBuilderViability();
@@ -145,7 +144,7 @@ public final class NetworkBuilder {
     }
 
     private void checkBuilderViability() {
-        if (layerInfo.size() > 127) {
+        if (layerInfo.length > 127) {
             Log.logger.logException(IllegalNetworkArguments.class, "Amount of layers must be less than 128");
         }
 
@@ -171,7 +170,7 @@ public final class NetworkBuilder {
     }
 
     public int[] getLayerInfo() {
-        return layerInfo.stream().mapToInt(Integer::intValue).toArray();
+        return layerInfo;
     }
 
     public WeightInitState getWeightInit() {
