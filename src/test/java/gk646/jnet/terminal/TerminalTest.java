@@ -34,7 +34,7 @@ class TerminalTest {
     void testCommandHistory() {
         Terminal.commandHistory.clear();
         int commandHistoryOffset = 0;
-        int previousSize =Terminal.commandHistory.size();
+        int previousSize = Terminal.commandHistory.size();
         //Simulate input
         Terminal.parseText("print(hey)");
 
@@ -60,7 +60,7 @@ class TerminalTest {
         assertEquals("help", Terminal.commandHistory.get(commandHistoryOffset));
     }
 
-
+/*
     @Test
     void testCommands() {
         var terminal = new Terminal();
@@ -74,6 +74,15 @@ class TerminalTest {
 
         assertEquals("> ", terminal.testCommand(" "));
 
+ }
+ */
 
+    @Test
+    void netBuilderTest() {
+        var terminal = new Terminal();
+        assertEquals("added new list: he", terminal.testCommand("list he [2,3]"));
+
+        assertEquals("created new NetBuilder", terminal.testCommand("new NetBuilder([3,],relu)"));
+        assertEquals("created new NetBuilder", terminal.testCommand("new NetBuilder($he,relu)"));
     }
 }

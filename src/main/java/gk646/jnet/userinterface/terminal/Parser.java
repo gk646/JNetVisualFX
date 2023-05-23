@@ -33,7 +33,9 @@ public final class Parser {
     public boolean parse(String text) {
         for (Command command : CommandController.COMMANDS) {
             if (text.startsWith(command.toString())) {
+                long time = System.nanoTime();
                 command.cmd(text);
+                System.out.println(System.nanoTime() -time);
                 return true;
             }
         }

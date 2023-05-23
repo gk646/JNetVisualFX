@@ -89,11 +89,19 @@ public final class ArrayParser {
     }
 
 
-    private double[] parseArrayFromString(String prompt) {
+    public double[] parseArrayFromString(String prompt) {
         String[] numbers = prompt.split(",");
         double[] arr = new double[numbers.length];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Double.parseDouble(numbers[i]);
+        }
+        return arr;
+    }
+    public int[] parseIntArrayFromString(String prompt) {
+        String[] numbers = prompt.split(",");
+        int[] arr = new int [numbers.length];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = Integer.parseInt(numbers[i]);
         }
         return arr;
     }

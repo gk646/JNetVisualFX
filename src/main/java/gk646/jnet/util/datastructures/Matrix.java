@@ -1,5 +1,7 @@
 package gk646.jnet.util.datastructures;
 
+import gk646.jnet.userinterface.terminal.Log;
+
 import java.util.Arrays;
 
 public final class Matrix {
@@ -35,6 +37,13 @@ public final class Matrix {
         return data[row][col];
     }
 
+    public double[] getRow(int row) {
+        if (row > rows) {
+            Log.logger.logException(IllegalArgumentException.class, "row index out of bounds!");
+        }
+        return data[row];
+    }
+
     public int getRows() {
         return rows;
     }
@@ -53,6 +62,14 @@ public final class Matrix {
 
     public Matrix transpose() {
         return this;
+    }
+
+    public boolean isOneDimensional() {
+        return this.rows == 1;
+    }
+
+    public boolean isEmpty() {
+        return rows == 0 && cols == 0;
     }
 
     @Override
@@ -90,7 +107,6 @@ public final class Matrix {
         }
         return builder.toString();
     }
-
 
     @Override
     public int hashCode() {
