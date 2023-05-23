@@ -59,7 +59,8 @@ public class Window extends Application {
         sceneRoot.setOnKeyPressed(inputHandler::handleSpecialKeyType);
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
 
-        System.out.println(System.getenv("TEST_KEY"));
+        //System.out.println(System.getenv("TEST_KEY"));
+
         localFileSaver = new LocalFileSaver();
     }
 

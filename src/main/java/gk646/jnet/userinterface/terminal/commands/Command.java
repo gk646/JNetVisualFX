@@ -11,6 +11,7 @@ import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.terminal.Parser;
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
+import gk646.jnet.util.StringUtil;
 import gk646.jnet.util.datastructures.Matrix;
 
 import java.awt.Desktop;
@@ -336,7 +337,61 @@ public enum Command {
             Parser.arrayParser.parseList(prompt, listName);
         }
     },
+    train("train - trains your active network; needs data to be in the same shape // Syntax: train(<input-list>,<target-list>,<repetitions>)") {
+        final String syntax = "(<input-list>,<target-list>,<repetitions>)";
 
+        @Override
+        public void cmd(String prompt) {
+            if (Playground.neuralNetwork == null){
+                Terminal.addText("no neural network!");
+                return;
+            }
+
+            prompt = prompt.replace("train(", "");
+            if (prompt.isBlank() || prompt.equals("train")) {
+                Terminal.addText("missing list names: " + this + syntax);
+                return;
+            }
+            if (!prompt.contains(")")) {
+                Terminal.addText("missing closing bracket: " + this + syntax);
+                return;
+            }
+            if (StringUtil.countChar(prompt, ',') != 2) {
+                Terminal.addText("missing commas/arguments: " + this + syntax);
+                return;
+            }
+
+            String[] arguments = prompt.substring(0, prompt.length() - 1).split(",");
+            /*
+            if (arguments.length < 3) {
+                Terminal.addText("Invalid command, not enough arguments provided: " + this + syntax);
+                return;
+            }
+
+             */
+            Matrix input = Playground.playgroundLists.get(arguments[0]);
+            Matrix target = Playground.playgroundLists.get(arguments[1]);
+
+            if (input == null) {
+                Terminal.addText("input matrix not fond: " + arguments[0]);
+                return;
+            }
+            if (target == null) {
+                Terminal.addText("target matrix not found: " + arguments[1]);
+                return;
+            }
+
+            int repetitions;
+            try {
+                repetitions = Integer.parseInt(arguments[2]);
+            } catch (NumberFormatException e) {
+                Terminal.addText("repetitions must be a valid integer: " + arguments[2]);
+                return;
+            }
+
+            Playground.neuralNetwork.train(input.getRawData(), input.getRawData(), repetitions);
+        }
+    },
     $("% - denotes a variable// Syntax: $<variable-Name>") {
         @Override
         public void cmd(String prompt) {

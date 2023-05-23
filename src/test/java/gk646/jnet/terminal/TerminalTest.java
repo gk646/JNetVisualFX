@@ -32,10 +32,9 @@ class TerminalTest {
 
     @Test
     void testCommandHistory() {
+        Terminal.commandHistory.clear();
         int commandHistoryOffset = 0;
         int previousSize =Terminal.commandHistory.size();
-
-
         //Simulate input
         Terminal.parseText("print(hey)");
 

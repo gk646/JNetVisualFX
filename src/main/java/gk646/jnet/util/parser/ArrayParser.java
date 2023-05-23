@@ -2,6 +2,7 @@ package gk646.jnet.util.parser;
 
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
+import gk646.jnet.util.StringUtil;
 import gk646.jnet.util.datastructures.Matrix;
 
 import java.util.ArrayList;
@@ -14,13 +15,27 @@ public final class ArrayParser {
     }
 
     public void parseList(String prompt, String listName) {
-        int depth = 0;
-        boolean twoDimensional = prompt.charAt(0) == '[' && prompt.charAt(1) == '[';  // still couldnt go wrong [23,[]
-        if (twoDimensional && !(prompt.charAt(prompt.length() - 1) == ']' && prompt.charAt(prompt.length() - 2) == ']')) {
+        if(!prompt.contains("[")|| !prompt.contains("]")){{
+            Terminal.addText(invalidDeclaration + prompt);
+            return;
+        }}
+        if (prompt.equals("[]") || prompt.equals("[[]]")) {
+            Playground.playgroundLists.put(listName, new Matrix(0, 0));
+            Terminal.addText("empty list added: " + listName);
+            return;
+        }
+        if (prompt.length() < 2) {
             Terminal.addText(invalidDeclaration + prompt);
             return;
         }
-        for (char currentChar : prompt.toCharArray()) {// [1,1]
+        boolean twoDimensional = prompt.startsWith("[[") && prompt.endsWith("]]");
+        if (!twoDimensional && (prompt.startsWith("[[") || prompt.endsWith("]]"))) {
+            Terminal.addText(invalidDeclaration + prompt);
+            return;
+        }
+
+        int depth = 0;
+        for (char currentChar : prompt.toCharArray()) {
             switch (currentChar) {
                 case '[' -> depth++;
                 case ']' -> depth--;
@@ -32,11 +47,6 @@ public final class ArrayParser {
                 Terminal.addText(invalidDeclaration + prompt);
                 return;
             }
-        }
-        if (prompt.length() == 2) {
-            Playground.playgroundLists.put(listName, new Matrix(0, 0));
-            Terminal.addText("empty list added: " + listName);
-            return;
         }
         if (depth != 0) {
             Terminal.addText(invalidDeclaration + prompt);
