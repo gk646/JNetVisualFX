@@ -1,6 +1,5 @@
 package gk646.jnet.userinterface.terminal;
 
-import gk646.jnet.userinterface.JNetVisualFX;
 import gk646.jnet.userinterface.graphics.Colors;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.userinterface.userinput.InputHandler;
@@ -18,13 +17,14 @@ import java.util.List;
 public final class Terminal {
     static double characterWidth = ContainerHelper.initCharacterWidth(15);
     private static int fontSize = 15;
+    static Font activeFont = Resources.getFontInSize(fontSize);
     public static int lineHeight = fontSize + 4;
     public static byte cursorOffsetLeft = 0;
     private static final byte COMMAND_HISTORY_LENGTH = 127;
     private int counter = 0;
     public static String terminalRoot = "> ";
     public static StringBuilder currentText = new StringBuilder();
-    static final ContainerHelper containerHelper = new ContainerHelper(65, 50, 35, 50);
+    static final ContainerHelper containerHelper = new ContainerHelper(0.3f, 74, 75, 26);
     public static final LimitedQueue<String> commandHistory = new LimitedQueue<>(COMMAND_HISTORY_LENGTH);
     private static final LimitedQueue<String> terminalText = new LimitedQueue<>(35);
     private static final Parser parser = new Parser();
@@ -55,6 +55,7 @@ public final class Terminal {
 
 
     private void drawScrollingText(GraphicsContext gc) {
+        gc.setFont(activeFont);
         gc.setFill(Color.MINTCREAM);
         int startX = containerHelper.getDrawX();
         int startY = containerHelper.getDrawY() + containerHelper.getHeight() - lineHeight * 2;
@@ -87,11 +88,11 @@ public final class Terminal {
     }
 
     private void drawBorder(GraphicsContext gc) {
-        gc.setFill(Colors.PHILIPINE_SILVER);
-        gc.fillRoundRect(containerHelper.getDrawX() - 5, containerHelper.getDrawY(), containerHelper.getWidth() + 5, containerHelper.getHeight(), 25, 25);
+        //gc.setFill(Colors.PHILIPINE_SILVER);
+        //gc.fillRoundRect(containerHelper.getDrawX() - 10, containerHelper.getDrawY(), containerHelper.getWidth() + 5, containerHelper.getHeight(), 25, 25);
 
         gc.setFill(backGround);
-        gc.fillRoundRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight() + 3, 25, 25);
+        gc.fillRoundRect(containerHelper.getDrawX()-5, containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight() + 3, 25, 25);
 
         gc.setFill(Colors.PHILIPINE_SILVER);
         gc.fillText("[Terminal]", containerHelper.getDrawX() + 10, containerHelper.getDrawY() + 20);
@@ -136,10 +137,9 @@ public final class Terminal {
 
     public static void changeFontSize(int value) {
         fontSize += value;
-        Font font = Resources.getFontInSize(fontSize);
-        JNetVisualFX.gc.setFont(font);
+        activeFont = Resources.getFontInSize(fontSize);
         Text text1 = new Text("A");
-        text1.setFont(font);
+        text1.setFont(activeFont);
         characterWidth = (float) (text1.getLayoutBounds().getWidth());
         lineHeight = fontSize + 4;
     }
@@ -150,7 +150,7 @@ public final class Terminal {
     }
 
 
-    public String testCommand(String command){
+    public String testCommand(String command) {
         Terminal.parseText(command);
         return terminalText.get(0);
     }

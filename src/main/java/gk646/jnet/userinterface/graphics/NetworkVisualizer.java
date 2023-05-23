@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import java.util.Arrays;
 
 public final class NetworkVisualizer {
-    public static final ContainerHelper containerHelper = new ContainerHelper(0, 0, 60, 100);
+    public static final ContainerHelper containerHelper = new ContainerHelper(0, 0, 76, 75);
     public static float maxCircleDiameter = 30;
     float circleDiameter = 15;
     static final float MIN_CIRCLE_DIAMETER = 7;

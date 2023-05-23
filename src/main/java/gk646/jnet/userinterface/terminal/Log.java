@@ -8,7 +8,6 @@ import gk646.jnet.util.NetLogger;
 import gk646.jnet.util.datastructures.LimitedQueue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,8 @@ public final class Log {
      */
     public static boolean verbose = true;
     private static final LimitedQueue<String> logText = new LimitedQueue<>(50);
-    private static final Color backGround = Colors.DARK_GREY;
-    public static final ContainerHelper containerHelper = new ContainerHelper(65, 0, 35, 50);
+    private static final Color backGround = Colors.UBUNTU_BLACK;
+    public static final ContainerHelper containerHelper = new ContainerHelper(75, 0, 25, 100);
     public static int scrollOffset = 0;
     public final double characterWidth = ContainerHelper.initCharacterWidth(11);
     public static final int LINE_HEIGHT = 14;
@@ -44,14 +43,13 @@ public final class Log {
     }
 
     private void drawScrollingText(GraphicsContext gc) {
-        gc.save();
-
         gc.setFill(Color.MINTCREAM);
         gc.setFont(Resources.cascadiaCode11);
         int startX = containerHelper.getDrawX() + 3;
         int startY = containerHelper.getDrawY() + containerHelper.getHeight() - LINE_HEIGHT + scrollOffset;
 
         int maxCharsPerLine = (int) (containerHelper.getWidth() / characterWidth);
+
         for (String string : logText) {
             lines.clear();
             int start = 0;
@@ -70,6 +68,15 @@ public final class Log {
             startY -= (lines.size() - 1) * LINE_HEIGHT;
 
             for (String line : lines) {
+                if (line.startsWith("[W")) {
+                    gc.setFill(Colors.CADMIUM_ORANGE);
+                } else if (line.startsWith("[S")) {
+                    gc.setFill(Colors.RED);
+                } else {
+                    if (gc.getFill() != Color.MINTCREAM) {
+                        gc.setFill(Color.MINTCREAM);
+                    }
+                }
                 gc.fillText(line, startX, startY);
                 startY += LINE_HEIGHT;
             }
@@ -77,7 +84,7 @@ public final class Log {
             startY -= (lines.size() + 1) * LINE_HEIGHT;
         }
 
-        gc.restore();
+        gc.setFont(Terminal.activeFont);
     }
 
     public void drawBackGround(GraphicsContext gc) {
