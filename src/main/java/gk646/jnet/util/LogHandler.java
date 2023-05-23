@@ -58,7 +58,7 @@ public class LogHandler extends Handler {
             @Override
             public String format(LogRecord logRecord) {
                 return
-                        " [" + logRecord.getLevel() + "] " +
+                        "[" + logRecord.getLevel() + "] " +
                                 logRecord.getMessage() + "\n";
             }
         };

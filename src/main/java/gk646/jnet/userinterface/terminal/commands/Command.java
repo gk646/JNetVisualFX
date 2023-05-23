@@ -4,6 +4,7 @@ import gk646.jnet.Info;
 import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
 import gk646.jnet.networks.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.networks.neuralnetwork.exceptions.IllegalNetworkArguments;
 import gk646.jnet.userinterface.Window;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.CommandController;
@@ -80,6 +81,7 @@ public enum Command {
         private boolean invalidDimensions(List<Integer> arr) {
             for (int num : arr) {
                 if (num <= 0) {
+                    Log.logger.logException(IllegalNetworkArguments.class,"Layer size has to be bigger than 0");
                     return true;
                 }
             }
@@ -133,7 +135,7 @@ public enum Command {
                 }
 
                 if (numbers.length == 0 || invalidDimensions(numList)) {
-                    return "networkDimensions are illegal // [4,4,4] -> creates a network with 3 layers and 4 neurons each";
+                    return "illegal network dimensions: "+prompt;
                 }
 
                 String activationFunctionString = matcher.group(3).toUpperCase();  // "SIGMOID"
@@ -392,7 +394,7 @@ public enum Command {
             Playground.neuralNetwork.train(input.getRawData(), input.getRawData(), repetitions);
         }
     },
-    $("% - denotes a variable// Syntax: $<variable-Name>") {
+    $("$ - denotes a variable// Syntax: $<variable-Name>") {
         @Override
         public void cmd(String prompt) {
             prompt = prompt.substring(1);

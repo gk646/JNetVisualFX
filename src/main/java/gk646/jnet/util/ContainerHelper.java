@@ -10,7 +10,7 @@ import javafx.scene.text.Text;
  * Helper class to scale containers to the windows size according to the global {@link JNetVisualFX#bounds}.
  */
 public final class ContainerHelper {
-    private int percentX;
+    private float percentX;
     private int percentY;
     private int width;
     private int height;
@@ -24,7 +24,7 @@ public final class ContainerHelper {
      * @param widthPercent          the width in percent of the bounds
      * @param heightPercent         the height in percent of the bounds
      */
-    public ContainerHelper(int beginPositionPercentX, int beginPositionPercentY, int widthPercent, int heightPercent) {
+    public ContainerHelper(float beginPositionPercentX, int beginPositionPercentY, int widthPercent, int heightPercent) {
         this.percentX = beginPositionPercentX;
         this.percentY = beginPositionPercentY;
         this.width = widthPercent;

@@ -69,7 +69,6 @@ public final class JNetVisualFX {
 
 
     private void draw() {
-        gc.clearRect(0, 0, bounds.x, bounds.y);
 
         networkVisualizer.draw(gc);
         terminal.draw(gc);
