@@ -42,8 +42,7 @@ public final class Network {
         this.momentum = networkBuilder.getMomentum();
 
         layers = Layer.createLayers(layerInfo, networkBuilder);
-
-        netUtils.networkIntegrityCheck(this);
+        NetworkVisualizer.updateConnectionMatrix(networkBuilder.getLayerInfo());
     }
 
     /**
@@ -71,5 +70,26 @@ public final class Network {
         for (int i = layers.length - 1; i >= 0; i--) {
             error = layers[i].backwardPass(error, learnRate, momentum);
         }
+    }
+
+    public void backPropagationVisual(double[] input, double[] target) {
+        double[] calcError = forwardPassVisual(input);
+        double[] error = new double[calcError.length];
+        for (int i = 0; i < error.length; i++) {
+            error[i] = lossFunction.apply(calcError[i], target[i]);
+        }
+        for (int i = layers.length - 1; i >= 0; i--) {
+            error = layers[i].backwardPassVisual(error, learnRate, momentum,i);
+        }
+    }
+
+    private double[] forwardPassVisual(double[] input) {
+        double[] referenceInput = input;
+        int layerNumber = 0;
+        for (final Layer layer : layers) {
+            referenceInput = layer.forwardPassVisual(referenceInput, layerNumber++);
+
+        }
+        return referenceInput;
     }
 }

@@ -7,28 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TerminalTest {
 
+    static Terminal terminal = new Terminal();
 
-    @Test
-    void testCursorShift() {
-        Terminal.addText("hello");
-        Terminal.currentText = new StringBuilder("hey");
-
-        for (int i = 0; i < 3; i++) {
-            //Simulate LEFT press
-            if (Terminal.TerminalInfo.cursorOffsetLeft < Terminal.currentText.length()) {
-                Terminal.TerminalInfo.cursorOffsetLeft++;
-            }
-        }
-
-        int length = Terminal.currentText.length();
-        if (length > 0) {
-            if (Terminal.TerminalInfo.cursorOffsetLeft == 0) {
-                Terminal.currentText.deleteCharAt(length - 1);
-            } else if (Terminal.TerminalInfo.cursorOffsetLeft != length) {
-                Terminal.currentText.deleteCharAt(length - 1 - Terminal.TerminalInfo.cursorOffsetLeft);
-            }
-        }
-    }
 
     @Test
     void testCommandHistory() {
@@ -60,10 +40,9 @@ class TerminalTest {
         assertEquals("help", Terminal.commandHistory.get(commandHistoryOffset));
     }
 
-/*
+
     @Test
     void testCommands() {
-        var terminal = new Terminal();
         assertEquals("5", terminal.testCommand("2+3"));
 
         assertEquals("invalid arithmetic expr: 2+", terminal.testCommand("2+"));
@@ -75,11 +54,10 @@ class TerminalTest {
         assertEquals("> ", terminal.testCommand(" "));
 
  }
- */
+
 
     @Test
     void netBuilderTest() {
-        var terminal = new Terminal();
         assertEquals("added new list: he", terminal.testCommand("list he [2,3]"));
 
         assertEquals("created new NetBuilder", terminal.testCommand("new NetBuilder([3,],relu)"));

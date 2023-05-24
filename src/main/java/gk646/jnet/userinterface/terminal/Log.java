@@ -16,12 +16,8 @@ public final class Log {
     public static final NetLogger logger = new NetLogger("", null);
     public static final ContainerHelper containerHelper = new ContainerHelper(75, 0, 25, 100);
     public static final int LINE_HEIGHT = 14;
-    private static final LimitedQueue<String> logText = new LimitedQueue<>(50);
+    private static final LimitedQueue<String> logText = new LimitedQueue<>(75);
     private static final Color backGround = Colors.UBUNTU_BLACK;
-    /**
-     * Controls the visibility of debug messages and logging.
-     */
-    public static boolean verbose = true;
     public static int scrollOffset = 0;
     static int maxCharsPerLine = 49;
     public final double characterWidth = ContainerHelper.initCharacterWidth(12);

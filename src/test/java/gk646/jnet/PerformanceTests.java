@@ -69,6 +69,7 @@ public class PerformanceTests {
         System.out.println("Elapsed Time for countNewlinesFast: " + elapsedTime / 1000000.0 + " ms");
 
 
+
         startTime = System.nanoTime();
         for (int i = 0; i < 10000; i++) {
             countNewline(s, in);

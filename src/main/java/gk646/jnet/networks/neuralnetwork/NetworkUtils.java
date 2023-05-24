@@ -1,5 +1,6 @@
 package gk646.jnet.networks.neuralnetwork;
 
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.terminal.Log;
 
 import java.util.InputMismatchException;
@@ -15,31 +16,28 @@ public final class NetworkUtils {
         this.network = network;
     }
 
-    public void print3DArray(double[][][] array) {
-        StringBuilder sb = new StringBuilder();
-        if (!Log.verbose) return;
-        for (int i = 0; i < array.length; i++) {
-            System.out.println("Weight Layer Pair: " + i);
-            sb.append("Weight Layer Pair: ").append(i);
-            for (int j = 0; j < array[i].length; j++) {
-                for (int k = 0; k < array[i][j].length; k++) {
-                    double num = array[i][j][k];
-                    if (num < 0) {
-                        System.out.printf("%.2f | ", num);
-                        sb.append(String.format("%.2f | ", num));
-                    } else {
-                        System.out.printf(" %.2f | ", num);
-                        sb.append(String.format("%.2f | ", num));
-                    }
-                }
-                System.out.println();
-                sb.append("\n");
-            }
-            System.out.println();
-            sb.append("\n");
-            //Log.addLogText(sb.toString());
-            sb = new StringBuilder();
+    public static void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException ignored) {
         }
+    }
+
+    public void perRepetitionTasks(double[][] input, double[][] target) {
+        double error = 0;
+        double[] output;
+        for (int i = 0; i < input.length; i++) {
+            output = network.forwardPass(input[i]);
+            for (int j = 0; j < output.length; j++) {
+                error += network.lossFunction.apply(output[j], target[i][j]);
+            }
+        }
+        Log.logger.info(network.lossFunction + ": " + (float) error);
+    }
+
+    public void finishTraining(int repetitions, int inputLength) {
+        UserStatistics.updateStat(UserStatistics.Stat.numberOfForwardPasses, repetitions + repetitions * inputLength);
+        UserStatistics.updateStat(UserStatistics.Stat.numberOfBackPropagations, repetitions);
     }
 
     public void printNeuronBias(Layer[] layers) {
@@ -52,24 +50,8 @@ public final class NetworkUtils {
         }
     }
 
-    /**
-     * Performs {@link Thread#sleep(long)} for the given time.
-     * Skips the duration if  {@link Log#verbose} is false:
-     *
-     * @param millis amount of milliseconds as int.
-     */
-    public void sleep(int millis) {
-        if (!Log.verbose) return;
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-
     public void printNetwork() {
-        if (!Log.verbose) return;
+        if (!NeuralNetwork.VERBOSE) return;
         Log.addLogText("");
         StringBuilder sb = new StringBuilder();
         int max = 0;
@@ -89,13 +71,6 @@ public final class NetworkUtils {
             Log.addLogText(sb.toString());
             sb = new StringBuilder();
         }
-    }
-
-    /**
-     * Performs various checks regarding the structural integrity of the network.
-     */
-    void networkIntegrityCheck(Network network) {
-
     }
 
     public boolean arrayShapeCheck(double[][] input, double[][] target) {

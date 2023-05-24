@@ -3,6 +3,7 @@ package gk646.jnet.networks.neuralnetwork;
 import gk646.jnet.networks.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.networks.neuralnetwork.builder.DerivativeActivationFunction;
 import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.Log;
 
 import java.util.Arrays;
@@ -77,6 +78,40 @@ public final class Layer {
     }
 
     double[] backwardPass(double[] error, double learnRate, double momentum) {
+        double[] nextError = new double[input.length];
+        for (int i = 0; i < output.length; i++) {
+            double d = error[i];
+            d *= derivativeFunc.apply(wSums[i]);
+            for (int j = 0; j < input.length; j++) {
+                nextError[j] += weights[j][i] * d;
+                double dw = input[j] * d * learnRate;
+                weights[j][i] -= dweights[j][i] * momentum + dw;
+                dweights[j][i] = dw;
+            }
+        }
+        return nextError;
+    }
+
+    double[] forwardPassVisual(double[] in, int layerNumber) {
+        System.arraycopy(in, 0, this.input, 0, in.length);
+        input[input.length - 1] = 1;
+        Arrays.fill(output, 0);
+        for (int i = 0; i < output.length; i++) {
+            for (int j = 0; j < input.length; j++) {
+                if (j < input.length - 1) {
+                    NetworkVisualizer.activeConnection[layerNumber][i][j] += 15;
+                    NetworkUtils.sleep(NeuralNetwork.delayPerStep);
+                }
+                output[i] += weights[j][i] * input[j];
+            }
+            //output[i] += neurons[i].bias;
+            wSums[i] = output[i];
+            output[i] = activeFunc.apply(output[i]);
+        }
+        return Arrays.copyOf(output, output.length);
+    }
+
+    double[] backwardPassVisual(double[] error, double learnRate, double momentum, int layerNumber) {
         double[] nextError = new double[input.length];
         for (int i = 0; i < output.length; i++) {
             double d = error[i];

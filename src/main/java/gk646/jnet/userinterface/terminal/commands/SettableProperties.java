@@ -34,8 +34,8 @@ public enum SettableProperties {
             }
 
             if (parsedNum > 0 && parsedNum < 50) {
-                int fontSizeDelta = parsedNum - Terminal.getFontSize();
-                Terminal.changeFontSize(fontSizeDelta);
+                int fontSizeDelta = parsedNum - Terminal.TerminalInfo.getFontSize();
+                Terminal.TerminalInfo.changeFontSize(fontSizeDelta);
                 return "set new fontsize: " + parsedNum;
             }
             return "invalid fontsize: " + parsedNum;
