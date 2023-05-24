@@ -8,16 +8,15 @@ import gk646.jnet.userinterface.terminal.Log;
 import java.util.Arrays;
 
 public final class Layer {
-    ActivationFunction activeFunc;
-    DerivativeActivationFunction derivativeFunc;
     final int layerSize;
-    Neuron[] neurons;
+    final double[] wSums;
     private final double[] output;
     private final double[] input;
     private final double[][] weights;
     private final double[][] dweights;
-    final double[] wSums;
-    boolean isLastLayer = false;
+    ActivationFunction activeFunc;
+    DerivativeActivationFunction derivativeFunc;
+    Neuron[] neurons;
 
     Layer(int inSize, int outSize, NetworkBuilder networkBuilder) {
         this.activeFunc = networkBuilder.getActiveFunc();
@@ -41,6 +40,26 @@ public final class Layer {
         }
     }
 
+    public static Layer[] createLayers(int[] layerInfo, NetworkBuilder networkBuilder) {
+        int layerCount = layerInfo.length;
+        if (layerCount < 1) {
+            Log.logger.logException(IllegalArgumentException.class, "invalid layer-count");
+        }
+
+        Layer[] temp = new Layer[layerCount - 1];
+
+        for (int i = 0; i < layerCount - 1; i++) {
+            if (i == layerCount - 2) {
+                temp[i] = new Layer(layerInfo[i], layerInfo[i + 1], networkBuilder);
+                temp[i].activeFunc = networkBuilder.getLastLayerFunction();
+                temp[i].derivativeFunc = DerivativeActivationFunction.valueOf(temp[i].activeFunc.toString());
+                break;
+            }
+            temp[i] = new Layer(layerInfo[i], layerInfo[i + 1], networkBuilder);
+        }
+
+        return temp;
+    }
 
     double[] forwardPass(double[] in) {
         System.arraycopy(in, 0, this.input, 0, in.length);
@@ -70,26 +89,5 @@ public final class Layer {
             }
         }
         return nextError;
-    }
-
-    public static Layer[] createLayers(int[] layerInfo, NetworkBuilder networkBuilder) {
-        int layerCount = layerInfo.length;
-        if (layerCount < 1) {
-            Log.logger.logException(IllegalArgumentException.class, "invalid layer-count");
-        }
-
-        Layer[] temp = new Layer[layerCount - 1];
-
-        for (int i = 0; i < layerCount - 1; i++) {
-            if (i == layerCount - 2) {
-                temp[i] = new Layer(layerInfo[i], layerInfo[i + 1], networkBuilder);
-                temp[i].activeFunc = networkBuilder.getLastLayerFunction();
-                temp[i].derivativeFunc = DerivativeActivationFunction.valueOf(temp[i].activeFunc.toString());
-                break;
-            }
-            temp[i] = new Layer(layerInfo[i], layerInfo[i + 1], networkBuilder);
-        }
-
-        return temp;
     }
 }

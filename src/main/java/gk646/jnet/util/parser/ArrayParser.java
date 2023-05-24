@@ -2,7 +2,6 @@ package gk646.jnet.util.parser;
 
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
-import gk646.jnet.util.StringUtil;
 import gk646.jnet.util.datastructures.Matrix;
 
 import java.util.ArrayList;
@@ -15,10 +14,12 @@ public final class ArrayParser {
     }
 
     public void parseList(String prompt, String listName) {
-        if(!prompt.contains("[")|| !prompt.contains("]")){{
-            Terminal.addText(invalidDeclaration + prompt);
-            return;
-        }}
+        if (!prompt.contains("[") || !prompt.contains("]")) {
+            {
+                Terminal.addText(invalidDeclaration + prompt);
+                return;
+            }
+        }
         if (prompt.equals("[]") || prompt.equals("[[]]")) {
             Playground.playgroundLists.put(listName, new Matrix(0, 0));
             Terminal.addText("empty list added: " + listName);
@@ -97,9 +98,10 @@ public final class ArrayParser {
         }
         return arr;
     }
+
     public int[] parseIntArrayFromString(String prompt) {
         String[] numbers = prompt.split(",");
-        int[] arr = new int [numbers.length];
+        int[] arr = new int[numbers.length];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Integer.parseInt(numbers[i]);
         }

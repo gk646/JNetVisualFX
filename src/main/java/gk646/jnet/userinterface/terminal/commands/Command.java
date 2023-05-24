@@ -204,8 +204,11 @@ public enum Command {
     }, quicksetup("quicksetup - quickly generates a basic Network((4,4,4), sigmoid)// Syntax: quicksetup") {
         @Override
         public void cmd(String prompt) {
-            Terminal.parseText("new NetBuilder([4,4,4],sigmoid)");
+            Terminal.parseText("new NetBuilder([3,3,3],sigmoid)");
             Terminal.parseText("new Network");
+            Terminal.parseText("list he [23,23,23]");
+            Terminal.parseText("list hey [23,23,24]");
+            Terminal.parseText("train(hey,he,3)");
         }
     }, listget("") {
         @Override
@@ -363,8 +366,8 @@ public enum Command {
         }
     };
 
-    Matcher matcher;
     private final String manPage;
+    Matcher matcher;
 
     Command(String manPage) {
         this.manPage = manPage;

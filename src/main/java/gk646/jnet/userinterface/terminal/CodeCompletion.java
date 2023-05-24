@@ -15,9 +15,9 @@ import java.util.List;
 public final class CodeCompletion {
     private static final Trie trie = new Trie();
     private static final Color backGround = Colors.INTELLIJ_GREY;
-    final ArrayList<String> commandList = new ArrayList<>(Arrays.stream(CommandController.COMMANDS).map(Enum::toString).toList());
     private static List<String> currentCompletions = new ArrayList<>();
     private static boolean inSpecialNameSpace;
+    final ArrayList<String> commandList = new ArrayList<>(Arrays.stream(CommandController.COMMANDS).map(Enum::toString).toList());
     private String previousPrompt = "";
 
     CodeCompletion() {
@@ -29,24 +29,38 @@ public final class CodeCompletion {
         }
     }
 
+    public static boolean blockCommandHistory() {
+        if (!Terminal.currentText.isEmpty()) {
+            return !CodeCompletion.currentCompletions.isEmpty();
+        }
+        return false;
+    }
+
+    public static List<String> getCurrentCompletions() {
+        return currentCompletions;
+    }
+
+    public static boolean isInSpecialNameSpace() {
+        return inSpecialNameSpace;
+    }
+
     public void draw(GraphicsContext gc) {
         if (isNewPrompt()) {
             currentCompletions = autoComplete();
         }
         int length = currentCompletions.size();
-        int startY = Terminal.containerHelper.getDrawY() + Terminal.containerHelper.getHeight() - Terminal.lineHeight;
-        startY -= length * Terminal.lineHeight;
+        int startY = Terminal.containerHelper.getDrawY() + Terminal.containerHelper.getHeight() - Terminal.TerminalInfo.lineHeight;
+        startY -= length * Terminal.TerminalInfo.lineHeight;
 
         int startX = Terminal.containerHelper.getDrawX();
         for (String text : currentCompletions) {
             gc.setFill(backGround);
-            gc.fillRect(startX, startY - 13, 180, Terminal.lineHeight);
-            gc.setFill(Terminal.text);
+            gc.fillRect(startX, startY - 13, 180, Terminal.TerminalInfo.lineHeight);
+            gc.setFill(Terminal.TerminalInfo.text);
             gc.fillText(text, startX, startY);
-            startY += Terminal.lineHeight;
+            startY += Terminal.TerminalInfo.lineHeight;
         }
     }
-
 
     public List<String> getCodeCompletions() {
         return trie.autoComplete(Terminal.currentText.toString());
@@ -72,22 +86,6 @@ public final class CodeCompletion {
             inSpecialNameSpace = false;
             return commandList.stream().filter(word -> word.startsWith(input) && !word.equals(input)).toList();
         }
-    }
-
-
-    public static boolean blockCommandHistory() {
-        if (!Terminal.currentText.isEmpty()) {
-            return !CodeCompletion.currentCompletions.isEmpty();
-        }
-        return false;
-    }
-
-    public static List<String> getCurrentCompletions() {
-        return currentCompletions;
-    }
-
-    public static boolean isInSpecialNameSpace() {
-        return inSpecialNameSpace;
     }
 
     private boolean isNewPrompt() {

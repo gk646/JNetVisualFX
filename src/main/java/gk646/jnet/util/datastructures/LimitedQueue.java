@@ -10,15 +10,17 @@ import java.util.NoSuchElementException;
  * @param <T> the type
  */
 public final class LimitedQueue<T> implements Iterable<T> {
+    private final int max;
+    boolean shift;
     private int size = 0;
     private int maximumCapacity;
     private T[] elements;
-    boolean shift;
 
     @SuppressWarnings("unchecked")
     public LimitedQueue(int maximumCapacity) {
         elements = (T[]) new Object[maximumCapacity];
         this.maximumCapacity = maximumCapacity;
+        this.max = maximumCapacity;
     }
 
     /**
@@ -74,6 +76,16 @@ public final class LimitedQueue<T> implements Iterable<T> {
     }
 
     /**
+     * Sets the element at index i to s
+     *
+     * @param s the given string value
+     * @param i the index to set
+     */
+    public void set(T s, int i) {
+        elements[i] = s;
+    }
+
+    /**
      * Returns a backwards iterator over elements of type {@code T}.
      *
      * @return an Iterator.
@@ -121,6 +133,9 @@ public final class LimitedQueue<T> implements Iterable<T> {
      * @param newLimit the new maximum limit
      */
     public void setLimit(int newLimit) {
+        if (newLimit > max || newLimit == 0) {
+            return;
+        }
         this.maximumCapacity = newLimit;
         if (size > newLimit) {
             size = newLimit;

@@ -20,6 +20,17 @@ import java.util.Objects;
 public class Window extends Application {
     public static LocalFileSaver localFileSaver;
 
+    public static void exit() {
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            Platform.exit();
+        }).start();
+    }
+
     /**
      * The main entry point for all JavaFX applications.
      * The start method is called after the init method has returned,
@@ -64,18 +75,7 @@ public class Window extends Application {
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
 
         //System.out.println(System.getenv("TEST_KEY"));
-        Log.logger.info("Startup took " + (System.nanoTime() - Main.startUpTime)/100_000_000 +" ms");
-    }
-
-    public static void exit() {
-        new Thread(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            Platform.exit();
-        }).start();
+        Log.logger.info("Startup took " + (System.nanoTime() - Main.startUpTime) / 100_000_000 + " ms");
     }
 
     @Override

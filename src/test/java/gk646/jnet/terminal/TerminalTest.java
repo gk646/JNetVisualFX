@@ -15,17 +15,17 @@ class TerminalTest {
 
         for (int i = 0; i < 3; i++) {
             //Simulate LEFT press
-            if (Terminal.cursorOffsetLeft < Terminal.currentText.length()) {
-                Terminal.cursorOffsetLeft++;
+            if (Terminal.TerminalInfo.cursorOffsetLeft < Terminal.currentText.length()) {
+                Terminal.TerminalInfo.cursorOffsetLeft++;
             }
         }
 
         int length = Terminal.currentText.length();
         if (length > 0) {
-            if (Terminal.cursorOffsetLeft == 0) {
+            if (Terminal.TerminalInfo.cursorOffsetLeft == 0) {
                 Terminal.currentText.deleteCharAt(length - 1);
-            } else if (Terminal.cursorOffsetLeft != length) {
-                Terminal.currentText.deleteCharAt(length - 1 - Terminal.cursorOffsetLeft);
+            } else if (Terminal.TerminalInfo.cursorOffsetLeft != length) {
+                Terminal.currentText.deleteCharAt(length - 1 - Terminal.TerminalInfo.cursorOffsetLeft);
             }
         }
     }

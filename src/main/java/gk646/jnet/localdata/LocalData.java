@@ -20,16 +20,6 @@ public class LocalData {
         this.stats = stats;
     }
 
-    public void updateFontSize(int fontSize) {
-        settings.settingsMap.put("fontsize", fontSize);
-    }
-
-    public void saveAll(String path) {
-        if (settings != null) settings.save(path);
-        if (stats != null) stats.save(path);
-    }
-
-
     public static LocalData readLocalFiles(String fullDirectoryPath) {
         UserStatistics stats = readStats(fullDirectoryPath);
         UserSettings settings = readSettings(fullDirectoryPath);
@@ -48,6 +38,7 @@ public class LocalData {
             Log.logger.warning("error reading user-config");
             return settings;
         }
+        Log.logger.info("successfully read user-config");
         return settings;
     }
 
@@ -59,12 +50,21 @@ public class LocalData {
                 stats.readLine(line);
             }
         } catch (IOException | NumberFormatException e) {
-            Log.logger.warning("error reading user-stats");
             Log.logger.warning("unreadable user-stats! use \"reset-user-statistics\" to reset");
             UserStatistics.unreadableStatistics = true;
             return stats;
         }
+        Log.logger.info("successfully read user-statistics");
         return stats;
+    }
+
+    public void updateFontSize(int fontSize) {
+        settings.settingsMap.put("fontsize", fontSize);
+    }
+
+    public void saveAll(String path) {
+        if (settings != null) settings.save(path);
+        if (stats != null) stats.save(path);
     }
 
     public void resetStats(String fullPath) {

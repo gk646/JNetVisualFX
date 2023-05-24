@@ -14,10 +14,10 @@ import java.util.Map;
 
 public final class Parser {
 
-    static final HashMap<String, Method> methodMap = new HashMap<>();
-    static final HashMap<String, Constructor> constructorMap = new HashMap<>();
     public static final ArithmeticParser numberParser = new ArithmeticParser();
     public static final ArrayParser arrayParser = new ArrayParser();
+    static final HashMap<String, Method> methodMap = new HashMap<>();
+    static final HashMap<String, Constructor> constructorMap = new HashMap<>();
 
     Parser() {
         for (Method method : NetworkBuilder.class.getMethods()) {
@@ -28,6 +28,14 @@ public final class Parser {
         }
         constructorMap.put("Network", NeuralNetwork.class.getConstructors()[0]);
         constructorMap.put("NetBuilder", NetworkBuilder.class.getConstructors()[0]);
+    }
+
+    public static Map<String, Method> getMethodMap() {
+        return methodMap;
+    }
+
+    public static Map<String, Constructor> getConstructorMap() {
+        return constructorMap;
     }
 
     public boolean parse(String text) {
@@ -42,13 +50,5 @@ public final class Parser {
 
     private boolean parseAliasCommands() {
         return false;
-    }
-
-    public static Map<String, Method> getMethodMap() {
-        return methodMap;
-    }
-
-    public static Map<String, Constructor> getConstructorMap() {
-        return constructorMap;
     }
 }

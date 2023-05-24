@@ -7,9 +7,9 @@ import java.util.Random;
 
 public final class NetworkUtils {
 
+    public static final Random rng = new Random(System.nanoTime());
     static final String SHAPE_ERROR = "Given input matrix does not match shape of target matrix";
     final Network network;
-    public static final Random rng = new Random(System.nanoTime());
 
     public NetworkUtils(Network network) {
         this.network = network;
@@ -111,7 +111,7 @@ public final class NetworkUtils {
     }
 
     public boolean arrayShapeCheck(double[] input, double[] target) {
-        if (input.length != target.length ||input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
+        if (input.length != target.length || input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
             return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
         }
         return true;

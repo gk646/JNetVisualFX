@@ -2,7 +2,10 @@ package gk646.jnet.networks.neuralnetwork;
 
 import gk646.jnet.networks.neuralnetwork.builder.LossFunction;
 import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
+import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.util.Manual;
+
+import java.util.Arrays;
 
 /**
  * A java implementation of a NeuralNetwork. Performs the basic {@link Network#forwardPass(double[])} and {@link Network#backPropagation(double[], double[])}
@@ -28,7 +31,7 @@ public final class Network {
 
     public Network(NetworkBuilder networkBuilder) {
         this.layerInfo = networkBuilder.getLayerInfo();
-
+        NetworkVisualizer.setMaxNeurons(Arrays.stream(layerInfo).max().orElse(0));
 
         this.layerCount = (byte) layerInfo.length;
         this.outputLayerSize = (byte) layerInfo[layerCount - 1];

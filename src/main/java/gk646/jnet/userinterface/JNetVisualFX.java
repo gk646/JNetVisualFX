@@ -2,7 +2,6 @@ package gk646.jnet.userinterface;
 
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.graphics.Resources;
-import gk646.jnet.userinterface.terminal.CommandController;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.terminal.Terminal;
 import javafx.animation.Animation;
@@ -20,13 +19,13 @@ import java.awt.Point;
  * {@link #networkVisualizer} and a {@link #log}.
  */
 public final class JNetVisualFX {
-    final Canvas canvas;
     public static final Point bounds = new Point();
+    final Canvas canvas;
     final Scene sceneRoot;
-    private GraphicsContext gc;
     final Terminal terminal;
     final NetworkVisualizer networkVisualizer;
     final Log log;
+    private GraphicsContext gc;
 
     JNetVisualFX(Canvas canvas, Scene scene) {
         bounds.x = (int) scene.getWidth();
@@ -40,6 +39,7 @@ public final class JNetVisualFX {
         log = new Log();
         networkVisualizer = new NetworkVisualizer();
 
+        gc.setLineWidth(2);
         gc.setFont(Resources.cascadiaCode);
     }
 

@@ -13,18 +13,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class UserStatistics {
-    public enum Stat {
-        networksCreated,
-        networksTrained,
-        arraysCreated,
-        numberOfForwardPasses,
-        numberOfBackPropagations,
-        totalSecondsUsed,
-        totalCommandsUsed,
-        startupTime
-    }
-
-    public static boolean unreadableStatistics;
+     public static final Map<Stat, Number> localNumbers = new EnumMap<>(Stat.class);
     private static final String DISCLAIMER = """
             *-------------------------------------------*
             This is an automatically generated document; Do not edit!
@@ -35,10 +24,9 @@ public class UserStatistics {
             THIS FILE IS UNREADABLE! NO FURTHER STATISTICS ARE SAVED!
             USE THE COMMAND: "reset-user-statistics" TO RESET THEM.
             """;
-    private int readCounter = 0;
     private static final int SKIP_COUNT = StringUtil.countChar(DISCLAIMER, '\n') + 1;
-    public static final Map<Stat, Number> localNumbers = new EnumMap<>(Stat.class);
-
+    public static boolean unreadableStatistics;
+    private int readCounter = 0;
     public UserStatistics() {
         localNumbers.put(Stat.networksCreated, 0);
         localNumbers.put(Stat.networksTrained, 0);
@@ -48,6 +36,18 @@ public class UserStatistics {
         localNumbers.put(Stat.totalSecondsUsed, 0);
         localNumbers.put(Stat.totalCommandsUsed, 0);
         localNumbers.put(Stat.startupTime, 0);
+    }
+
+    public static void updateStat(Stat statName, int value) {
+        localNumbers.put(statName, localNumbers.get(statName).intValue() + value);
+    }
+
+    public static void replaceStat(Stat stat, int value) {
+        localNumbers.put(stat, value);
+    }
+
+    public static Number getStat(Stat statName) {
+        return localNumbers.get(statName);
     }
 
     public void readLine(String line) {
@@ -66,7 +66,6 @@ public class UserStatistics {
             }
         }
     }
-
 
     public void save(String path) {
         if (unreadableStatistics) {
@@ -108,7 +107,6 @@ public class UserStatistics {
         }
     }
 
-
     public void reset(String fullPath) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fullPath + File.separator + Info.USER_STATISTIC_FILE_NAME))) {
             bw.write(DISCLAIMER);
@@ -127,16 +125,7 @@ public class UserStatistics {
         }
     }
 
-
-    public static void updateStat(Stat statName, int value) {
-        localNumbers.put(statName, localNumbers.get(statName).intValue() + value);
-    }
-
-    public static void replaceStat(Stat stat, int value) {
-        localNumbers.put(stat, value);
-    }
-
-    public static Number getStat(Stat statName) {
-        return localNumbers.get(statName);
+    public enum Stat {
+        networksCreated, networksTrained, arraysCreated, numberOfForwardPasses, numberOfBackPropagations, totalSecondsUsed, totalCommandsUsed, startupTime
     }
 }

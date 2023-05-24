@@ -4,8 +4,6 @@ import gk646.jnet.networks.neuralnetwork.exceptions.IllegalNetworkArguments;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.util.Manual;
 
-import java.util.List;
-
 
 /**
  * A helper class to specify the network parameters. Besides layerInfo and the activationFunction customization is optional.
@@ -43,7 +41,7 @@ public final class NetworkBuilder {
      * @param layerInfo a new list
      * @return a reference to this object
      */
-    public NetworkBuilder setNetworkSize(int [] layerInfo) {
+    public NetworkBuilder setNetworkSize(int[] layerInfo) {
         this.layerInfo = layerInfo;
         checkBuilderViability();
         return this;
@@ -54,44 +52,6 @@ public final class NetworkBuilder {
      */
     public NetworkBuilder setActivationFunction(ActivationFunction activeFunc) {
         this.activeFunc = activeFunc;
-        checkBuilderViability();
-        return this;
-    }
-
-    /**
-     * Sets the neuron initialization state which controls how the initial bias of the neurons pre-training is initialized.
-     * Supported values RANDOM and ZERO.
-     * Recommended value: RANDOM
-     *
-     * @param neuronInitState the initState
-     * @return a reference to this object
-     */
-
-    public NetworkBuilder setNeuronInitState(NeuronInitState neuronInitState) {
-        this.neuronInitState = neuronInitState;
-        checkBuilderViability();
-        return this;
-    }
-
-    /**
-     * Sets the learnRate the NeuralNetwork. Learn-rate is the multiplier by which the gradient descent step is multiplied each learning iteration.
-     * Making the learnRate too small or too big can have a big impact on the outcome.
-     * Recommended values 1-5.
-     *
-     * @param learnRate an int.
-     * @return a reference to this object
-     */
-    @Manual(text = """
-             Sets the learnRate the NeuralNetwork. Learn-rate is the multiplier by which the gradient descent step is multiplied each learning iteration.
-                  Making the learnRate too small or too big can have a big impact on the outcome.
-                 Recommended values 1-5.
-                 
-                  @param learnRate an int.
-                  @return a reference to this object
-                 
-            """)
-    public NetworkBuilder setLearnRate(double learnRate) {
-        this.learnRate = learnRate;
         checkBuilderViability();
         return this;
     }
@@ -115,24 +75,6 @@ public final class NetworkBuilder {
                  * @return a reference to this object""")
     public NetworkBuilder setWeightInitState(WeightInitState weightInitState) {
         this.weightInitState = weightInitState;
-        checkBuilderViability();
-        return this;
-    }
-
-    /**
-     * Sets the loss function which controls the initial error calculation which is propagated back through the network.
-     *
-     * @param lossFunction the new loss function
-     * @return a reference to this object
-     */
-    public NetworkBuilder setLossFunction(LossFunction lossFunction) {
-        this.lossFunction = lossFunction;
-        checkBuilderViability();
-        return this;
-    }
-
-    public NetworkBuilder setMomentum(double momentum) {
-        this.momentum = momentum;
         checkBuilderViability();
         return this;
     }
@@ -185,16 +127,72 @@ public final class NetworkBuilder {
         return learnRate;
     }
 
+    /**
+     * Sets the learnRate the NeuralNetwork. Learn-rate is the multiplier by which the gradient descent step is multiplied each learning iteration.
+     * Making the learnRate too small or too big can have a big impact on the outcome.
+     * Recommended values 1-5.
+     *
+     * @param learnRate an int.
+     * @return a reference to this object
+     */
+    @Manual(text = """
+             Sets the learnRate the NeuralNetwork. Learn-rate is the multiplier by which the gradient descent step is multiplied each learning iteration.
+                  Making the learnRate too small or too big can have a big impact on the outcome.
+                 Recommended values 1-5.
+                 
+                  @param learnRate an int.
+                  @return a reference to this object
+                 
+            """)
+    public NetworkBuilder setLearnRate(double learnRate) {
+        this.learnRate = learnRate;
+        checkBuilderViability();
+        return this;
+    }
+
     public NeuronInitState getNeuronInitState() {
         return neuronInitState;
+    }
+
+    /**
+     * Sets the neuron initialization state which controls how the initial bias of the neurons pre-training is initialized.
+     * Supported values RANDOM and ZERO.
+     * Recommended value: RANDOM
+     *
+     * @param neuronInitState the initState
+     * @return a reference to this object
+     */
+
+    public NetworkBuilder setNeuronInitState(NeuronInitState neuronInitState) {
+        this.neuronInitState = neuronInitState;
+        checkBuilderViability();
+        return this;
     }
 
     public LossFunction getLossFunction() {
         return lossFunction;
     }
 
+    /**
+     * Sets the loss function which controls the initial error calculation which is propagated back through the network.
+     *
+     * @param lossFunction the new loss function
+     * @return a reference to this object
+     */
+    public NetworkBuilder setLossFunction(LossFunction lossFunction) {
+        this.lossFunction = lossFunction;
+        checkBuilderViability();
+        return this;
+    }
+
     public double getMomentum() {
         return momentum;
+    }
+
+    public NetworkBuilder setMomentum(double momentum) {
+        this.momentum = momentum;
+        checkBuilderViability();
+        return this;
     }
 
     public ActivationFunction getLastLayerFunction() {

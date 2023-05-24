@@ -5,38 +5,37 @@ import gk646.jnet.util.ContainerHelper;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
-
 public final class NetworkVisualizer {
     public static final ContainerHelper containerHelper = new ContainerHelper(0, 0, 76, 75);
-    public static float maxCircleDiameter = 30;
-    float circleDiameter = 15;
-    static final float MIN_CIRCLE_DIAMETER = 7;
+    static final float MIN_CIRCLE_DIAMETER = 10;
+    static final Color neuronColor = Colors.ICE_BERG;
+    static final Color backGround = Colors.WHITE_SMOKE;
+    public static float maxCircleDiameter = 35;
     static short offsetX = 0;
     static int offsetY = 0;
     static short verticalSpacing = 50;
     static short horizontalSpacing = 75;
-    static final Color neuronColor = Colors.ICE_BERG;
-    static final Color backGround = Colors.MILK;
+    static int maxNeuronCountInLayers = 3;
+    float circleDiameter = 15;
 
     public NetworkVisualizer() {
     }
 
+    public static void setMaxNeurons(int val) {
+        maxNeuronCountInLayers = val;
+    }
 
     public void draw(GraphicsContext gc) {
         drawBackGround(gc);
         drawNetwork(gc);
     }
 
-
     private void calculateCircleDiameter() {
         circleDiameter = Math.max(MIN_CIRCLE_DIAMETER, Math.min(maxCircleDiameter, containerHelper.getWidth() / 30));
     }
 
     private void calculateSpacing() {
-        int maxNeurons = Arrays.stream(Playground.neuralNetwork.getBounds()).max().orElse(0);
-
-        verticalSpacing = (short) ((containerHelper.getHeight() - circleDiameter) / (maxNeurons + 1));
+        verticalSpacing = (short) ((containerHelper.getHeight() - circleDiameter) / (maxNeuronCountInLayers + 1));
         horizontalSpacing = (short) ((containerHelper.getWidth() - circleDiameter) / (Playground.neuralNetwork.getBounds().length + 1));
     }
 
@@ -55,17 +54,33 @@ public final class NetworkVisualizer {
 
         calculateCircleDiameter();
         calculateSpacing();
-
+        gc.setStroke(Colors.PASTEL_GREY);
         gc.setFill(neuronColor);
         int[] netDimensions = Playground.neuralNetwork.getBounds();
 
+        int[] startXs = new int[netDimensions.length];
+        int[][] startYs = new int[netDimensions.length][];
+
         for (int i = 0; i < netDimensions.length; i++) {
             int neuronCount = netDimensions[i];
-            int startY = getLayerStartY(neuronCount);
-            int startX = getLayerStartX(i);
+            startXs[i] = getLayerStartX(i);
+            startYs[i] = new int[neuronCount];
 
             for (int j = 0; j < neuronCount; j++) {
-                gc.fillOval(startX, startY + j * verticalSpacing, circleDiameter, circleDiameter);
+                startYs[i][j] = getLayerStartY(neuronCount) + j * verticalSpacing;
+
+                if (i > 0) {
+                    for (int k = 0; k < netDimensions[i - 1]; k++) {
+                        gc.strokeLine(startXs[i] + circleDiameter / 2, startYs[i][j] + circleDiameter / 2,
+                                startXs[i - 1] + circleDiameter / 2, startYs[i - 1][k] + circleDiameter / 2);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < netDimensions.length; i++) {
+            for (int j = 0; j < netDimensions[i]; j++) {
+                gc.fillOval(startXs[i], startYs[i][j], circleDiameter, circleDiameter);
             }
         }
     }
