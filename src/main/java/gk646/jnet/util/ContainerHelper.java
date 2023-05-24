@@ -10,10 +10,10 @@ import javafx.scene.text.Text;
  * Helper class to scale containers to the windows size according to the global {@link JNetVisualFX#bounds}.
  */
 public final class ContainerHelper {
-    private float percentX;
-    private int percentY;
-    private int width;
-    private int height;
+    private final float percentX;
+    private final int percentY;
+    private final int width;
+    private final int height;
 
 
     /**
@@ -31,6 +31,11 @@ public final class ContainerHelper {
         this.height = heightPercent;
     }
 
+    public static double initCharacterWidth(int size) {
+        Text text = new Text("A");
+        text.setFont(Resources.getFontInSize(size));
+        return (float) (text.getLayoutBounds().getWidth() + 0.1);
+    }
 
     public int getDrawX() {
         return (int) (JNetVisualFX.bounds.x / 100f * percentX);
@@ -54,12 +59,5 @@ public final class ContainerHelper {
 
         gc.strokeLine(this.getDrawX(), this.getHeight() / 2, this.getWidth(), this.getHeight() / 2);
         gc.setLineWidth(1);
-    }
-
-
-    public static double initCharacterWidth(int size) {
-        Text text = new Text("A");
-        text.setFont(Resources.getFontInSize(size));
-        return (float) (text.getLayoutBounds().getWidth() + 0.1);
     }
 }

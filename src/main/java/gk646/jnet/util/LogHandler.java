@@ -24,7 +24,7 @@ public class LogHandler extends Handler {
     @Override
     public void publish(LogRecord record) {
         if (isLoggable(record)) {
-          Log.addLogText(getFormatter().format(record));
+            Log.addLogText(getFormatter().format(record));
         }
     }
 
@@ -59,7 +59,7 @@ public class LogHandler extends Handler {
             public String format(LogRecord logRecord) {
                 return
                         "[" + logRecord.getLevel() + "] " +
-                                logRecord.getMessage() + "\n";
+                                logRecord.getMessage();
             }
         };
     }

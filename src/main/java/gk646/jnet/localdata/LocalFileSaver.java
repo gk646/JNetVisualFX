@@ -1,21 +1,13 @@
 package gk646.jnet.localdata;
 
 import gk646.jnet.Info;
-import gk646.jnet.localdata.files.UserSettings;
-import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.terminal.Log;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 
 public class LocalFileSaver {
-    public enum OperatingSystem {
-        WINDOWS, UNIX, UNSUPPORTED, MAC
-    }
-
     LocalData localData;
     OperatingSystem os;
     boolean savePossible;
@@ -32,15 +24,15 @@ public class LocalFileSaver {
         localData = LocalData.readLocalFiles(fullDirectoryPath);
     }
 
-
     public void saveLocalFiles() {
         if (!savePossible || fullDirectoryPath == null) return;
         localData.saveAll(fullDirectoryPath);
     }
 
-    public void resetUserStatistic(){
+    public void resetUserStatistic() {
         localData.resetStats(fullDirectoryPath);
     }
+
     private boolean canCreateAppDataFolder() {
         String appDataPath = null;
         switch (os) {
@@ -69,7 +61,6 @@ public class LocalFileSaver {
         }
     }
 
-
     private boolean isOSSupported() {
         return os != OperatingSystem.UNSUPPORTED;
     }
@@ -91,5 +82,9 @@ public class LocalFileSaver {
         } else {
             return OperatingSystem.UNSUPPORTED;
         }
+    }
+
+    public enum OperatingSystem {
+        WINDOWS, UNIX, UNSUPPORTED, MAC
     }
 }

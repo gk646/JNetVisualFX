@@ -65,7 +65,6 @@ public enum CreatableObjects {
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 Terminal.addText("error creating new object: " + e.getMessage());
             }
-
         }
     }, Network("") {
         public void cmd(String prompt) {

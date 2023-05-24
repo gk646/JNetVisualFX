@@ -57,7 +57,4 @@ public class UserSettings {
             Log.logger.logException(IOException.class, "error saving to disk");
         }
     }
-
-
-
 }

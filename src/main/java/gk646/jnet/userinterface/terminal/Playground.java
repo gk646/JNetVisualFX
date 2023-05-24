@@ -9,13 +9,10 @@ import java.util.Map;
 
 public final class Playground {
 
-    public static NetworkBuilder networkBuilder;
-
-    public static NeuralNetwork neuralNetwork;
-
     public static final Map<String, Matrix> playgroundLists = new HashMap<>();
-
     public static final Map<String, Double> variables = new HashMap<>();
+    public static NetworkBuilder networkBuilder;
+    public static NeuralNetwork neuralNetwork;
 
     private Playground() {
     }

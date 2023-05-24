@@ -3,11 +3,12 @@ package gk646.jnet.util;
 import gk646.jnet.Main;
 
 public class NumberUtil {
-    private NumberUtil(){}
+    private NumberUtil() {
+    }
+
     public static int toInt(double d) {
         return (int) d;
     }
-
     public static int[] arrayToInt(double[] d) {
         int[] temp = new int[d.length];
         for (int i = 0; i < d.length; i++) {

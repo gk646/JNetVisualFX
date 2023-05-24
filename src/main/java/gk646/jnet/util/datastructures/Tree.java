@@ -17,10 +17,8 @@ public class Tree<T> {
         }
         if (left == null) {
             left = new Tree<>(e);
-            return;
         } else if (right == null) {
             right = new Tree<>(e);
-            return;
         }
     }
 }

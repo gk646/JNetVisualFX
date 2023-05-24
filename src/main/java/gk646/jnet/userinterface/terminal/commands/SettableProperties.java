@@ -39,12 +39,11 @@ public enum SettableProperties {
                 return "set new fontsize: " + parsedNum;
             }
             return "invalid fontsize: " + parsedNum;
-
         }
     };
     private static final Pattern pattern = Pattern.compile("\\((.*?)\\)");
-    Matcher matcher;
     private final String manPage;
+    Matcher matcher;
 
     SettableProperties(String manPage) {
         this.manPage = manPage;

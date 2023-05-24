@@ -29,7 +29,7 @@ public final class InputHandler {
             }
             case ENTER -> {
                 commandHistoryOffset = -1;
-                Terminal.cursorOffsetLeft = 0;
+                Terminal.TerminalInfo.cursorOffsetLeft = 0;
                 String prompt = Terminal.currentText.toString();
                 Terminal.currentText.setLength(0);
                 Terminal.parseText(prompt);
@@ -37,21 +37,21 @@ public final class InputHandler {
             }
             case BACKSPACE -> {
                 int length = Terminal.currentText.length();
-                if (length > 0 && Terminal.cursorOffsetLeft < length) {
-                    Terminal.currentText.deleteCharAt(length - 1 - Terminal.cursorOffsetLeft);
+                if (length > 0 && Terminal.TerminalInfo.cursorOffsetLeft < length) {
+                    Terminal.currentText.deleteCharAt(length - 1 - Terminal.TerminalInfo.cursorOffsetLeft);
                 }
                 return;
             }
             case DEL -> {
-                if (Terminal.cursorOffsetLeft > 0 && Terminal.cursorOffsetLeft <= Terminal.currentText.length()) {
-                    Terminal.currentText.deleteCharAt(Terminal.currentText.length() - Terminal.cursorOffsetLeft);
+                if (Terminal.TerminalInfo.cursorOffsetLeft > 0 && Terminal.TerminalInfo.cursorOffsetLeft <= Terminal.currentText.length()) {
+                    Terminal.currentText.deleteCharAt(Terminal.currentText.length() - Terminal.TerminalInfo.cursorOffsetLeft);
                 }
                 return;
             }
         }
 
-        if (Terminal.cursorOffsetLeft > 0 && Terminal.cursorOffsetLeft <= Terminal.currentText.length()) {
-            Terminal.currentText.insert(Terminal.currentText.length() - Terminal.cursorOffsetLeft, event.getCharacter());
+        if (Terminal.TerminalInfo.cursorOffsetLeft > 0 && Terminal.TerminalInfo.cursorOffsetLeft <= Terminal.currentText.length()) {
+            Terminal.currentText.insert(Terminal.currentText.length() - Terminal.TerminalInfo.cursorOffsetLeft, event.getCharacter());
         } else {
             Terminal.currentText.append(event.getCharacter());
         }
@@ -89,14 +89,14 @@ public final class InputHandler {
                 if (controlPressed) Terminal.changeFontSize(-1);
             }
             case LEFT -> {
-                if (Terminal.cursorOffsetLeft < Terminal.currentText.length()) Terminal.cursorOffsetLeft++;
+                if (Terminal.TerminalInfo.cursorOffsetLeft < Terminal.currentText.length()) Terminal.TerminalInfo.cursorOffsetLeft++;
             }
             case RIGHT -> {
-                if (Terminal.cursorOffsetLeft >= 1) Terminal.cursorOffsetLeft--;
+                if (Terminal.TerminalInfo.cursorOffsetLeft >= 1) Terminal.TerminalInfo.cursorOffsetLeft--;
             }
             case TAB -> {
                 if (CodeCompletion.getCurrentCompletions().size() == 1) {
-                    Terminal.cursorOffsetLeft = 0;
+                    Terminal.TerminalInfo.cursorOffsetLeft = 0;
                     if (CodeCompletion.isInSpecialNameSpace()) {
                         Terminal.currentText = new StringBuilder(Terminal.currentText.substring(0, Terminal.currentText.indexOf(" ") + 1));
                         Terminal.currentText.append(CodeCompletion.getCurrentCompletions().get(0));

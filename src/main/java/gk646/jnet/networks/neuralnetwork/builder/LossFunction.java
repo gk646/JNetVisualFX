@@ -2,7 +2,7 @@ package gk646.jnet.networks.neuralnetwork.builder;
 
 public enum LossFunction {
 
-    MEAN_SQUARED_AVERAGE_ERROR{
+    MEAN_SQUARED_AVERAGE_ERROR {
         @Override
         public double apply(double predictedOutput, double targetOutput) {
             return 2 * (predictedOutput - targetOutput);
