@@ -1,5 +1,6 @@
 package gk646.jnet.terminal;
 
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.terminal.Terminal;
 import org.junit.jupiter.api.Test;
 
@@ -7,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ArrayParserTests {
 
-
     @Test
     void arrayParseTests() {
+        new UserStatistics();
         var terminal = new Terminal();
 
         // Single and multi-digit integers in one-dimensional array

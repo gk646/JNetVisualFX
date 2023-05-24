@@ -2,6 +2,7 @@ package gk646.jnet.userinterface;
 
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.graphics.Resources;
+import gk646.jnet.userinterface.terminal.CommandController;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.terminal.Terminal;
 import javafx.animation.Animation;

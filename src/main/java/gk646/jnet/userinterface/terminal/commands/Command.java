@@ -1,6 +1,7 @@
 package gk646.jnet.userinterface.terminal.commands;
 
 import gk646.jnet.Info;
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.Window;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.CommandController;
@@ -8,6 +9,7 @@ import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.terminal.Parser;
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
+import gk646.jnet.util.NumberUtil;
 import gk646.jnet.util.StringUtil;
 import gk646.jnet.util.datastructures.Matrix;
 
@@ -148,11 +150,13 @@ public enum Command {
         public void cmd(String prompt) {
             Terminal.addText(Info.VERSION);
         }
-    }, resetall("resetall - resets all properties to default value // // Syntax: resetall") {
+    },
+
+    resetall("resetall - resets all properties to default value // // Syntax: resetall") {
         @Override
         public void cmd(String prompt) {
-            NetworkVisualizer.maxCircleDiameter = 20;
-            SettableProperties.fontsize.cmd("(15)");
+            NetworkVisualizer.maxCircleDiameter = 30;
+            SettableProperties.fontsize.cmd("15");
             Terminal.terminalRoot = ">";
             Terminal.addText("reset all value to default state!");
         }
@@ -168,14 +172,10 @@ public enum Command {
         public void cmd(String prompt) {
             Terminal.addText("man <method or command> for manual the manual page");
         }
-    }, reset("reset - reset the playground // reset both the NetBuilder and current Network to null // Syntax: reset") {
-        @Override
-        public void cmd(String prompt) {
+    },
 
-            Playground.reset();
-            Terminal.addText("playground was reset");
-        }
-    }, wiki("wiki - opens the wiki // opens the github wiki page about JNetVisualFX // Syntax: wiki") {
+
+    wiki("wiki - opens the wiki // opens the github wiki page about JNetVisualFX // Syntax: wiki") {
         private static final String wiki = "https://github.com/gk646/JNetVisualFX/wiki";
 
         @Override
@@ -318,6 +318,48 @@ public enum Command {
             } else {
                 Terminal.addText("no variable named: " + prompt);
             }
+        }
+    }, reset_user_statistics("reset-user-statistics - resets the user statistics completely; only necessary when user-statistics.txt is unreadable ;USE WITH CARE // Syntax: reset-user-statistics") {
+        @Override
+        public String toString() {
+            return "reset-user-statistics";
+        }
+
+        @Override
+        public void cmd(String prompt) {
+            Window.localFileSaver.resetUserStatistic();
+        }
+    }, reset("reset - reset the playground // reset both the NetBuilder and current Network to null // Syntax: reset") {
+        @Override
+        public void cmd(String prompt) {
+            Playground.reset();
+            Terminal.addText("playground was reset");
+        }
+    },
+
+    getStat("getStat - retrieves a statistic; returns the most updated value // Syntax: getStat <stat-name>") {
+        @Override
+        public void cmd(String prompt) {
+            prompt = prompt.replace("getStat ", "");
+            if (prompt.isEmpty() || prompt.equals("getStat")) {
+                Terminal.addText("Missing argument: getStat <stat-name>");
+                return;
+            }
+
+            UserStatistics.Stat stat;
+            try {
+                stat = UserStatistics.Stat.valueOf(prompt);
+            } catch (IllegalArgumentException ignored) {
+                Terminal.addText("no statistic with such name");
+                return;
+            }
+            if (stat == UserStatistics.Stat.totalSecondsUsed) {
+                Terminal.addText(String.valueOf(NumberUtil.getNewTotalTime(UserStatistics.getStat(stat))));
+                return;
+            }
+
+
+            Terminal.addText(UserStatistics.getStat(stat).toString());
         }
     };
 

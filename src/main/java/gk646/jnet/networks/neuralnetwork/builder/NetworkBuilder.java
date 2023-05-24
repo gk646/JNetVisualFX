@@ -120,7 +120,7 @@ public final class NetworkBuilder {
     }
 
     /**
-     * Sets the loss function which controls the inital error calculation which is propagated back through the network.
+     * Sets the loss function which controls the initial error calculation which is propagated back through the network.
      *
      * @param lossFunction the new loss function
      * @return a reference to this object

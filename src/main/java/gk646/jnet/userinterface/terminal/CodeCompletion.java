@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class CodeCompletion {
@@ -52,7 +53,7 @@ public final class CodeCompletion {
     }
 
     public List<String> autoComplete() {
-        if (Terminal.currentText.isEmpty()) return new ArrayList<>();
+        if (Terminal.currentText.isEmpty()) return Collections.emptyList();
 
         String input = Terminal.currentText.toString();
         if (input.startsWith("set ")) {
@@ -63,6 +64,10 @@ public final class CodeCompletion {
             inSpecialNameSpace = true;
             String newInput = input.replace("new ", "");
             return CommandController.creatableObjects.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
+        } else if (input.startsWith("getStat ")) {
+            inSpecialNameSpace = true;
+            String newInput = input.replace("getStat ", "");
+            return CommandController.userStatistics.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
         } else {
             inSpecialNameSpace = false;
             return commandList.stream().filter(word -> word.startsWith(input) && !word.equals(input)).toList();

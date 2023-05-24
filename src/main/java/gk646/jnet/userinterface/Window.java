@@ -18,7 +18,7 @@ import java.util.Objects;
 
 
 public class Window extends Application {
-    private LocalFileSaver localFileSaver;
+    public static LocalFileSaver localFileSaver;
 
     /**
      * The main entry point for all JavaFX applications.
@@ -36,6 +36,7 @@ public class Window extends Application {
      */
     @Override
     public void start(Stage stage) {
+        localFileSaver = new LocalFileSaver();
         //stage.initStyle(StageStyle.UNIFIED);    // can cause window to go white ?
         Point bounds = setupScreen();
         stage.setWidth(bounds.x);
@@ -63,7 +64,6 @@ public class Window extends Application {
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
 
         //System.out.println(System.getenv("TEST_KEY"));
-        localFileSaver = new LocalFileSaver();
         Log.logger.info("Startup took " + (System.nanoTime() - Main.startUpTime)/100_000_000 +" ms");
     }
 

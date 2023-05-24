@@ -1,5 +1,6 @@
 package gk646.jnet.userinterface.terminal;
 
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.graphics.Colors;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.userinterface.userinput.InputHandler;
@@ -92,7 +93,7 @@ public final class Terminal {
         //gc.fillRoundRect(containerHelper.getDrawX() - 10, containerHelper.getDrawY(), containerHelper.getWidth() + 5, containerHelper.getHeight(), 25, 25);
 
         gc.setFill(backGround);
-        gc.fillRoundRect(containerHelper.getDrawX()-5, containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight() + 3, 25, 25);
+        gc.fillRoundRect(containerHelper.getDrawX() - 5, containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight() + 3, 25, 25);
 
         gc.setFill(Colors.PHILIPINE_SILVER);
         gc.fillText("[Terminal]", containerHelper.getDrawX() + 10, containerHelper.getDrawY() + 20);
@@ -104,7 +105,7 @@ public final class Terminal {
         int activeLineLength = activeLine.length();
         int insertionPoint = activeLineLength - cursorOffsetLeft;
 
-        String cursorDisplay = (counter++ % 45 < 20) ? "|" : " ";
+        String cursorDisplay = (counter++ % 55 < 25) ? "|" : " ";
 
         if (cursorOffsetLeft > 0 && insertionPoint <= activeLineLength) {
             activeLine = new StringBuilder(activeLine).insert(insertionPoint, cursorDisplay).toString();
@@ -122,6 +123,7 @@ public final class Terminal {
 
         if (parser.parse(text) || Parser.numberParser.parse(text)) {
             commandHistory.add(text);
+            UserStatistics.updateStat(UserStatistics.Stat.totalCommandsUsed, 1);
         } else {
             terminalText.add(text + " :was not found to be a command");
         }

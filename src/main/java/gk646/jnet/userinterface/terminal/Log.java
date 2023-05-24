@@ -30,7 +30,7 @@ public final class Log {
     final List<String> lines = new ArrayList<>();
 
     public Log() {
-        logger.addHandler(new LogHandler());
+
     }
 
     public static void addLogText(String text) {
