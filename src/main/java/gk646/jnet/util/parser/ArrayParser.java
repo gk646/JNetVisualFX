@@ -5,6 +5,7 @@ import gk646.jnet.userinterface.terminal.Terminal;
 import gk646.jnet.util.datastructures.Matrix;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class ArrayParser {
@@ -63,7 +64,6 @@ public final class ArrayParser {
 
     private void parseOneDimensionalArray(String prompt, String listName) { // [2,3,4,5]
         double[] arr = parseArrayFromString(prompt.substring(1, prompt.length() - 1));
-
         if (Playground.playgroundLists.put(listName, new Matrix(arr)) != null) {
             Terminal.addText("updated list: " + listName);
         } else {
@@ -77,12 +77,12 @@ public final class ArrayParser {
         prompt = prompt.replace("][", " ");
         String[] arrays = prompt.substring(2, prompt.length() - 2).split(" ");
 
-        List<double[]> numberLists = new ArrayList<>(arrays.length);
+        List<double[]> numberList = new ArrayList<>(arrays.length);
         for (String numbers : arrays) {
-            numberLists.add(parseArrayFromString(numbers));
+            numberList.add(parseArrayFromString(numbers));
         }
 
-        if (Playground.playgroundLists.put(listName, new Matrix(numberLists.toArray(new double[arrays.length][]))) != null) {
+        if (Playground.playgroundLists.put(listName, new Matrix(numberList.toArray(new double[arrays.length][]))) != null) {
             Terminal.addText("updated list: " + listName);
         } else {
             Terminal.addText("added new list: " + listName);

@@ -83,10 +83,10 @@ public final class InputHandler {
             case CONTROL -> controlPressed = true;
 
             case PLUS -> {
-                if (controlPressed) Terminal.changeFontSize(1);
+                if (controlPressed) Terminal.TerminalInfo.changeFontSize(1);
             }
             case MINUS -> {
-                if (controlPressed) Terminal.changeFontSize(-1);
+                if (controlPressed) Terminal.TerminalInfo.changeFontSize(-1);
             }
             case LEFT -> {
                 if (Terminal.TerminalInfo.cursorOffsetLeft < Terminal.currentText.length()) Terminal.TerminalInfo.cursorOffsetLeft++;

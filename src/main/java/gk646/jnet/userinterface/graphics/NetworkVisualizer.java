@@ -11,12 +11,14 @@ public final class NetworkVisualizer {
     static final Color neuronColor = Colors.ICE_BERG;
     static final Color backGround = Colors.WHITE_SMOKE;
     public static float maxCircleDiameter = 35;
+    public static short[][][] activeConnection;
     static short offsetX = 0;
     static int offsetY = 0;
     static short verticalSpacing = 50;
     static short horizontalSpacing = 75;
     static int maxNeuronCountInLayers = 3;
     float circleDiameter = 15;
+    int waitCounter = 0;
 
     public NetworkVisualizer() {
     }
@@ -25,9 +27,17 @@ public final class NetworkVisualizer {
         maxNeuronCountInLayers = val;
     }
 
+    public static void updateConnectionMatrix(int[] layerInfo) {
+        activeConnection = new short[layerInfo.length - 1][][];
+        for (int i = 1; i < layerInfo.length; i++) {
+            activeConnection[i - 1] = new short[layerInfo[i]][layerInfo[i - 1]];
+        }
+    }
+
     public void draw(GraphicsContext gc) {
         drawBackGround(gc);
-        drawNetwork(gc);
+        drawNetworkLines(gc);
+        drawNetworkCircles(gc);
     }
 
     private void calculateCircleDiameter() {
@@ -49,39 +59,56 @@ public final class NetworkVisualizer {
         return (int) ((layerIndex + 1) * horizontalSpacing - circleDiameter / 2 + offsetX);
     }
 
-    private void drawNetwork(GraphicsContext gc) {
+    private void drawNetworkLines(GraphicsContext gc) {
         if (Playground.neuralNetwork == null) return;
 
         calculateCircleDiameter();
         calculateSpacing();
         gc.setStroke(Colors.PASTEL_GREY);
-        gc.setFill(neuronColor);
         int[] netDimensions = Playground.neuralNetwork.getBounds();
 
-        int[] startXs = new int[netDimensions.length];
-        int[][] startYs = new int[netDimensions.length][];
-
-        for (int i = 0; i < netDimensions.length; i++) {
-            int neuronCount = netDimensions[i];
-            startXs[i] = getLayerStartX(i);
-            startYs[i] = new int[neuronCount];
-
+        int startY;
+        int startX = (int) (getLayerStartX(1) + circleDiameter / 2);
+        int previousX;
+        int previousY;
+        int neuronCount;
+        for (int i = 1; i < netDimensions.length; i++) {
+            neuronCount = netDimensions[i];
+            startY = (int) (getLayerStartY(neuronCount) + circleDiameter / 2);
             for (int j = 0; j < neuronCount; j++) {
-                startYs[i][j] = getLayerStartY(neuronCount) + j * verticalSpacing;
-
-                if (i > 0) {
-                    for (int k = 0; k < netDimensions[i - 1]; k++) {
-                        gc.strokeLine(startXs[i] + circleDiameter / 2, startYs[i][j] + circleDiameter / 2,
-                                startXs[i - 1] + circleDiameter / 2, startYs[i - 1][k] + circleDiameter / 2);
+                previousY = (int) (getLayerStartY(netDimensions[i - 1]) + circleDiameter / 2);
+                previousX = (int) (getLayerStartX(i - 1) + circleDiameter / 2);
+                for (int k = 0; k < netDimensions[i - 1]; k++) {
+                    if (activeConnection[i - 1][j][k] > 0) {
+                        gc.setStroke(Colors.RED);
+                        gc.strokeLine(startX, startY, previousX, previousY);
+                        gc.setStroke(Colors.PASTEL_GREY);
+                        activeConnection[i - 1][j][k]--;
+                    } else {
+                        gc.strokeLine(startX, startY, previousX, previousY);
                     }
+                    previousY += verticalSpacing;
                 }
+                startY += verticalSpacing;
             }
+            startX += horizontalSpacing;
         }
+    }
 
-        for (int i = 0; i < netDimensions.length; i++) {
-            for (int j = 0; j < netDimensions[i]; j++) {
-                gc.fillOval(startXs[i], startYs[i][j], circleDiameter, circleDiameter);
+    private void drawNetworkCircles(GraphicsContext gc) {
+        if (Playground.neuralNetwork == null) return;
+
+        gc.setFill(neuronColor);
+        int[] netDimensions = Playground.neuralNetwork.getBounds();
+        int startX = getLayerStartX(0);
+        int startY;
+        for (final int netDimension : netDimensions) {
+            startY = getLayerStartY(netDimension);
+            for (int j = 0; j < netDimension; j++) {
+                gc.fillOval(startX, startY, circleDiameter, circleDiameter);
+                startY += verticalSpacing;
             }
+            startX += horizontalSpacing;
         }
     }
 

@@ -16,10 +16,12 @@ import gk646.jnet.util.datastructures.Matrix;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum Command {
+
 
     print("print - terminal output // prints out the given value, performs basic arithmetic on numbers // Syntax - print(<args>)") {
         private final Pattern pattern = Pattern.compile("print\\((.*?)\\)");
@@ -27,7 +29,7 @@ public enum Command {
         @Override
         public void cmd(String prompt) {
             if (!prompt.contains(")")) {
-                Terminal.addText("missing closing bracket: " + prompt);
+                Terminal.addText(missingBracket + prompt);
                 return;
             }
 
@@ -63,9 +65,6 @@ public enum Command {
             Terminal.addText("no object with manual page named: " + prompt);
         }
     }, new1("new - create new object // works with either \"Network\" or \"NetBuilder\" // Syntax - new <ObjectName>") {
-
-        private final Pattern pattern = Pattern.compile("(\\w+)\\(\\[([^)]+)],([^)]+)\\)");
-
         @Override
         public String toString() {
             return "new";
@@ -173,8 +172,6 @@ public enum Command {
             Terminal.addText("man <method or command> for manual the manual page");
         }
     },
-
-
     wiki("wiki - opens the wiki // opens the github wiki page about JNetVisualFX // Syntax: wiki") {
         private static final String wiki = "https://github.com/gk646/JNetVisualFX/wiki";
 
@@ -201,14 +198,18 @@ public enum Command {
             }
             Terminal.terminalRoot = prompt + ">";
         }
-    }, quicksetup("quicksetup - quickly generates a basic Network((4,4,4), sigmoid)// Syntax: quicksetup") {
+    }, quicksetup("quicksetup - helper command; not to be used // Syntax: quicksetup") {
         @Override
         public void cmd(String prompt) {
-            Terminal.parseText("new NetBuilder([3,3,3],sigmoid)");
+            Terminal.parseText("new NetBuilder([2,2,1],sigmoid)");
             Terminal.parseText("new Network");
             Terminal.parseText("list he [23,23,23]");
             Terminal.parseText("list hey [23,23,24]");
-            Terminal.parseText("train(hey,he,3)");
+
+            Terminal.parseText("list input [[0,1][1,0][0,0][1,1]]");
+            Terminal.parseText("list output [[1],[1],[0],[0]]");
+
+            Terminal.parseText("jnet_train(input,output,3)");
         }
     }, listget("") {
         @Override
@@ -256,60 +257,6 @@ public enum Command {
                 return;
             }
             Parser.arrayParser.parseList(prompt, listName);
-        }
-    }, train("train - trains your active network; needs data to be in the same shape // Syntax: train(<input-list>,<target-list>,<repetitions>)") {
-        final String syntax = "(<input-list>,<target-list>,<repetitions>)";
-
-        @Override
-        public void cmd(String prompt) {
-            if (Playground.neuralNetwork == null) {
-                Terminal.addText("no neural network!");
-                return;
-            }
-
-            prompt = prompt.replace("train(", "");
-            if (prompt.isBlank() || prompt.equals("train")) {
-                Terminal.addText("missing list names: " + this + syntax);
-                return;
-            }
-            if (!prompt.contains(")")) {
-                Terminal.addText("missing closing bracket: " + this + syntax);
-                return;
-            }
-            if (StringUtil.countChar(prompt, ',') != 2) {
-                Terminal.addText("missing commas/arguments: " + this + syntax);
-                return;
-            }
-
-            String[] arguments = prompt.substring(0, prompt.length() - 1).split(",");
-            /*
-            if (arguments.length < 3) {
-                Terminal.addText("Invalid command, not enough arguments provided: " + this + syntax);
-                return;
-            }
-
-             */
-            Matrix input = Playground.playgroundLists.get(arguments[0]);
-            Matrix target = Playground.playgroundLists.get(arguments[1]);
-
-            if (input == null) {
-                Terminal.addText("input matrix not fond: " + arguments[0]);
-                return;
-            }
-            if (target == null) {
-                Terminal.addText("target matrix not found: " + arguments[1]);
-                return;
-            }
-
-            int repetitions;
-            try {
-                repetitions = Integer.parseInt(arguments[2]);
-            } catch (NumberFormatException e) {
-                Terminal.addText("repetitions must be a valid integer: " + arguments[2]);
-                return;
-            }
-
-            Playground.neuralNetwork.train(input.getRawData(), input.getRawData(), repetitions);
         }
     }, $("$ - denotes a variable// Syntax: $<variable-Name>") {
         @Override
@@ -364,8 +311,140 @@ public enum Command {
 
             Terminal.addText(UserStatistics.getStat(stat).toString());
         }
-    };
+    },
 
+
+    jnet_train("jnet-train - trains your active Network; needs data to be in the same shape // Syntax: jnet-train(<input-list>,<target-list>,<repetitions>)") {
+        static final String syntax = "(<input-list>,<target-list>,<repetitions>)";
+
+        @Override
+        public void cmd(String prompt) {
+            if (Playground.neuralNetwork == null) {
+                Terminal.addText(noNetwork);
+                return;
+            }
+
+            prompt = prompt.replace("jnet_train(", "");
+            if (prompt.isBlank() || prompt.equals("jnet_train")) {
+                Terminal.addText(missingList + "jnet_train(" + syntax);
+                return;
+            }
+            if (!prompt.contains(")")) {
+                Terminal.addText(missingBracket + this + syntax);
+                return;
+            }
+            if (StringUtil.countChar(prompt, ',') != 2) {
+                Terminal.addText("missing commas/arguments: " + this + syntax);
+                return;
+            }
+
+            String[] arguments = prompt.substring(0, prompt.length() - 1).split(",");
+
+
+            Matrix input = Playground.playgroundLists.get(arguments[0]);
+            Matrix target = Playground.playgroundLists.get(arguments[1]);
+
+            if (input == null) {
+                Terminal.addText("input matrix not fond: " + arguments[0]);
+                return;
+            }
+            if (target == null) {
+                Terminal.addText("target matrix not found: " + arguments[1]);
+                return;
+            }
+
+            int repetitions;
+            try {
+                repetitions = Integer.parseInt(arguments[2]);
+            } catch (NumberFormatException e) {
+                Terminal.addText("repetitions must be a valid integer: " + arguments[2]);
+                return;
+            }
+
+            Playground.neuralNetwork.trainVisual(input.getRawData(), target.getRawData(), repetitions);
+        }
+    },
+    jnet_randomtrain("jnet-randomtrain - randomly shuffles training data ; same as jnet_train // Syntax: jnet-randomtrain(<input-list>,<target-list>,<repetitions>)") {
+        static final String syntax = "(<input-list>,<target-list>,<repetitions>)";
+
+        @Override
+        public void cmd(String prompt) {
+            if (Playground.neuralNetwork == null) {
+                Terminal.addText(noNetwork);
+                return;
+            }
+
+            prompt = prompt.replace("jnet_randomtrain(", "");
+            if (prompt.isBlank() || prompt.equals("jnet_randomtrain")) {
+                Terminal.addText(missingList + this + syntax);
+                return;
+            }
+            if (!prompt.contains(")")) {
+                Terminal.addText(missingBracket + this + syntax);
+                return;
+            }
+            if (StringUtil.countChar(prompt, ',') != 2) {
+                Terminal.addText("missing commas/arguments: " + this + syntax);
+                return;
+            }
+
+            String[] arguments = prompt.substring(0, prompt.length() - 1).split(",");
+
+
+            Matrix input = Playground.playgroundLists.get(arguments[0]);
+            Matrix target = Playground.playgroundLists.get(arguments[1]);
+
+            if (input == null) {
+                Terminal.addText("input matrix not fond: " + arguments[0]);
+                return;
+            }
+            if (target == null) {
+                Terminal.addText("target matrix not found: " + arguments[1]);
+                return;
+            }
+
+            int repetitions;
+            try {
+                repetitions = Integer.parseInt(arguments[2]);
+            } catch (NumberFormatException e) {
+                Terminal.addText("repetitions must be a valid integer: " + arguments[2]);
+                return;
+            }
+
+            Playground.neuralNetwork.trainRandom(input.getRawData(), target.getRawData(), repetitions);
+        }
+    },
+    jnet_out("jnet-out - give you the output for a given input // Syntax: jnet-out(<input-list>)") {
+        static final String syntax = "(<input-list>)";
+
+        @Override
+        public void cmd(String prompt) {
+            if (Playground.neuralNetwork == null) {
+                Terminal.addText("no neural network!");
+                return;
+            }
+
+            prompt = prompt.replace("jnet_out(", "");
+            if (prompt.isBlank() || prompt.equals("jnet_out")) {
+                Terminal.addText("missing list names: " + this + syntax);
+                return;
+            }
+            if (!prompt.contains(")")) {
+                Terminal.addText(missingBracket + this + syntax);
+                return;
+            }
+
+            Matrix input = Playground.playgroundLists.get(prompt.substring(0, prompt.length() - 1));
+            if (input == null) {
+                Terminal.addText("input matrix not fond: " + prompt.substring(0, prompt.length() - 1));
+                return;
+            }
+            Terminal.addText(Arrays.toString(Playground.neuralNetwork.out(input.getRow(0))));
+        }
+    };
+    static final String missingBracket = "missing closing bracket: ";
+    static final String noNetwork = "no neural network!";
+    static final String missingList = "missing list names: ";
     private final String manPage;
     Matcher matcher;
 

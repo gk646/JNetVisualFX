@@ -26,11 +26,6 @@ public final class Terminal {
     public Terminal() {
         terminalText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder((4,4,4),sigmoid)\"");
         commandHistory.add("help");
-        terminalText.setLimit(containerHelper.getHeight() / TerminalInfo.lineHeight);
-    }
-
-    public static int getFontSize() {
-        return TerminalInfo.fontSize;
     }
 
     public static void parseText(String text) {
@@ -48,20 +43,11 @@ public final class Terminal {
     }
 
     public static void addText(String text) {
-        terminalText.add(text);
+        terminalText.add(StringUtil.insertNewLines(text,TerminalInfo.maxCharsPerLine));
     }
 
     public static void clear() {
         terminalText.clear();
-    }
-
-    public static void changeFontSize(int value) {
-        TerminalInfo.fontSize += value;
-        TerminalInfo.activeFont = Resources.getFontInSize(TerminalInfo.fontSize);
-        Text text1 = new Text("A");
-        text1.setFont(TerminalInfo.activeFont);
-        TerminalInfo.characterWidth = (float) (text1.getLayoutBounds().getWidth());
-        TerminalInfo.lineHeight = TerminalInfo.fontSize + 4;
     }
 
     public static void scrollCommandHistory() {
@@ -70,7 +56,7 @@ public final class Terminal {
     }
 
     public void updateSize() {
-        terminalText.setLimit((containerHelper.getHeight() / TerminalInfo.lineHeight) -1);
+        terminalText.setLimit((containerHelper.getHeight() / TerminalInfo.lineHeight) - 1);
         TerminalInfo.maxCharsPerLine = (int) (containerHelper.getWidth() / TerminalInfo.characterWidth);
         recalculateLineBreaks();
     }
@@ -148,6 +134,19 @@ public final class Terminal {
         static Font activeFont = Resources.getFontInSize(fontSize);
 
         private TerminalInfo() {
+        }
+
+        public static int getFontSize() {
+            return TerminalInfo.fontSize;
+        }
+
+        public static void changeFontSize(int value) {
+            TerminalInfo.fontSize += value;
+            TerminalInfo.activeFont = Resources.getFontInSize(TerminalInfo.fontSize);
+            Text text1 = new Text("A");
+            text1.setFont(TerminalInfo.activeFont);
+            TerminalInfo.characterWidth = (float) (text1.getLayoutBounds().getWidth());
+            TerminalInfo.lineHeight = TerminalInfo.fontSize + 4;
         }
     }
 }

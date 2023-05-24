@@ -66,6 +66,9 @@ public final class JNetVisualFX {
             log.updateSize();
             terminal.updateSize();
         });
+
+        terminal.updateSize();
+        log.updateSize();
     }
 
 
