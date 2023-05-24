@@ -23,6 +23,7 @@ public class NetLogger extends java.util.logging.Logger {
      */
     public NetLogger(String name, String resourceBundleName) {
         super(name, resourceBundleName);
+        addHandler(new LogHandler());
         this.setUseParentHandlers(false);
     }
 

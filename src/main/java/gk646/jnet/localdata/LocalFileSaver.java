@@ -1,6 +1,8 @@
 package gk646.jnet.localdata;
 
 import gk646.jnet.Info;
+import gk646.jnet.localdata.files.UserSettings;
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.terminal.Log;
 
 import java.io.BufferedReader;
@@ -16,38 +18,29 @@ public class LocalFileSaver {
 
     LocalData localData;
     OperatingSystem os;
-    final boolean savePossible;
+    boolean savePossible;
     private String fullDirectoryPath;
 
     public LocalFileSaver() {
         os = getOS();
         savePossible = (isOSSupported() & canCreateAppDataFolder() & createLocalFiles());
         if (!savePossible) {
-            Log.logger.warning("cant read user setting");
+            Log.logger.warning("local save not supported");
             return;
         }
 
-        localData = readLocalFiles();
+        localData = LocalData.readLocalFiles(fullDirectoryPath);
     }
 
 
     public void saveLocalFiles() {
         if (!savePossible || fullDirectoryPath == null) return;
+        localData.saveAll(fullDirectoryPath);
     }
 
-
-    public LocalData readLocalFiles() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fullDirectoryPath + File.separator + Info.CONFIGURATION_FILE_NAME))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-            return LocalData.empty();
-        } catch (IOException e) {
-            return LocalData.empty();
-        }
+    public void resetUserStatistic(){
+        localData.resetStats(fullDirectoryPath);
     }
-
     private boolean canCreateAppDataFolder() {
         String appDataPath = null;
         switch (os) {
