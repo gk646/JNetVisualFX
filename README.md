@@ -12,11 +12,17 @@ JNetVisualFX is a terminal based NeuralNetwork visualizer with the focus on test
 ### *Disclaimer*
 Iam in no way an expert on machine learning or neural networks. All information provided or gained through using JNetVisualFX is not guaranteed to be right nor do I guarantee it. I try to do my best to make an interesting application and learn about these topics myself by implementing them.
 
-### Install
 
-The application comes already prepackaged in a .zip-archive with a runtime included. Just unzip it and start `JNetVisualFX.exe`.
+### **How to Install**
 
-### How to get started:
+**Windows**  
+The application comes already prepackaged in a .zip-archive with a runtime included. Just unzip it and start `JNetVisualFX.exe`.  
+
+**Unix**  
+Downlaod the v.x.x.x-LINUX.jar and run it. **You will need a basic Java Runtime installed**.  
+
+
+### **How to get started:**
 
 Upon starting, you won't have a built network yet. For building your first Network you need a NetBuilder, which is a reusable building block for your network.    
 Create a new NetBuilder with `new NetBuilder([4,4,4],sigmoid)`, the first argument being a list of numbers representing the neuronCount each layer. Second is a activationFunction.
@@ -24,7 +30,7 @@ You can customize your NetBuilder with further commands to your liking.
 When you have your desired NetBuilder call `new Network` to create a new Network with your NetBuilder.  
 Voilà, you made your first Network now you can play around with it!
 
-### Terminal
+### **Terminal**
 
 The terminal is the central part of JNetVisualFX allowing you to get information, customize the application and interact with networks.  
 It supports:
