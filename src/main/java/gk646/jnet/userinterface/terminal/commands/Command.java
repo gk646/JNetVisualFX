@@ -2,6 +2,7 @@ package gk646.jnet.userinterface.terminal.commands;
 
 import gk646.jnet.Info;
 import gk646.jnet.localdata.files.UserStatistics;
+import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
 import gk646.jnet.userinterface.Window;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.CommandController;
@@ -92,7 +93,6 @@ public enum Command {
             Terminal.addText("no creatable object named: " + creatableName);
         }
     }, set("set - sets a given property // sets properties e.g circlesize, fontsize, bgr_color... // Syntax: set <propertyName>(<value>)") {
-        static final SettableProperties[] SETTABLE_PROPERTIES = SettableProperties.values();
 
         @Override
         public void cmd(String prompt) {
@@ -107,7 +107,7 @@ public enum Command {
                 prompt = prompt.replace(creatableName, "").trim();
             }
 
-            for (SettableProperties settableProperties : SETTABLE_PROPERTIES) {
+            for (SettableProperties settableProperties : CommandController.SETTABLE_PROPERTIES) {
                 if (settableProperties.name().equals(creatableName)) {
                     Terminal.addText(settableProperties.cmd(prompt));
                     return;
@@ -440,6 +440,13 @@ public enum Command {
                 return;
             }
             Terminal.addText(Arrays.toString(Playground.neuralNetwork.out(input.getRow(0))));
+        }
+    },
+
+    jnet_fastforward("jnet_fastforward - will skip all delays to quickly finish the task") {
+        @Override
+        public void cmd(String prompt) {
+            NeuralNetwork.resetWorker();
         }
     };
     static final String missingBracket = "missing closing bracket: ";

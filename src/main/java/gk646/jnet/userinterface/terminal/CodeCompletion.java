@@ -1,14 +1,11 @@
 package gk646.jnet.userinterface.terminal;
 
 import gk646.jnet.userinterface.graphics.Colors;
-import gk646.jnet.userinterface.terminal.commands.Command;
 import gk646.jnet.util.datastructures.Trie;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,16 +14,18 @@ public final class CodeCompletion {
     private static final Color backGround = Colors.INTELLIJ_GREY;
     private static List<String> currentCompletions = new ArrayList<>();
     private static boolean inSpecialNameSpace;
-    final ArrayList<String> commandList = new ArrayList<>(Arrays.stream(CommandController.COMMANDS).map(Enum::toString).toList());
     private String previousPrompt = "";
 
-    CodeCompletion() {
+     CodeCompletion() {
+        /*
         for (Command command : CommandController.COMMANDS) {
             trie.insert(command.toString());
         }
         for (Method method : Parser.getMethodMap().values()) {
             trie.insert(method.getName());
         }
+
+         */
     }
 
     public static boolean blockCommandHistory() {
@@ -82,9 +81,13 @@ public final class CodeCompletion {
             inSpecialNameSpace = true;
             String newInput = input.replace("getStat ", "");
             return CommandController.userStatistics.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
+        } else if (input.startsWith("man ")) {
+            inSpecialNameSpace = true;
+            String newInput = input.replace("man ", "");
+            return CommandController.MANUALS.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
         } else {
             inSpecialNameSpace = false;
-            return commandList.stream().filter(word -> word.startsWith(input) && !word.equals(input)).toList();
+            return CommandController.commandList.stream().filter(word -> word.startsWith(input) && !word.equals(input)).toList();
         }
     }
 
