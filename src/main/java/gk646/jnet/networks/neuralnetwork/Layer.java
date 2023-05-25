@@ -117,6 +117,10 @@ public final class Layer {
             double d = error[i];
             d *= derivativeFunc.apply(wSums[i]);
             for (int j = 0; j < input.length; j++) {
+                if (j < input.length - 1) {
+                    NetworkVisualizer.activeConnection[layerNumber][i][j] -= 15;
+                    NetworkUtils.sleep(NeuralNetwork.delayPerStep);
+                }
                 nextError[j] += weights[j][i] * d;
                 double dw = input[j] * d * learnRate;
                 weights[j][i] -= dweights[j][i] * momentum + dw;

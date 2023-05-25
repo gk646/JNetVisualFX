@@ -14,6 +14,7 @@ import java.util.InputMismatchException;
 public final class NeuralNetwork {
     public static boolean VERBOSE = true;
     static int delayPerStep = 70;
+    static Thread worker;
     private final Network network;
 
     @Manual(text = "The NeuralNetwork. Can be built using \"new Network\" after you made a NetBuilder. All the attributes like learn-rate and activation function are changed through the NetBuilder." +
@@ -24,6 +25,13 @@ public final class NeuralNetwork {
 
     public static void setDelayPerStep(int val) {
         delayPerStep = val;
+    }
+
+    public static void resetWorker() {
+        if (worker != null) {
+            worker.interrupt();
+        }
+        worker = null;
     }
 
     /**
@@ -44,7 +52,12 @@ public final class NeuralNetwork {
     public void trainVisual(double[][] input, double[][] target, int repetitions) {
         if (!network.netUtils.arrayShapeCheck(input, target)) return;
 
-        new Thread(() -> {
+        if (worker != null) {
+            Log.logger.severe("training already in progress! \"jnet_fastforward\" to skip");
+            return;
+        }
+
+        worker = new Thread(() -> {
             for (int i = 0; i < repetitions; i++) {
                 for (int j = 0; j < input.length; j++) {
                     network.backPropagationVisual(input[j], target[j]);
@@ -52,28 +65,37 @@ public final class NeuralNetwork {
                 network.netUtils.perRepetitionTasks(input, target);
             }
             network.netUtils.finishTraining(repetitions, input.length);
-        }).start();
+            worker = null;
+        });
+        worker.start();
     }
 
     public void trainRandom(double[][] input, double[][] target, int repetitions) {
         if (!network.netUtils.arrayShapeCheck(input, target)) return;
 
-        new Thread(() -> {
+        if (worker != null) {
+            Log.logger.severe("training already in progress! \"jnet_fastforward\" to skip");
+            return;
+        }
+
+        worker = new Thread(() -> {
+            int number;
             for (int i = 0; i < repetitions; i++) {
                 for (int j = 0; j < input.length; j++) {
-                    int number = NetworkUtils.rng.nextInt(input.length);
+                    number = NetworkUtils.rng.nextInt(input.length);
                     network.backPropagation(input[number], target[number]);
                 }
                 network.netUtils.perRepetitionTasks(input, target);
             }
             network.netUtils.finishTraining(repetitions, input.length);
-        }).start();
+        });
+        worker.start();
     }
 
     public void trainSynchronous(double[][] input, double[][] target, int repetitions) {
         if (!network.netUtils.arrayShapeCheck(input, target)) return;
 
-        var worker= new Thread(() -> {
+        var worker = new Thread(() -> {
             for (int i = 0; i < repetitions; i++) {
                 for (int j = 0; j < input.length; j++) {
                     int number = NetworkUtils.rng.nextInt(input.length);

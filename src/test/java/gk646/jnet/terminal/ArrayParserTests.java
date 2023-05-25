@@ -1,7 +1,10 @@
 package gk646.jnet.terminal;
 
 import gk646.jnet.localdata.files.UserStatistics;
+import gk646.jnet.userinterface.terminal.CodeCompletion;
+import gk646.jnet.userinterface.terminal.CommandController;
 import gk646.jnet.userinterface.terminal.Terminal;
+import gk646.jnet.userinterface.terminal.commands.Command;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

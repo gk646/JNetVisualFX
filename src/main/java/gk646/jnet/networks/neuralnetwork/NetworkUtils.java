@@ -9,7 +9,8 @@ import java.util.Random;
 public final class NetworkUtils {
 
     public static final Random rng = new Random(System.nanoTime());
-    static final String SHAPE_ERROR = "Given input matrix does not match shape of target matrix";
+    static final String ARRAY_MISMATCH = "given matrices do not have the same length";
+    static final String NETWORK_MISMATCH = "given matrices do not match network bounds";
     final Network network;
 
     public NetworkUtils(Network network) {
@@ -20,6 +21,7 @@ public final class NetworkUtils {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException ignored) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -75,19 +77,22 @@ public final class NetworkUtils {
 
     public boolean arrayShapeCheck(double[][] input, double[][] target) {
         if (input.length != target.length) {
-            return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
+            return Log.logger.logException(InputMismatchException.class, ARRAY_MISMATCH);
         }
         for (int i = 0; i < input.length; i++) {
             if (input[i].length != network.inputLayerSize || target[i].length != network.outputLayerSize) {
-                return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
+                return Log.logger.logException(InputMismatchException.class, NETWORK_MISMATCH);
             }
         }
         return true;
     }
 
     public boolean arrayShapeCheck(double[] input, double[] target) {
-        if (input.length != target.length || input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
-            return Log.logger.logException(InputMismatchException.class, SHAPE_ERROR);
+        if (input.length != target.length) {
+            return Log.logger.logException(InputMismatchException.class, ARRAY_MISMATCH);
+        }
+        if (input.length != network.inputLayerSize || target.length != network.outputLayerSize) {
+            return Log.logger.logException(InputMismatchException.class, NETWORK_MISMATCH);
         }
         return true;
     }

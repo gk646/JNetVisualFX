@@ -84,6 +84,11 @@ public final class NetworkVisualizer {
                         gc.strokeLine(startX, startY, previousX, previousY);
                         gc.setStroke(Colors.PASTEL_GREY);
                         activeConnection[i - 1][j][k]--;
+                    } else if (activeConnection[i - 1][j][k] < 0) {
+                        gc.setStroke(Colors.ICE_BERG);
+                        gc.strokeLine(startX, startY, previousX, previousY);
+                        gc.setStroke(Colors.PASTEL_GREY);
+                        activeConnection[i - 1][j][k]++;
                     } else {
                         gc.strokeLine(startX, startY, previousX, previousY);
                     }

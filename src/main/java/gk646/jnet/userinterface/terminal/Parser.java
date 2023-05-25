@@ -30,9 +30,6 @@ public final class Parser {
         constructorMap.put("NetBuilder", NetworkBuilder.class.getConstructors()[0]);
     }
 
-    public static Map<String, Method> getMethodMap() {
-        return methodMap;
-    }
 
     public static Map<String, Constructor> getConstructorMap() {
         return constructorMap;

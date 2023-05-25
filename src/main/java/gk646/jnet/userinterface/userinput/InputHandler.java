@@ -45,6 +45,7 @@ public final class InputHandler {
             case DEL -> {
                 if (Terminal.TerminalInfo.cursorOffsetLeft > 0 && Terminal.TerminalInfo.cursorOffsetLeft <= Terminal.currentText.length()) {
                     Terminal.currentText.deleteCharAt(Terminal.currentText.length() - Terminal.TerminalInfo.cursorOffsetLeft);
+                    Terminal.TerminalInfo.cursorOffsetLeft-=1;
                 }
                 return;
             }
