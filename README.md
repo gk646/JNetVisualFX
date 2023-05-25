@@ -6,6 +6,9 @@ JNetVisualFX is a terminal based NeuralNetwork visualizer with the focus on test
 <!--suppress CheckImageSize -->
 <img src="screenshots/0.9.7_training.png" alt="The startup screen with a 10,10,10,2 Layer Network" width="830" height="580">
 
+
+## For a comprehensive guide check [Wiki!](https://github.com/gk646/JNetVisualFX/wiki/Home/)
+
 ### *Disclaimer*
 Iam in no way an expert on machine learning or neural networks. All information provided or gained through using JNetVisualFX is not guaranteed to be right nor do I guarantee it. I try to do my best to make an interesting application and learn about these topics myself by implementing them.
 
@@ -16,7 +19,7 @@ The application comes already prepackaged in a .zip-archive with a runtime inclu
 ### How to get started:
 
 Upon starting, you won't have a built network yet. For building your first Network you need a NetBuilder, which is a reusable building block for your network.    
-Create a new NetBuilder with `new NetBuilder((4,4,4),sigmoid)`, the first argument being a list of numbers representing the neuronCount each layer. Second is a activationFunction.
+Create a new NetBuilder with `new NetBuilder([4,4,4],sigmoid)`, the first argument being a list of numbers representing the neuronCount each layer. Second is a activationFunction.
 You can customize your NetBuilder with further commands to your liking.  
 When you have your desired NetBuilder call `new Network` to create a new Network with your NetBuilder.  
 Voilà, you made your first Network now you can play around with it!
@@ -29,6 +32,7 @@ It supports:
 - Scrolling through past commands using UP and DOWN (if there's no autocompletion)
 - changing cursor position with LEFT and RIGHT  
 - Code completion with TAB (if there's only 1 suggestion)
+- Pasting text from the clipboard
 
 There's lots of useful commands but these here will get you started:
 - `help` - displays helpful information 
@@ -37,17 +41,3 @@ There's lots of useful commands but these here will get you started:
 
 Feel free to experiment around there's a lot of small commands to explore.
 
-
-### Working with data
-...
-
-
-### Training your Network
-...
-
-
-### Exercises
-...
-
-
-##
