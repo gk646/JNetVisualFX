@@ -33,6 +33,9 @@ It supports:
 - changing cursor position with LEFT and RIGHT  
 - Code completion with TAB (if there's only 1 suggestion)
 - Pasting text from the clipboard
+- Parsing of arithmetic expressions from the command line e.g `2+3`
+- Printing variables (lists) with `$<var-name>` 
+
 
 There's lots of useful commands but these here will get you started:
 - `help` - displays helpful information 
