@@ -4,6 +4,7 @@ import gk646.jnet.Info;
 import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
 import gk646.jnet.userinterface.Window;
+import gk646.jnet.userinterface.graphics.ColorPalette;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.CommandController;
 import gk646.jnet.userinterface.terminal.Log;
@@ -22,7 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum Command {
-
 
     print("print(<args>) -  prints out the given value, performs basic arithmetic on numbers") {
         private final Pattern pattern = Pattern.compile("print\\((.*?)\\)");
@@ -63,6 +63,13 @@ public enum Command {
                     return;
                 }
             }
+
+            if (prompt.equals("themes")) {
+                for (ColorPalette palette : ColorPalette.values()) {
+                    Log.addLogText(palette.name());
+                    return;
+                }
+            }
             Terminal.addText("no object with manual page named: " + prompt);
         }
     }, new1("new <creatableName> - creates a new object; autocompletion shows a list of all creatable objects; can be man<object> to get info") {
@@ -92,29 +99,9 @@ public enum Command {
             }
             Terminal.addText("no creatable object named: " + creatableName);
         }
-    }, set("set <propertyName>(<value>) - sets the given property; autocompletion shows list ; properties can be man<name> to get info") {
-        @Override
-        public void cmd(String prompt) {
-            prompt = prompt.replace("set ", "");
-            if (prompt.isBlank() || prompt.equals("set")) {
-                Terminal.addText("missing argument: set <propertyName> value || e.g. \"set circlesize 25\"");
-                return;
-            }
-            String creatableName = prompt;
-            if (prompt.contains(" ")) {
-                creatableName = prompt.substring(0, prompt.indexOf(" "));
-                prompt = prompt.replace(creatableName, "").trim();
-            }
+    },
 
-            for (SettableProperties settableProperties : SettableProperties.values()) {
-                if (settableProperties.name().equals(creatableName)) {
-                    Terminal.addText(settableProperties.cmd(prompt));
-                    return;
-                }
-            }
-            Terminal.addText("no property named:" + creatableName);
-        }
-    }, exit("exit - exits the application") {
+    exit("exit - exits the application") {
         @Override
         public void cmd(String prompt) {
             Terminal.clear();
@@ -157,6 +144,7 @@ public enum Command {
             SettableProperties.fontsize.cmd("15");
             Terminal.terminalRoot = ">";
             Terminal.addText("reset all value to default state!");
+            ColorPalette.DEFAULT.loadPalette();
         }
     }, helpall("helpall -  lists all commands including their man page in the log") {
         @Override
@@ -183,7 +171,7 @@ public enum Command {
                 Terminal.addText("error opening: " + wiki);
             }
         }
-    }, name("name - name yourself // adds your name to the terminal root; \"reset\" to reset // Syntax: name <name>") {
+    }, name("name <name> - name yourself ; adds your name to the terminal root; \"name reset\" to reset") {
         @Override
         public void cmd(String prompt) {
             prompt = prompt.replace("name ", "");
@@ -198,7 +186,7 @@ public enum Command {
             }
             Terminal.terminalRoot = prompt + ">";
         }
-    }, quicksetup("quicksetup - helper command; not to be used // Syntax: quicksetup") {
+    }, quicksetup("quicksetup - helper command; not to be used") {
         @Override
         public void cmd(String prompt) {
             Terminal.parseText("new NetBuilder([2,2,1],sigmoid)");
@@ -227,12 +215,16 @@ public enum Command {
                 Terminal.addText("no list named: " + prompt);
             }
         }
-    }, listall("listall - displays a list of lists created ") {
+    }, listall("listall - displays all named lists; use \"list\" to create one") {
         @Override
         public void cmd(String prompt) {
+            if (Playground.playgroundLists.isEmpty()) {
+                Terminal.addText("no saved lists");
+                return;
+            }
             Playground.playgroundLists.forEach((s, matrix) -> Terminal.addText(s + ": " + matrix));
         }
-    }, list("list - creates and saves a named list out of the given input; can be floating points ; max depth is 2 ; bracket type = [] // Syntax: list <name> <[[list,of][num,bers]]> ") {
+    }, list("list <name> <[[list,of][num,bers]]> - creates and saves a named list out of the given input; can be floating points ; max depth is 2 ; bracket type = []") {
         static final String syntax = " <name> <[array type]>";
 
         @Override
@@ -258,7 +250,7 @@ public enum Command {
             }
             Parser.arrayParser.parseList(prompt, listName);
         }
-    }, $("$ - denotes a variable// Syntax: $<variable-Name>") {
+    }, $("$<variable-Name> - denotes a variable") {
         @Override
         public void cmd(String prompt) {
             prompt = prompt.substring(1);
@@ -269,17 +261,12 @@ public enum Command {
                 Terminal.addText("no variable named: " + prompt);
             }
         }
-    }, reset_user_statistics("reset-user-statistics - resets the user statistics completely; only necessary when user-statistics.txt is unreadable ;USE WITH CARE // Syntax: reset-user-statistics") {
-        @Override
-        public String toString() {
-            return "reset-user-statistics";
-        }
-
+    }, reset_user_statistics("reset_user_statistics - resets the user statistics completely; only necessary when user-statistics.txt is unreadable ;USE WITH CARE") {
         @Override
         public void cmd(String prompt) {
             Window.localFileSaver.resetUserStatistic();
         }
-    }, reset("reset - reset the playground // reset both the NetBuilder and current Network to null // Syntax: reset") {
+    }, reset("reset - reset the playground // reset both the NetBuilder and current Network to null") {
         @Override
         public void cmd(String prompt) {
             Playground.reset();
@@ -287,7 +274,7 @@ public enum Command {
         }
     },
 
-    getStat("getStat - retrieves a statistic; returns the most updated value // Syntax: getStat <stat-name>") {
+    getStat("getStat <stat-name> - retrieves a statistic; returns the most updated value") {
         @Override
         public void cmd(String prompt) {
             prompt = prompt.replace("getStat ", "");
@@ -313,8 +300,7 @@ public enum Command {
         }
     },
 
-
-    jnet_train("jnet-train - trains your active Network; needs data to be in the same shape // Syntax: jnet-train(<input-list>,<target-list>,<repetitions>)") {
+    jnet_train("jnet-train(<input-list>,<target-list>,<repetitions>) - trains your active Network; needs data to be in the same shape") {
         static final String syntax = "(<input-list>,<target-list>,<repetitions>)";
 
         @Override
@@ -362,9 +348,10 @@ public enum Command {
             }
 
             Playground.neuralNetwork.trainVisual(input.getRawData(), target.getRawData(), repetitions);
+            Terminal.addText("training started! \"jnet_fastforward\" to skip delays; \"set trainDelay <value>\" to change it");
         }
     },
-    jnet_randomtrain("jnet-randomtrain - randomly shuffles training data ; same as jnet_train // Syntax: jnet-randomtrain(<input-list>,<target-list>,<repetitions>)") {
+    jnet_randomtrain("jnet-randomtrain(<input-list>,<target-list>,<repetitions>) - randomly shuffles training data ; same usage as jnet-train") {
         static final String syntax = "(<input-list>,<target-list>,<repetitions>)";
 
         @Override
@@ -414,19 +401,19 @@ public enum Command {
             Playground.neuralNetwork.trainRandom(input.getRawData(), target.getRawData(), repetitions);
         }
     },
-    jnet_out("jnet-out - give you the output for a given input // Syntax: jnet-out(<input-list>)") {
+    jnet_out("jnet-out(<input-list>) - gives you the output for a given input") {
         static final String syntax = "(<input-list>)";
 
         @Override
         public void cmd(String prompt) {
             if (Playground.neuralNetwork == null) {
-                Terminal.addText("no neural network!");
+                Terminal.addText(noNetwork);
                 return;
             }
 
             prompt = prompt.replace("jnet_out(", "");
             if (prompt.isBlank() || prompt.equals("jnet_out")) {
-                Terminal.addText("missing list names: " + this + syntax);
+                Terminal.addText(missingList + this + syntax);
                 return;
             }
             if (!prompt.contains(")")) {
@@ -448,12 +435,122 @@ public enum Command {
         public void cmd(String prompt) {
             NeuralNetwork.resetWorker();
         }
+    },
+    theme("theme <theme-name> - set the active theme; \"man themes\" to get a list of all themes") {
+        @Override
+        public void cmd(String prompt) {
+            prompt = prompt.replace("theme ", "");
+            if (prompt.isBlank() || prompt.equals("theme")) {
+                Terminal.addText("missing theme name");
+                return;
+            }
+
+            for (ColorPalette palette : ColorPalette.values()) {
+                if (palette.name().equals(prompt)) {
+                    palette.loadPalette();
+                    return;
+                }
+            }
+            Terminal.addText("no theme named: " + prompt);
+        }
+    },
+    setLearnRate("setLearnRate <floating-point> - sets the builders learn rate ; learn rate is very important \"man LearnRate\" for info") {
+        @Override
+        public void cmd(String prompt) {
+            if (noNetBuilderCheck()) return;
+
+
+            double parsedNum;
+            try {
+                parsedNum = Double.parseDouble(prompt);
+            } catch (NumberFormatException ignored) {
+                Terminal.addText("couldnt parse " + this + " <" + this + ">: " + prompt);
+                return;
+            }
+
+            if (parsedNum > 0 && parsedNum < 10) {
+                Playground.networkBuilder.setLearnRate(parsedNum);
+                Terminal.addText("set new " + this + ": " + parsedNum);
+                return;
+            }
+            Terminal.addText("invalid " + this + ": " + parsedNum);
+        }
+    },
+
+    setNetworkSize("setNetworkSize <[list]> - sets the builders network size ; \"man NetworkSize\" for info") {
+        @Override
+        public void cmd(String prompt) {
+            if (noNetBuilderCheck()) return;
+
+            prompt = prompt.replace("setLearnRate ", "");
+            if (prompt.isBlank() || prompt.equals(this.name())) {
+                Terminal.addText(missingArgument);
+                return;
+            }
+
+            int[] newLayerInfo;
+            try {
+                newLayerInfo = Parser.arrayParser.parseIntArrayFromString(prompt);
+            } catch (NumberFormatException ignored) {
+                Terminal.addText("wrong array declaration");
+                return;
+            }
+
+            Playground.networkBuilder.setNetworkSize(newLayerInfo);
+            Terminal.addText("set new network size: " + Arrays.toString(newLayerInfo));
+        }
+    },
+    setActivationFunction("") {
+        @Override
+        public void cmd(String prompt) {
+            if (noNetBuilderCheck()) return;
+
+            prompt = prompt.replace(this + " ", "");
+            if (prompt.isBlank() || prompt.equals(this.name())) {
+                Terminal.addText(missingArgument);
+                return;
+            }
+        }
+    },
+    setLossFunction("") {
+        @Override
+        public void cmd(String prompt) {
+
+        }
+    },
+    set("set <propertyName>(<value>) - sets the given property; autocompletion shows list ; properties can be man<name> to get info") {
+        @Override
+        public void cmd(String prompt) {
+            prompt = prompt.replace("set ", "");
+            if (prompt.isBlank() || prompt.equals("set")) {
+                Terminal.addText("missing argument: set <propertyName> value || e.g. \"set circlesize 25\"");
+                return;
+            }
+            String creatableName = prompt;
+            if (prompt.contains(" ")) {
+                creatableName = prompt.substring(0, prompt.indexOf(" "));
+                prompt = prompt.replace(creatableName, "").trim();
+            }
+
+            for (SettableProperties settableProperties : SettableProperties.values()) {
+                if (settableProperties.name().equals(creatableName)) {
+                    Terminal.addText(settableProperties.cmd(prompt));
+                    return;
+                }
+            }
+            Terminal.addText("no property named:" + creatableName);
+        }
     };
+
+
     static final String missingBracket = "missing closing bracket: ";
     static final String noNetwork = "no neural network!";
     static final String missingList = "missing list names: ";
+    static final String noNetBuilder = "no NetBuilder! \"man NetBuilder\" for info";
+    static final String missingArgument = "missing argument";
     private final String manPage;
     Matcher matcher;
+
 
     Command(String manPage) {
         this.manPage = manPage;
@@ -464,4 +561,14 @@ public enum Command {
     public String getManPage() {
         return manPage;
     }
+
+    boolean noNetBuilderCheck() {
+        if (Playground.networkBuilder == null) {
+            Terminal.addText(noNetBuilder);
+            return true;
+        }
+        return false;
+    }
+
+
 }

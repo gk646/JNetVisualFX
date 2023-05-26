@@ -1,8 +1,11 @@
 package gk646.jnet.networks.neuralnetwork.builder;
 
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.networks.neuralnetwork.exceptions.IllegalNetworkArguments;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.util.Manual;
+
+import java.util.Arrays;
 
 
 /**
@@ -65,21 +68,14 @@ public final class NetworkBuilder {
      * @param weightInitState the weightInitState
      * @return a reference to this object
      */
-    @Manual(text = """
-            Sets the weight initialization state which controls how the initial weights of the network weight matrix are set.
-                 * This is a very crucial element and can lead to a virtually non-functioning network if set wrong.<br>
-                 * Supported values RANDOM (default range: -0.1, 0.1) and ZERO(0,0) and {@link WeightInitState#random(float, float)}.
-                 * Recommended value: RANDOM
-                 *
-                 * @param weightInitState the weightInitState
-                 * @return a reference to this object""")
+
     public NetworkBuilder setWeightInitState(WeightInitState weightInitState) {
         this.weightInitState = weightInitState;
         checkBuilderViability();
         return this;
     }
 
-    public NetworkBuilder setLayerLayerFunction(ActivationFunction function) {
+    public NetworkBuilder setLastLayerActivationFunction(ActivationFunction function) {
         this.layerLayerActivationFunction = function;
         checkBuilderViability();
         return this;
@@ -109,6 +105,8 @@ public final class NetworkBuilder {
         if (weightInitState == WeightInitState.RANDOM && (weightInitState.bound > 10 || weightInitState.origin < -10)) {
             Log.logger.logException(IllegalNetworkArguments.class, "Weight initialization bounds are too big! origin: " + weightInitState.origin + " - bound: " + weightInitState.bound);
         }
+
+        UserStatistics.updateStat(UserStatistics.Stat.netBuilderCustomizations, 1);
     }
 
     public int[] getLayerInfo() {
@@ -130,7 +128,7 @@ public final class NetworkBuilder {
     /**
      * Sets the learnRate the NeuralNetwork. Learn-rate is the multiplier by which the gradient descent step is multiplied each learning iteration.
      * Making the learnRate too small or too big can have a big impact on the outcome.
-     * Recommended values 1-5.
+     * Recommended values 0.01 - 1.
      *
      * @param learnRate an int.
      * @return a reference to this object
@@ -197,5 +195,13 @@ public final class NetworkBuilder {
 
     public ActivationFunction getLastLayerFunction() {
         return layerLayerActivationFunction;
+    }
+
+    @Override
+    public String toString() {
+        return "NetBuilder: { Layers:" + Arrays.toString(layerInfo)
+                + " | Activation Function: " + activeFunc.toString() +
+                " | Learn Rate: " + learnRate
+                + " | Loss Function: " + lossFunction.toString() + " }";
     }
 }

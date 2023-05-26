@@ -5,6 +5,8 @@ import gk646.jnet.util.ContainerHelper;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+
 public final class NetworkVisualizer {
     public static final ContainerHelper containerHelper = new ContainerHelper(0, 0, 76, 75);
     static final float MIN_CIRCLE_DIAMETER = 10;
@@ -18,7 +20,6 @@ public final class NetworkVisualizer {
     static short horizontalSpacing = 75;
     static int maxNeuronCountInLayers = 3;
     float circleDiameter = 15;
-    int waitCounter = 0;
 
     public NetworkVisualizer() {
     }
@@ -36,6 +37,7 @@ public final class NetworkVisualizer {
 
     public void draw(GraphicsContext gc) {
         drawBackGround(gc);
+        drawInfo(gc);
         drawNetworkLines(gc);
         drawNetworkCircles(gc);
     }
@@ -120,5 +122,14 @@ public final class NetworkVisualizer {
     private void drawBackGround(GraphicsContext gc) {
         gc.setFill(backGround);
         gc.fillRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth(), containerHelper.getHeight());
+    }
+
+    private void drawInfo(GraphicsContext gc) {
+        gc.setFill(Colors.INTELLIJ_GREY);
+        if (Playground.networkBuilder == null) {
+            gc.fillText("NetBuilder: null", containerHelper.getDrawX() + containerHelper.getWidth() - 150, containerHelper.getDrawY() + 25);
+        } else {
+            gc.fillText(Playground.networkBuilder.toString(),containerHelper.getDrawX()+25,containerHelper.getDrawY() + 25);
+        }
     }
 }

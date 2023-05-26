@@ -26,9 +26,6 @@ public enum DerivativeActivationFunction {
     SOFTMAX {
         @Override
         public double apply(double x) {
-            //TODO
-            // Note: The derivative of the softmax function requires a vector of values, not a single value.
-            // If you need to use softmax, you might need to handle it elsewhere in your code.
             return x;
         }
     },

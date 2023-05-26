@@ -73,7 +73,7 @@ public final class CodeCompletion {
         for (String text : currentCompletions) {
             gc.setFill(backGround);
             gc.fillRect(startX, startY - 13, 180, Terminal.TerminalInfo.lineHeight);
-            gc.setFill(Terminal.TerminalInfo.text);
+            gc.setFill(Terminal.TerminalInfo.textColor);
             gc.fillText(text, startX, startY);
             startY += Terminal.TerminalInfo.lineHeight;
         }
@@ -86,16 +86,16 @@ public final class CodeCompletion {
         String input = Terminal.currentText.toString();
         if (input.startsWith("set ")) {
             inSpecialNameSpace = true;
-            return setTrie.autoComplete(input.replace("set ", ""));
+            return setTrie.autoCompleteWithAllOnEmpty(input.replace("set ", ""));
         } else if (input.startsWith("new ")) {
             inSpecialNameSpace = true;
-            return creatableTrie.autoComplete(input.replace("new ", ""));
+            return creatableTrie.autoCompleteWithAllOnEmpty(input.replace("new ", ""));
         } else if (input.startsWith("getStat ")) {
             inSpecialNameSpace = true;
-            return statsTrie.autoComplete(input.replace("getStat ", ""));
+            return statsTrie.autoCompleteWithAllOnEmpty(input.replace("getStat ", ""));
         } else if (input.startsWith("man ")) {
             inSpecialNameSpace = true;
-            return manTrie.autoComplete(input.replace("man ", ""));
+            return manTrie.autoCompleteWithAllOnEmpty(input.replace("man ", ""));
         } else {
             inSpecialNameSpace = false;
             return allCommandsTrie.autoComplete(input);

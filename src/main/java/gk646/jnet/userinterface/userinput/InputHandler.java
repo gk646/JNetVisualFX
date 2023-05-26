@@ -61,16 +61,12 @@ public final class InputHandler {
     public void handleSpecialKeyType(KeyEvent event) {
         switch (event.getCode()) {
             case UP -> {
-                if (CodeCompletion.blockCommandHistory()) return;
-
                 if (commandHistoryOffset < Terminal.commandHistory.size() - 1) {
                     commandHistoryOffset++;
                 }
                 Terminal.scrollCommandHistory();
             }
             case DOWN -> {
-                if (CodeCompletion.blockCommandHistory()) return;
-
                 if (commandHistoryOffset > 0) {
                     commandHistoryOffset--;
                 } else {

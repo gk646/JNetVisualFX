@@ -5,7 +5,7 @@ public enum ActivationFunction {
     SIGMOID {
         @Override
         public double apply(double x) {
-            return (1 / (1 + Math.exp(-x)));
+            return 1 / (1 + Math.exp(-x));
         }
     },
     RELU {
