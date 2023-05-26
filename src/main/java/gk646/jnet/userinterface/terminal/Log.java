@@ -10,17 +10,18 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * The Logger responsible for logging errors, info and exceptions to both the application log and java-terminal.
+ * The Log class, providing a display for helpful information and handing logging aswell.
  */
 public final class Log {
     public static final NetLogger logger = new NetLogger("", null);
     public static final ContainerHelper containerHelper = new ContainerHelper(75, 0, 25, 100);
     public static final int LINE_HEIGHT = 14;
-    private static final LimitedQueue<String> logText = new LimitedQueue<>(75);
-    private static final Color backGround = Colors.UBUNTU_BLACK;
-    public static int scrollOffset = 0;
+    static final LimitedQueue<String> logText = new LimitedQueue<>(75);
+    static int scrollOffset = 0;
+    double characterWidth = ContainerHelper.initCharacterWidth(12);
     static int maxCharsPerLine = 49;
-    public final double characterWidth = ContainerHelper.initCharacterWidth(12);
+  static   Color backGround = Colors.UBUNTU_BLACK;
+  static   Color textColor = Colors.MILK;
 
     public Log() {
         logText.setLimit(containerHelper.getHeight() / LINE_HEIGHT);
@@ -37,8 +38,8 @@ public final class Log {
 
     private void drawLogText(GraphicsContext gc) {
         gc.setFont(Resources.cascadiaCode12);
-        if (!gc.getFill().equals(Terminal.TerminalInfo.text)) {
-            gc.setFill(Terminal.TerminalInfo.text);
+        if (!gc.getFill().equals(Terminal.TerminalInfo.textColor)) {
+            gc.setFill(Terminal.TerminalInfo.textColor);
         }
         int startX = containerHelper.getDrawX() + 3;
         int startY = containerHelper.getDrawY() + containerHelper.getHeight() - LINE_HEIGHT + scrollOffset;
@@ -49,8 +50,8 @@ public final class Log {
             } else if (s.startsWith("[S")) {
                 gc.setFill(Colors.RED);
             } else {
-                if (!gc.getFill().equals(Terminal.TerminalInfo.text)) {
-                    gc.setFill(Terminal.TerminalInfo.text);
+                if (!gc.getFill().equals(Terminal.TerminalInfo.textColor)) {
+                    gc.setFill(Terminal.TerminalInfo.textColor);
                 }
             }
             gc.fillText(s, startX, startY);
@@ -76,12 +77,19 @@ public final class Log {
         String string;
         for (int i = 0; i < logText.size(); i++) {
             string = logText.directGet(i);
-            if (string.length() < maxCharsPerLine) {
-                continue;
-            }
             string = string.replace("\n", "");
             string = StringUtil.insertNewLines(string, maxCharsPerLine);
             logText.set(string, i);
         }
     }
+
+    public static void setBackGround(Color newBackGround) {
+        backGround = newBackGround;
+    }
+
+    public static void setTextColor(Color newTextColor) {
+       textColor = newTextColor;
+    }
 }
+
+

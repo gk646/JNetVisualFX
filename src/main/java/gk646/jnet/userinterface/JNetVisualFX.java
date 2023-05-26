@@ -1,5 +1,6 @@
 package gk646.jnet.userinterface;
 
+import gk646.jnet.userinterface.graphics.ColorPalette;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.graphics.Resources;
 import gk646.jnet.userinterface.terminal.Log;
@@ -20,6 +21,7 @@ import java.awt.Point;
  */
 public final class JNetVisualFX {
     public static final Point bounds = new Point();
+    static ColorPalette colorPalette;
     final Canvas canvas;
     final Scene sceneRoot;
     final Terminal terminal;
@@ -41,6 +43,9 @@ public final class JNetVisualFX {
 
         gc.setLineWidth(2);
         gc.setFont(Resources.cascadiaCode);
+
+        ColorPalette.DEFAULT.loadPalette();
+
     }
 
     public void run() {
@@ -70,7 +75,6 @@ public final class JNetVisualFX {
         terminal.updateSize();
         log.updateSize();
     }
-
 
     private void draw() {
 

@@ -99,7 +99,7 @@ public final class Layer {
         for (int i = 0; i < output.length; i++) {
             for (int j = 0; j < input.length; j++) {
                 if (j < input.length - 1) {
-                    NetworkVisualizer.activeConnection[layerNumber][i][j] += 15;
+                    NetworkVisualizer.activeConnection[layerNumber][i][j] += 25;
                     NetworkUtils.sleep(NeuralNetwork.delayPerStep);
                 }
                 output[i] += weights[j][i] * input[j];
@@ -118,7 +118,7 @@ public final class Layer {
             d *= derivativeFunc.apply(wSums[i]);
             for (int j = 0; j < input.length; j++) {
                 if (j < input.length - 1) {
-                    NetworkVisualizer.activeConnection[layerNumber][i][j] -= 15;
+                    NetworkVisualizer.activeConnection[layerNumber][i][j] -= 25;
                     NetworkUtils.sleep(NeuralNetwork.delayPerStep);
                 }
                 nextError[j] += weights[j][i] * d;

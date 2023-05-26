@@ -40,6 +40,7 @@ public final class NetworkUtils {
     public void finishTraining(int repetitions, int inputLength) {
         UserStatistics.updateStat(UserStatistics.Stat.numberOfForwardPasses, repetitions + repetitions * inputLength);
         UserStatistics.updateStat(UserStatistics.Stat.numberOfBackPropagations, repetitions);
+        UserStatistics.updateStat(UserStatistics.Stat.networksTrained, 1);
     }
 
     public void printNeuronBias(Layer[] layers) {

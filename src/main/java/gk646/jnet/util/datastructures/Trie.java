@@ -7,20 +7,18 @@ import java.util.List;
 public final class Trie {
     private static final int ALPHABET_SIZE = 55;
     private final Trie[] children = new Trie[ALPHABET_SIZE];
-    private String text;
-
     private final char character;
+    private String text;
 
     private Trie(char c) {
         this.character = c;
     }
+    public static Trie root() {
+        return new Trie('L');
+    }
 
     public boolean isWord() {
         return text != null;
-    }
-
-    public static Trie root() {
-        return new Trie('L');
     }
 
     public void insertList(List<String> list) {
@@ -49,18 +47,38 @@ public final class Trie {
     }
 
     private int charToIndex(char c) {
-        if (c >= 97) return c - 97;
+        if (c >= 97 && c <= 132) return c - 97;
         if (c >= 65 && c <= 91) return c - 65 + 26;
         if (c == '_') return 52;
         if (c == '$') return 53;
-        if (c == '-') return 54;
-        return -1;
+        return 54;
     }
-
 
 
     public List<String> autoComplete(String prefix) {
         if (prefix == null || prefix.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Trie node = this;
+        for (char c : prefix.toCharArray()) {
+            if (node.children[charToIndex(c)] == null) {
+                return Collections.emptyList();
+            } else {
+                node = node.children[charToIndex(c)];
+            }
+        }
+
+        if (node.isWord() && !node.text.equals(prefix)) {
+            return List.of(node.text);
+        }
+        var results = new ArrayList<String>(15);
+        findAllChildWords(node, results, new StringBuilder().append(prefix));
+        return results;
+    }
+
+    public List<String> autoCompleteWithAllOnEmpty(String prefix) {
+        if (prefix == null) {
             return Collections.emptyList();
         }
 

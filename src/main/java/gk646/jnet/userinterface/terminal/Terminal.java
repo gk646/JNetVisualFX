@@ -43,7 +43,7 @@ public final class Terminal {
     }
 
     public static void addText(String text) {
-        terminalText.add(StringUtil.insertNewLines(text,TerminalInfo.maxCharsPerLine));
+        terminalText.add(StringUtil.insertNewLines(text, TerminalInfo.maxCharsPerLine));
     }
 
     public static void clear() {
@@ -69,8 +69,8 @@ public final class Terminal {
     }
 
     private void drawScrollingText(GraphicsContext gc) {
-        if (!gc.getFill().equals(TerminalInfo.text)) {
-            gc.setFill(TerminalInfo.text);
+        if (!gc.getFill().equals(TerminalInfo.textColor)) {
+            gc.setFill(TerminalInfo.textColor);
         }
         int startX = containerHelper.getDrawX();
         int startY = containerHelper.getDrawY() + containerHelper.getHeight() - TerminalInfo.lineHeight * 2;
@@ -109,9 +109,6 @@ public final class Terminal {
         String string;
         for (int i = 0; i < terminalText.size(); i++) {
             string = terminalText.directGet(i);
-            if (string.length() < TerminalInfo.maxCharsPerLine) {
-                continue;
-            }
             string = string.replace("\n", "");
             string = StringUtil.insertNewLines(string, TerminalInfo.maxCharsPerLine);
             terminalText.set(string, i);
@@ -124,9 +121,9 @@ public final class Terminal {
     }
 
     public static class TerminalInfo {
-        static final Color text = Colors.MILK;
-        private static final Color backGround = Colors.LIGHT_BLACK;
-        public static byte cursorOffsetLeft = 0;
+        static  Color backGround = Colors.LIGHT_BLACK;
+        public static int cursorOffsetLeft = 0;
+        static Color textColor = Colors.MILK;
         static int maxCharsPerLine = 100;
         static double characterWidth = ContainerHelper.initCharacterWidth(15);
         private static int fontSize = 15;
@@ -147,6 +144,14 @@ public final class Terminal {
             text1.setFont(TerminalInfo.activeFont);
             TerminalInfo.characterWidth = (float) (text1.getLayoutBounds().getWidth());
             TerminalInfo.lineHeight = TerminalInfo.fontSize + 4;
+        }
+
+        public static void setBackGround(Color backGround) {
+            TerminalInfo.backGround = backGround;
+        }
+
+        public static void setTextColor(Color textColor) {
+            TerminalInfo.textColor = textColor;
         }
     }
 }

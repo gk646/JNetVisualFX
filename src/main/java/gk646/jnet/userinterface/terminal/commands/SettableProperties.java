@@ -1,49 +1,31 @@
 package gk646.jnet.userinterface.terminal.commands;
 
+import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.Terminal;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.function.Consumer;
 
 public enum SettableProperties {
 
-    circlesize("circlesize - settable property with: set<propertyName> // maximum size of the neurons: 0 - 100, Default: 20") {
+    circlesize("settable property with: set <propertyName> <value> ; maximum pixel size of the neurons: 0 - 100, Default: 20") {
         @Override
         public String cmd(String prompt) {
-            matcher = pattern.matcher(prompt);
-            if (matcher.find()) {
-                int newCircleSize = Integer.parseInt(matcher.group(1));
-                if (newCircleSize > 0 && newCircleSize < 100) {
-                    NetworkVisualizer.maxCircleDiameter = newCircleSize;
-                    return "set new circleSize: " + newCircleSize;
-                }
-                return "invalid circlesize: " + newCircleSize;
-            }
-            return "couldnt parse circlesize (<circlesize): " + prompt;
+            return parseSetNumber(0, 100, number -> NetworkVisualizer.maxCircleDiameter = number, prompt);
         }
     },
-    fontsize("fontsize - settable property with: set<propertyName> // fontsize of the terminal font: 0 - 50, Default: 15") {
+    fontsize("settable property with: set <propertyName> <value> ; fontsize of the terminal font: 0 - 50, Default: 15") {
         @Override
         public String cmd(String prompt) {
-            int parsedNum;
-            try {
-                parsedNum = Integer.parseInt(prompt);
-            } catch (NumberFormatException ignored) {
-                return "couldnt parse " + fontsize + " <" + fontsize + ">: " + prompt;
-            }
-
-            if (parsedNum > 0 && parsedNum < 50) {
-                int fontSizeDelta = parsedNum - Terminal.TerminalInfo.getFontSize();
-                Terminal.TerminalInfo.changeFontSize(fontSizeDelta);
-                return "set new fontsize: " + parsedNum;
-            }
-            return "invalid fontsize: " + parsedNum;
+            return parseSetNumber(0, 50, number -> Terminal.TerminalInfo.changeFontSize(number - Terminal.TerminalInfo.getFontSize()), prompt);
+        }
+    }, trainDelay("settable property with: set <propertyName> <value> ; delay in milli seconds per calculation while training: 0 - 1500, Default: 64") {
+        @Override
+        public String cmd(String prompt) {
+            return parseSetNumber(0, 1500, NeuralNetwork::setDelayPerStep, prompt);
         }
     };
-    private static final Pattern pattern = Pattern.compile("\\((.*?)\\)");
     private final String manPage;
-    Matcher matcher;
 
     SettableProperties(String manPage) {
         this.manPage = manPage;
@@ -53,5 +35,20 @@ public enum SettableProperties {
 
     public String getManPage() {
         return manPage;
+    }
+
+    String parseSetNumber(int origin, int bound, Consumer<Integer> action, String prompt) {
+        int parsedNum;
+        try {
+            parsedNum = Integer.parseInt(prompt);
+        } catch (NumberFormatException ignored) {
+            return "couldnt parse " + this + " <" + this + ">: " + prompt;
+        }
+
+        if (parsedNum > origin && parsedNum < bound) {
+            action.accept(parsedNum);
+            return "set new " + this + ": " + parsedNum;
+        }
+        return "invalid " + this + ": " + parsedNum;
     }
 }

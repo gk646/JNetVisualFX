@@ -1,5 +1,6 @@
 package gk646.jnet.util.parser;
 
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
 import gk646.jnet.util.datastructures.Matrix;
@@ -64,6 +65,9 @@ public final class ArrayParser {
 
     private void parseOneDimensionalArray(String prompt, String listName) { // [2,3,4,5]
         double[] arr = parseArrayFromString(prompt.substring(1, prompt.length() - 1));
+
+        UserStatistics.updateStat(UserStatistics.Stat.arraysCreated,1);
+
         if (Playground.playgroundLists.put(listName, new Matrix(arr)) != null) {
             Terminal.addText("updated list: " + listName);
         } else {
@@ -81,6 +85,8 @@ public final class ArrayParser {
         for (String numbers : arrays) {
             numberList.add(parseArrayFromString(numbers));
         }
+
+        UserStatistics.updateStat(UserStatistics.Stat.arraysCreated,1);
 
         if (Playground.playgroundLists.put(listName, new Matrix(numberList.toArray(new double[arrays.length][]))) != null) {
             Terminal.addText("updated list: " + listName);

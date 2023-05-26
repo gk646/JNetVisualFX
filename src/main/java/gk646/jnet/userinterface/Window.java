@@ -2,8 +2,6 @@ package gk646.jnet.userinterface;
 
 import gk646.jnet.Main;
 import gk646.jnet.localdata.LocalFileSaver;
-import gk646.jnet.userinterface.terminal.CodeCompletion;
-import gk646.jnet.userinterface.terminal.CommandController;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.userinput.InputHandler;
 import javafx.application.Application;
@@ -14,13 +12,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.awt.Point;
 import java.util.Objects;
 
 
 public class Window extends Application {
-    public static LocalFileSaver localFileSaver;
+    public static final LocalFileSaver localFileSaver = new LocalFileSaver();
 
     public static void exit() {
         new Thread(() -> {
@@ -49,8 +48,7 @@ public class Window extends Application {
      */
     @Override
     public void start(Stage stage) {
-        localFileSaver = new LocalFileSaver();
-        //stage.initStyle(StageStyle.UNIFIED);    // can cause window to go white ?
+         stage.initStyle(StageStyle.UNIFIED);    // can cause window to go white ?
         Point bounds = setupScreen();
         stage.setWidth(bounds.x);
         stage.setHeight(bounds.y);
@@ -77,7 +75,7 @@ public class Window extends Application {
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
 
         //System.out.println(System.getenv("TEST_KEY"));
-        Log.logger.info("Startup took " + (System.nanoTime() - Main.startUpTime) / 100_000_000 + " ms");
+        Log.logger.info("Startup took " + (System.nanoTime() - Main.startUpTime) / 1_000_000 + " ms");
     }
 
     @Override

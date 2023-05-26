@@ -13,7 +13,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class UserStatistics {
-     public static final Map<Stat, Number> localNumbers = new EnumMap<>(Stat.class);
+     public static final Map<Stat, Integer> localNumbers = new EnumMap<>(Stat.class);
     private static final String DISCLAIMER = """
             *-------------------------------------------*
             This is an automatically generated document; Do not edit!
@@ -28,14 +28,13 @@ public class UserStatistics {
     public static boolean unreadableStatistics;
     private int readCounter = 0;
     public UserStatistics() {
-        localNumbers.put(Stat.networksCreated, 0);
+        localNumbers.put(Stat.netBuilderCustomizations, 0);
         localNumbers.put(Stat.networksTrained, 0);
         localNumbers.put(Stat.arraysCreated, 0);
         localNumbers.put(Stat.numberOfForwardPasses, 0);
         localNumbers.put(Stat.numberOfBackPropagations, 0);
         localNumbers.put(Stat.totalSecondsUsed, 0);
         localNumbers.put(Stat.totalCommandsUsed, 0);
-        localNumbers.put(Stat.startupTime, 0);
     }
 
     public static void updateStat(Stat statName, int value) {
@@ -56,12 +55,11 @@ public class UserStatistics {
             return;
         }
 
-
         String[] keyValuePair = line.split(": ");
 
         for (Stat key : localNumbers.keySet()) {
             if (key.name().equals(keyValuePair[0])) {
-                localNumbers.put(key, Double.parseDouble(keyValuePair[1]));
+                localNumbers.put(key, Integer.parseInt(keyValuePair[1]));
                 return;
             }
         }
@@ -82,7 +80,7 @@ public class UserStatistics {
             bw.newLine();
 
             var set = localNumbers.entrySet();
-            for (Map.Entry<Stat, Number> pair : set) {
+            for (Map.Entry<Stat, Integer> pair : set) {
                 bw.write(pair.getKey() + ": " + pair.getValue());
                 bw.newLine();
             }
@@ -113,7 +111,7 @@ public class UserStatistics {
             bw.newLine();
 
             var set = localNumbers.entrySet();
-            for (Map.Entry<Stat, Number> pair : set) {
+            for (Map.Entry<Stat, Integer> pair : set) {
                 bw.write(pair.getKey() + ": " + pair.getValue());
                 bw.newLine();
             }
@@ -126,6 +124,6 @@ public class UserStatistics {
     }
 
     public enum Stat {
-        networksCreated, networksTrained, arraysCreated, numberOfForwardPasses, numberOfBackPropagations, totalSecondsUsed, totalCommandsUsed, startupTime
+        netBuilderCustomizations, networksTrained, arraysCreated, numberOfForwardPasses, numberOfBackPropagations, totalSecondsUsed, totalCommandsUsed,
     }
 }

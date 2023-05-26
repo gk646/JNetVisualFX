@@ -17,8 +17,10 @@ public final class Parser {
 
 
     Parser() {
-        for (Method method : NetworkBuilder.class.getMethods()) {
-            methodMap.put(method.getName(), method);
+        for (Method method : NetworkBuilder.class.getDeclaredMethods()) {
+            if(method.getName().startsWith("set")){
+                methodMap.put(method.getName(), method);
+            }
         }
     }
 
@@ -34,6 +36,8 @@ public final class Parser {
                 return true;
             }
         }
+
+
         return parseAliasCommands();
     }
 
