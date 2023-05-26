@@ -1,31 +1,49 @@
 package gk646.jnet.userinterface.terminal;
 
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.graphics.Colors;
+import gk646.jnet.userinterface.terminal.commands.CreatableObjects;
+import gk646.jnet.userinterface.terminal.commands.SettableProperties;
 import gk646.jnet.util.datastructures.Trie;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public final class CodeCompletion {
-    private static final Trie trie = new Trie();
+    private final Trie allCommandsTrie = Trie.root();
+    private final Trie setTrie = Trie.root();
+    private final Trie manTrie = Trie.root();
+    private final Trie statsTrie = Trie.root();
+    private final Trie creatableTrie = Trie.root();
     private static final Color backGround = Colors.INTELLIJ_GREY;
     private static List<String> currentCompletions = new ArrayList<>();
     private static boolean inSpecialNameSpace;
     private String previousPrompt = "";
 
-     CodeCompletion() {
-        /*
-        for (Command command : CommandController.COMMANDS) {
-            trie.insert(command.toString());
-        }
-        for (Method method : Parser.getMethodMap().values()) {
-            trie.insert(method.getName());
-        }
+    CodeCompletion() {
+        List<String> settableProperties = Arrays.stream(SettableProperties.values()).map(Enum::toString).toList();
+        List<String> creatableObjects = Arrays.stream(CreatableObjects.values()).map(Enum::toString).toList();
+        ArrayList<String> commandList = new ArrayList<>(Arrays.stream(CommandController.COMMANDS).map(Enum::toString).toList());
+        List<String> userStatistics = Arrays.stream(UserStatistics.Stat.values()).map(Enum::toString).toList();
+        commandList.addAll(Parser.getMethodMap().values().stream().map(Method::getName).toList());
 
-         */
+        allCommandsTrie.insertList(commandList);
+        allCommandsTrie.insertList(Parser.getMethodMap().values().stream().map(Method::getName).toList());
+
+        setTrie.insertList(settableProperties);
+
+        manTrie.insertList(commandList);
+        manTrie.insertList(creatableObjects);
+        manTrie.insertList(settableProperties);
+
+        statsTrie.insertList(userStatistics);
+
+        creatableTrie.insertList(creatableObjects);
     }
 
     public static boolean blockCommandHistory() {
@@ -61,38 +79,31 @@ public final class CodeCompletion {
         }
     }
 
-    public List<String> getCodeCompletions() {
-        return trie.autoComplete(Terminal.currentText.toString());
-    }
 
     public List<String> autoComplete() {
         if (Terminal.currentText.isEmpty()) return Collections.emptyList();
 
         String input = Terminal.currentText.toString();
         if (input.startsWith("set ")) {
-            String newInput = input.replace("set ", "");
             inSpecialNameSpace = true;
-            return CommandController.settableProperties.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
+            return setTrie.autoComplete(input.replace("set ", ""));
         } else if (input.startsWith("new ")) {
             inSpecialNameSpace = true;
-            String newInput = input.replace("new ", "");
-            return CommandController.creatableObjects.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
+            return creatableTrie.autoComplete(input.replace("new ", ""));
         } else if (input.startsWith("getStat ")) {
             inSpecialNameSpace = true;
-            String newInput = input.replace("getStat ", "");
-            return CommandController.userStatistics.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
+            return statsTrie.autoComplete(input.replace("getStat ", ""));
         } else if (input.startsWith("man ")) {
             inSpecialNameSpace = true;
-            String newInput = input.replace("man ", "");
-            return CommandController.MANUALS.stream().filter(word -> word.startsWith(newInput) && !word.equals(newInput)).toList();
+            return manTrie.autoComplete(input.replace("man ", ""));
         } else {
             inSpecialNameSpace = false;
-            return CommandController.commandList.stream().filter(word -> word.startsWith(input) && !word.equals(input)).toList();
+            return allCommandsTrie.autoComplete(input);
         }
     }
 
     private boolean isNewPrompt() {
-        if (previousPrompt.contentEquals(Terminal.currentText)) {
+        if (previousPrompt.equals(Terminal.currentText.toString())) {
             return false;
         }
         this.previousPrompt = Terminal.currentText.toString();

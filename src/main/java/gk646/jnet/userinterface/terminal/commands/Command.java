@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public enum Command {
 
 
-    print("print - terminal output // prints out the given value, performs basic arithmetic on numbers // Syntax - print(<args>)") {
+    print("print(<args>) -  prints out the given value, performs basic arithmetic on numbers") {
         private final Pattern pattern = Pattern.compile("print\\((.*?)\\)");
 
         @Override
@@ -43,7 +43,7 @@ public enum Command {
             }
             Terminal.addText("Missing argument: print(<args>)");
         }
-    }, man("man - manual // returns the manual page for that command or method //Syntax - man <commandName>") {
+    }, man("man <command/object/property -name> - returns the manual page for that command, object or property") {
         @Override
         public void cmd(String prompt) {
             prompt = prompt.replace("man ", "");
@@ -57,7 +57,7 @@ public enum Command {
                     return;
                 }
             }
-            for (SettableProperties property : CommandController.SETTABLE_PROPERTIES) {
+            for (SettableProperties property : SettableProperties.values()) {
                 if (property.name().equals(prompt)) {
                     Terminal.addText(property.getManPage());
                     return;
@@ -65,7 +65,7 @@ public enum Command {
             }
             Terminal.addText("no object with manual page named: " + prompt);
         }
-    }, new1("new - create new object // works with either \"Network\" or \"NetBuilder\" // Syntax - new <ObjectName>") {
+    }, new1("new <creatableName> - creates a new object; autocompletion shows a list of all creatable objects; can be man<object> to get info") {
         @Override
         public String toString() {
             return "new";
@@ -84,7 +84,7 @@ public enum Command {
                 prompt = prompt.replace(creatableName, "");
             }
 
-            for (CreatableObjects creatableObjects : CommandController.CREATABLE_OBJECTS) {
+            for (CreatableObjects creatableObjects : CreatableObjects.values()) {
                 if (creatableObjects.name().equals(creatableName)) {
                     creatableObjects.cmd(prompt);
                     return;
@@ -92,8 +92,7 @@ public enum Command {
             }
             Terminal.addText("no creatable object named: " + creatableName);
         }
-    }, set("set - sets a given property // sets properties e.g circlesize, fontsize, bgr_color... // Syntax: set <propertyName>(<value>)") {
-
+    }, set("set <propertyName>(<value>) - sets the given property; autocompletion shows list ; properties can be man<name> to get info") {
         @Override
         public void cmd(String prompt) {
             prompt = prompt.replace("set ", "");
@@ -107,7 +106,7 @@ public enum Command {
                 prompt = prompt.replace(creatableName, "").trim();
             }
 
-            for (SettableProperties settableProperties : CommandController.SETTABLE_PROPERTIES) {
+            for (SettableProperties settableProperties : SettableProperties.values()) {
                 if (settableProperties.name().equals(creatableName)) {
                     Terminal.addText(settableProperties.cmd(prompt));
                     return;
@@ -115,43 +114,43 @@ public enum Command {
             }
             Terminal.addText("no property named:" + creatableName);
         }
-    }, exit("exit - exits the application // // Syntax: <any exit word>") {
+    }, exit("exit - exits the application") {
         @Override
         public void cmd(String prompt) {
             Terminal.clear();
             Terminal.addText("Thanks for using JNetVisualFX! - GoodBye");
             Window.exit();
         }
-    }, hello("hello - greets the user // // Syntax: <any hello word>") {
+    }, hello("hello - greets the user") {
         @Override
         public void cmd(String prompt) {
 
             Terminal.addText("Hello - good to see you!");
         }
-    }, clear("clear - clears the terminal // clears the whole text history for only the terminal // Syntax: clear") {
+    }, clear("clear - clears the whole text history for only the terminal") {
         @Override
         public void cmd(String prompt) {
             Terminal.clear();
         }
-    }, font("font - info about the font // // Syntax: font") {
+    }, font("font - info about the font") {
         @Override
         public void cmd(String prompt) {
 
             Terminal.addText("Cascadia Code : https://github.com/microsoft/cascadia-code");
         }
-    }, github("github - github link to the project // give me a star if you like it ;) // Syntax: github") {
+    }, github("github - github link to the project ; give me a star if you like it ;)") {
         @Override
         public void cmd(String prompt) {
             Terminal.addText("JNetVisualFX's github page: https://github.com/gk646/JNetVisualFX");
         }
-    }, version("version - version info // // Syntax: version") {
+    }, version("version - version info") {
         @Override
         public void cmd(String prompt) {
             Terminal.addText(Info.VERSION);
         }
     },
 
-    resetall("resetall - resets all properties to default value // // Syntax: resetall") {
+    resetall("resetall - resets all properties to default value; includes the \"reset\" command") {
         @Override
         public void cmd(String prompt) {
             NetworkVisualizer.maxCircleDiameter = 30;
@@ -159,20 +158,21 @@ public enum Command {
             Terminal.terminalRoot = ">";
             Terminal.addText("reset all value to default state!");
         }
-    }, helpall("helpall - lists all commands // lists all commands including their man page // Syntax: helpall") {
+    }, helpall("helpall -  lists all commands including their man page in the log") {
         @Override
         public void cmd(String prompt) {
             for (Command command : CommandController.COMMANDS) {
                 Log.addLogText(command.getManPage());
             }
         }
-    }, help("") {
+    }, help("help - your") {
         @Override
         public void cmd(String prompt) {
             Terminal.addText("man <method or command> for manual the manual page");
+            Terminal.addText("if you need more help open the the JNetVisualFX wiki with: \"wiki\"");
         }
     },
-    wiki("wiki - opens the wiki // opens the github wiki page about JNetVisualFX // Syntax: wiki") {
+    wiki("wiki - opens the JNetVisualFX's github wiki pages") {
         private static final String wiki = "https://github.com/gk646/JNetVisualFX/wiki";
 
         @Override
@@ -211,7 +211,7 @@ public enum Command {
 
             Terminal.parseText("jnet_train(input,output,3)");
         }
-    }, listget("") {
+    }, listget("listget <list-name> - replaces the commandline with the correct syntax to update the given list") {
         @Override
         public void cmd(String prompt) {
             prompt = prompt.replace("listget ", "");
