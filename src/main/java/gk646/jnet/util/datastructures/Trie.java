@@ -1,76 +1,95 @@
 package gk646.jnet.util.datastructures;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 public final class Trie {
-    private final HashMap<Character, Trie> children = new HashMap<>();
-    private String text = "";
+    private static final int ALPHABET_SIZE = 55;
+    private final Trie[] children = new Trie[ALPHABET_SIZE];
+    private String text;
 
+    private final char character;
+
+    private Trie(char c) {
+        this.character = c;
+    }
 
     public boolean isWord() {
-        return !text.isEmpty();
+        return text != null;
     }
 
-    public Trie getChild(Character c) {
-        return children.get(c);
+    public static Trie root() {
+        return new Trie('L');
     }
 
-    public void insert(String word) {
+    public void insertList(List<String> list) {
+        for (String val : list) {
+            this.insert(val, val);
+        }
+    }
+
+    public void insert(String word, String fullWord) {
         if (word == null || word.isEmpty()) {
             return;
         }
 
-        Character firstChar = word.charAt(0);
-
-        Trie child = getChild(firstChar);
+        char firstChar = word.charAt(0);
+        Trie child = children[charToIndex(firstChar)];
         if (child == null) {
-            child = new Trie();
-            children.put(firstChar, child);
+            child = new Trie(firstChar);
+            children[charToIndex(firstChar)] = child;
         }
 
         if (word.length() > 1) {
-            child.insert(word.substring(1));
+            child.insert(word.substring(1), fullWord);
         } else {
-            child.text = word;
+            child.text = fullWord;
         }
     }
 
-    public List<String> autoComplete(String prefix) {
-        ArrayList<String> results = new ArrayList<>();
+    private int charToIndex(char c) {
+        if (c >= 97) return c - 97;
+        if (c >= 65 && c <= 91) return c - 65 + 26;
+        if (c == '_') return 52;
+        if (c == '$') return 53;
+        if (c == '-') return 54;
+        return -1;
+    }
 
+
+
+    public List<String> autoComplete(String prefix) {
         if (prefix == null || prefix.isEmpty()) {
-            return results;
+            return Collections.emptyList();
         }
 
         Trie node = this;
         for (char c : prefix.toCharArray()) {
-            if (node.children.get(c) == null) {
-                return results;
+            if (node.children[charToIndex(c)] == null) {
+                return Collections.emptyList();
             } else {
-                node = node.children.get(c);
+                node = node.children[charToIndex(c)];
             }
         }
 
-        if (node.isWord()) {
-            results.add(node.text);
+        if (node.isWord() && !node.text.equals(prefix)) {
+            return List.of(node.text);
         }
-
-        findAllChildWords(node, results, new StringBuilder().append(prefix.charAt(0)));
-
+        var results = new ArrayList<String>(15);
+        findAllChildWords(node, results, new StringBuilder().append(prefix));
         return results;
     }
 
     private void findAllChildWords(Trie node, List<String> results, StringBuilder word) {
-        for (char c : node.children.keySet()) {
-            StringBuilder newWord = new StringBuilder(word.toString());
-            newWord.append(c);
-            Trie childNode = node.getChild(c);
-            if (childNode.isWord()) {
-                results.add(newWord.toString());
+        for (Trie child : node.children) {
+            if (child == null) continue;
+            word.append(child.character);
+            if (child.isWord()) {
+                results.add(word.toString());
             }
-            findAllChildWords(childNode, results, newWord);
+            findAllChildWords(child, results, word);
+            word.deleteCharAt(word.length() - 1);
         }
     }
 }

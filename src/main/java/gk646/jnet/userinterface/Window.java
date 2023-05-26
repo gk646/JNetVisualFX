@@ -2,6 +2,8 @@ package gk646.jnet.userinterface;
 
 import gk646.jnet.Main;
 import gk646.jnet.localdata.LocalFileSaver;
+import gk646.jnet.userinterface.terminal.CodeCompletion;
+import gk646.jnet.userinterface.terminal.CommandController;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.userinput.InputHandler;
 import javafx.application.Application;

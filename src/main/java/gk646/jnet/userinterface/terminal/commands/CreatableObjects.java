@@ -37,7 +37,6 @@ public enum CreatableObjects {
             String functionArgument = matcher.group(2);
 
             int[] layerInfo;
-            var constructor = Parser.getConstructorMap().get("NetBuilder");
 
             if (listOrVariableName.contains("$")) {
                 String listName = listOrVariableName.substring(1);
@@ -59,12 +58,8 @@ public enum CreatableObjects {
                 return;
             }
 
-            try {
-                Playground.networkBuilder = (NetworkBuilder) constructor.newInstance(layerInfo, activeFunction);
-                Terminal.addText("created new NetBuilder");
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                Terminal.addText("error creating new object: " + e.getMessage());
-            }
+            Playground.networkBuilder = new NetworkBuilder(layerInfo, activeFunction);
+            Terminal.addText("created new NetBuilder");
         }
     }, Network("") {
         public void cmd(String prompt) {
