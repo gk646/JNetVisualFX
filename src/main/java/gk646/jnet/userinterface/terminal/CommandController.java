@@ -13,10 +13,6 @@ import java.util.List;
 public final class CommandController {
     public static final Command[] COMMANDS = Command.values();
 
-
-
-
-
     private CommandController() {
 
     }

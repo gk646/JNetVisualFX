@@ -7,7 +7,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-public class LogHandler extends Handler {
+public final class LogHandler extends Handler {
 
     /**
      * Publish a {@code LogRecord}.

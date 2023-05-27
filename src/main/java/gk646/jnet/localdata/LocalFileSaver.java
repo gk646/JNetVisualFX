@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class LocalFileSaver {
+public final class LocalFileSaver {
     LocalData localData;
     OperatingSystem os;
     boolean savePossible;

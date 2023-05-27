@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserSettings {
+public final class UserSettings {
     static final String DISCLAIMER = """
             This is the configuration file for JNetVisualFX. This file will be overridden each save to preserve the formatting.
             If it gets unreadable for some reason it will be reset to the default values.

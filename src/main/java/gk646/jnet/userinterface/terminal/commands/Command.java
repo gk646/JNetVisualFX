@@ -3,6 +3,8 @@ package gk646.jnet.userinterface.terminal.commands;
 import gk646.jnet.Info;
 import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
+import gk646.jnet.networks.neuralnetwork.builder.ActivationFunction;
+import gk646.jnet.networks.neuralnetwork.builder.LossFunction;
 import gk646.jnet.userinterface.Window;
 import gk646.jnet.userinterface.graphics.ColorPalette;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
@@ -63,13 +65,19 @@ public enum Command {
                     return;
                 }
             }
-
-            if (prompt.equals("themes")) {
-                for (ColorPalette palette : ColorPalette.values()) {
-                    Log.addLogText(palette.name());
+            for (CreatableObjects creatables : CreatableObjects.values()) {
+                if (creatables.name().equals(prompt)) {
+                    Terminal.addText(creatables.manPage);
                     return;
                 }
             }
+            for (CustomManPage custom : CustomManPage.values()) {
+                if (custom.toString().equals(prompt)) {
+                    custom.manual();
+                    return;
+                }
+            }
+
             Terminal.addText("no object with manual page named: " + prompt);
         }
     }, new1("new <creatableName> - creates a new object; autocompletion shows a list of all creatable objects; can be man<object> to get info") {
@@ -454,11 +462,16 @@ public enum Command {
             Terminal.addText("no theme named: " + prompt);
         }
     },
-    setLearnRate("setLearnRate <floating-point> - sets the builders learn rate ; learn rate is very important \"man LearnRate\" for info") {
+    setLearnRate("setLearnRate <floating-point> - \"man LearnRate\" for info ; sets the builders learn rate") {
         @Override
         public void cmd(String prompt) {
             if (noNetBuilderCheck()) return;
 
+            prompt = prompt.replace("setLearnRate ", "");
+            if (prompt.isBlank() || prompt.equals(this.name())) {
+                Terminal.addText(missingArgument);
+                return;
+            }
 
             double parsedNum;
             try {
@@ -477,12 +490,12 @@ public enum Command {
         }
     },
 
-    setNetworkSize("setNetworkSize <[list]> - sets the builders network size ; \"man NetworkSize\" for info") {
+    setNetworkSize("setNetworkSize <[list]> - sets the NetBuilder network size ; \"man NetworkSize\" for info") {
         @Override
         public void cmd(String prompt) {
             if (noNetBuilderCheck()) return;
 
-            prompt = prompt.replace("setLearnRate ", "");
+            prompt = prompt.replace("setNetworkSize ", "");
             if (prompt.isBlank() || prompt.equals(this.name())) {
                 Terminal.addText(missingArgument);
                 return;
@@ -490,7 +503,7 @@ public enum Command {
 
             int[] newLayerInfo;
             try {
-                newLayerInfo = Parser.arrayParser.parseIntArrayFromString(prompt);
+                newLayerInfo = Parser.arrayParser.parseIntArrayFromString(prompt.substring(1, prompt.length() - 1));
             } catch (NumberFormatException ignored) {
                 Terminal.addText("wrong array declaration");
                 return;
@@ -500,7 +513,7 @@ public enum Command {
             Terminal.addText("set new network size: " + Arrays.toString(newLayerInfo));
         }
     },
-    setActivationFunction("") {
+    setActivationFunction("setActivationFunction <activation-func-name> - \"man ActivationFunction\" for a list ; sets the NetBuilder activation function") {
         @Override
         public void cmd(String prompt) {
             if (noNetBuilderCheck()) return;
@@ -510,12 +523,37 @@ public enum Command {
                 Terminal.addText(missingArgument);
                 return;
             }
+            ActivationFunction activeFunc;
+            try {
+                activeFunc = ActivationFunction.valueOf(prompt.toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+                Terminal.addText("no activation function named: " + prompt);
+                return;
+            }
+            Playground.networkBuilder.setActivationFunction(activeFunc);
+            Terminal.addText("set new activation function: " + activeFunc);
         }
     },
-    setLossFunction("") {
+    setLossFunction("setLossFunction <loss-func-name> - \"man LossFunction\" for a list ; sets the NetBuilder loss function") {
         @Override
         public void cmd(String prompt) {
+            if (noNetBuilderCheck()) return;
 
+            prompt = prompt.replace(this + " ", "");
+            if (prompt.isBlank() || prompt.equals(this.name())) {
+                Terminal.addText(missingArgument);
+                return;
+            }
+
+            LossFunction lossFunc;
+            try {
+                lossFunc = LossFunction.valueOf(prompt.toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+                Terminal.addText("no loss function named: " + prompt);
+                return;
+            }
+            Playground.networkBuilder.setLossFunction(lossFunc);
+            Terminal.addText("set new loss function: " + lossFunc);
         }
     },
     set("set <propertyName>(<value>) - sets the given property; autocompletion shows list ; properties can be man<name> to get info") {
@@ -569,6 +607,4 @@ public enum Command {
         }
         return false;
     }
-
-
 }
