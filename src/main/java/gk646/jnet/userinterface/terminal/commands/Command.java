@@ -355,8 +355,14 @@ public enum Command {
                 return;
             }
 
+            if (NeuralNetwork.worker != null) {
+                Log.logger.severe("training already in progress! \"jnet_fastforward\" to skip");
+                return;
+            }
+
             Playground.neuralNetwork.trainVisual(input.getRawData(), target.getRawData(), repetitions);
             Terminal.addText("training started! \"jnet_fastforward\" to skip delays; \"set trainDelay <value>\" to change it");
+            Log.addLogText("*------NEW TRAINING ---- "+repetitions+" REPETITIONS--------*");
         }
     },
     jnet_randomtrain("jnet-randomtrain(<input-list>,<target-list>,<repetitions>) - randomly shuffles training data ; same usage as jnet-train") {
@@ -409,7 +415,7 @@ public enum Command {
             Playground.neuralNetwork.trainRandom(input.getRawData(), target.getRawData(), repetitions);
         }
     },
-    jnet_out("jnet-out(<input-list>) - gives you the output for a given input") {
+    jnet_out("jnet-out(<input-list / [array] >) - gives you the output for a given input ; accepts both a listname or new declared list") {
         static final String syntax = "(<input-list>)";
 
         @Override
@@ -429,12 +435,23 @@ public enum Command {
                 return;
             }
 
-            Matrix input = Playground.playgroundLists.get(prompt.substring(0, prompt.length() - 1));
-            if (input == null) {
-                Terminal.addText("input matrix not fond: " + prompt.substring(0, prompt.length() - 1));
-                return;
+            if (prompt.contains("[")) {
+                double[] input;
+                try {
+                    input = Parser.arrayParser.parseArrayFromString(prompt.substring(1, prompt.length() - 2));
+                } catch (NumberFormatException ignored) {
+                    Terminal.addText("invalid list declaration");
+                    return;
+                }
+                Terminal.addText(new Matrix((Playground.neuralNetwork.out(input))).toString());
+            } else {
+                Matrix input = Playground.playgroundLists.get(prompt.substring(0, prompt.length() - 1));
+                if (input == null) {
+                    Terminal.addText("input matrix not fond: " + prompt.substring(0, prompt.length() - 1));
+                    return;
+                }
+                Terminal.addText(new Matrix((Playground.neuralNetwork.out(input.getRow(0)))).toString());
             }
-            Terminal.addText(Arrays.toString(Playground.neuralNetwork.out(input.getRow(0))));
         }
     },
 

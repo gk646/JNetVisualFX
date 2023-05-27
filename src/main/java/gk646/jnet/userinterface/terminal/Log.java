@@ -64,7 +64,7 @@ public final class Log {
         gc.fillRoundRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight(), 25, 25);
 
         gc.setFill(Colors.PHILIPINE_SILVER);
-        gc.fillText("[Log]", containerHelper.getDrawX() + 10, containerHelper.getDrawY() + 20);
+        gc.fillText("[Log]", containerHelper.getDrawX() +containerHelper.getWidth()- 47, containerHelper.getDrawY() + 20);
     }
 
     public void updateSize() {
