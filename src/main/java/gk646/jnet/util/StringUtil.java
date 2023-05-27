@@ -1,8 +1,6 @@
 package gk646.jnet.util;
 
-import java.util.Collections;
-
-public class StringUtil {
+public final class StringUtil {
 
     private StringUtil() {
     }
@@ -22,6 +20,7 @@ public class StringUtil {
         }
         return count;
     }
+
     public static String insertNewLines(String input, int maxCharsPerLine) {
         if (input.length() < maxCharsPerLine) return input;
         StringBuilder s = new StringBuilder(input);
@@ -34,6 +33,7 @@ public class StringUtil {
         }
         return s.toString();
     }
+
     public static boolean containsAnyNumbers(String s) {
         for (char c : s.toCharArray()) {
             switch (c) {
@@ -44,6 +44,4 @@ public class StringUtil {
         }
         return false;
     }
-
-
 }

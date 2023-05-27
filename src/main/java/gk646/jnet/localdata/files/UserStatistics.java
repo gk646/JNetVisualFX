@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class UserStatistics {
-     public static final Map<Stat, Integer> localNumbers = new EnumMap<>(Stat.class);
+public final class UserStatistics {
+    public static final Map<Stat, Integer> localNumbers = new EnumMap<>(Stat.class);
     private static final String DISCLAIMER = """
             *-------------------------------------------*
             This is an automatically generated document; Do not edit!
@@ -27,6 +27,7 @@ public class UserStatistics {
     private static final int SKIP_COUNT = StringUtil.countChar(DISCLAIMER, '\n') + 1;
     public static boolean unreadableStatistics;
     private int readCounter = 0;
+
     public UserStatistics() {
         localNumbers.put(Stat.netBuilderCustomizations, 0);
         localNumbers.put(Stat.networksTrained, 0);

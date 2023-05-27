@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class LocalData {
+public final class LocalData {
 
     final UserSettings settings;
     final UserStatistics stats;

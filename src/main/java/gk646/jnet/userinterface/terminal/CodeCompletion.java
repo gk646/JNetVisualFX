@@ -3,6 +3,7 @@ package gk646.jnet.userinterface.terminal;
 import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.graphics.Colors;
 import gk646.jnet.userinterface.terminal.commands.CreatableObjects;
+import gk646.jnet.userinterface.terminal.commands.CustomManPage;
 import gk646.jnet.userinterface.terminal.commands.SettableProperties;
 import gk646.jnet.util.datastructures.Trie;
 import javafx.scene.canvas.GraphicsContext;
@@ -40,6 +41,7 @@ public final class CodeCompletion {
         manTrie.insertList(commandList);
         manTrie.insertList(creatableObjects);
         manTrie.insertList(settableProperties);
+        manTrie.insertList(Arrays.stream(CustomManPage.values()).map(Enum::toString).toList());
 
         statsTrie.insertList(userStatistics);
 

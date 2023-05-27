@@ -3,7 +3,7 @@ package gk646.jnet.util;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-public class NetLogger extends java.util.logging.Logger {
+public final class NetLogger extends java.util.logging.Logger {
     /**
      * Protected method to construct a logger for a named subsystem.
      * <p>
