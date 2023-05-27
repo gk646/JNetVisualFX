@@ -13,8 +13,8 @@ import java.util.InputMismatchException;
 
 public final class NeuralNetwork {
     public static boolean VERBOSE = true;
+    public static Thread worker;
     static int delayPerStep = 64;
-    static Thread worker;
     private final Network network;
 
     @Manual(text = "The NeuralNetwork. Can be built using \"new Network\" after you made a NetBuilder. All the attributes like learn-rate and activation function are changed through the NetBuilder." +
@@ -53,10 +53,6 @@ public final class NeuralNetwork {
     public void trainVisual(double[][] input, double[][] target, int repetitions) {
         if (!network.netUtils.arrayShapeCheck(input, target)) return;
 
-        if (worker != null) {
-            Log.logger.severe("training already in progress! \"jnet_fastforward\" to skip");
-            return;
-        }
 
         worker = new Thread(() -> {
             for (int i = 0; i < repetitions; i++) {
