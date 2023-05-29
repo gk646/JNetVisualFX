@@ -145,5 +145,6 @@ public final class NetworkVisualizer {
         double minWidth = 0.5;
         double maxWidth = 5.0;
         return ((weight - lowestWeight) / (maxWeight - lowestWeight)) * (maxWidth - minWidth) + minWidth;
+
     }
 }
