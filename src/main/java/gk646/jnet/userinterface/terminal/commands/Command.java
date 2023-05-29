@@ -6,6 +6,8 @@ import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
 import gk646.jnet.networks.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.networks.neuralnetwork.builder.LossFunction;
 import gk646.jnet.userinterface.Window;
+import gk646.jnet.userinterface.exercise.Exercise;
+import gk646.jnet.userinterface.exercise.ExerciseWindow;
 import gk646.jnet.userinterface.graphics.ColorPalette;
 import gk646.jnet.userinterface.graphics.NetworkVisualizer;
 import gk646.jnet.userinterface.terminal.CommandController;
@@ -362,7 +364,7 @@ public enum Command {
 
             Playground.neuralNetwork.trainVisual(input.getRawData(), target.getRawData(), repetitions);
             Terminal.addText("training started! \"jnet_fastforward\" to skip delays; \"set trainDelay <value>\" to change it");
-            Log.addLogText("*------NEW TRAINING ---- "+repetitions+" REPETITIONS--------*");
+            Log.addLogText("*------NEW TRAINING ---- " + repetitions + " REPETITIONS--------*");
         }
     },
     jnet_randomtrain("jnet-randomtrain(<input-list>,<target-list>,<repetitions>) - randomly shuffles training data ; same usage as jnet-train") {
@@ -594,6 +596,25 @@ public enum Command {
                 }
             }
             Terminal.addText("no property named:" + creatableName);
+        }
+    },
+
+    exercise("exercise <number> - opens a new windows containing information about the exercise") {
+        @Override
+        public void cmd(String prompt) {
+            prompt = prompt.replace("exercise ", "");
+            if (prompt.isBlank() || prompt.equals("exercise")) {
+                Terminal.addText("missing argument: exercise <number>");
+                return;
+            }
+
+            for (Exercise exercise : Exercise.values()) {
+                if (exercise.toString().equals(prompt)) {
+                    ExerciseWindow.create(exercise);
+                    return;
+                }
+            }
+            Terminal.addText("no exercise with number: "+ prompt);
         }
     };
 
