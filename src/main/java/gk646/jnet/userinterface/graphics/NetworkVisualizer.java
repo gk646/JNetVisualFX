@@ -5,8 +5,6 @@ import gk646.jnet.util.ContainerHelper;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
-
 public final class NetworkVisualizer {
     public static final ContainerHelper containerHelper = new ContainerHelper(0, 0, 76, 75);
     static final float MIN_CIRCLE_DIAMETER = 10;
@@ -14,10 +12,13 @@ public final class NetworkVisualizer {
     static final Color backGround = Colors.WHITE_SMOKE;
     public static float maxCircleDiameter = 35;
     public static short[][][] activeConnection;
+    public static double maxWeight;
+    public static double lowestWeight;
+    public static double span;
     static short offsetX = 0;
     static int offsetY = 0;
-    static short verticalSpacing = 50;
-    static short horizontalSpacing = 75;
+    static int verticalSpacing = 50;
+    static int horizontalSpacing = 75;
     static int maxNeuronCountInLayers = 3;
     float circleDiameter = 15;
 
@@ -30,9 +31,15 @@ public final class NetworkVisualizer {
 
     public static void updateConnectionMatrix(int[] layerInfo) {
         activeConnection = new short[layerInfo.length - 1][][];
+        maxWeight = 0;
+        lowestWeight = 0;
         for (int i = 1; i < layerInfo.length; i++) {
             activeConnection[i - 1] = new short[layerInfo[i]][layerInfo[i - 1]];
         }
+    }
+
+    public static void setNewWeights(double high, double low) {
+
     }
 
     public void draw(GraphicsContext gc) {
@@ -81,6 +88,7 @@ public final class NetworkVisualizer {
                 previousY = (int) (getLayerStartY(netDimensions[i - 1]) + circleDiameter / 2);
                 previousX = (int) (getLayerStartX(i - 1) + circleDiameter / 2);
                 for (int k = 0; k < netDimensions[i - 1]; k++) {
+                    gc.setLineWidth(getRelativeLineWidth(Playground.neuralNetwork.getWeight(i - 1, j, k)));
                     if (activeConnection[i - 1][j][k] > 0) {
                         gc.setStroke(Colors.RED);
                         gc.strokeLine(startX, startY, previousX, previousY);
@@ -129,7 +137,13 @@ public final class NetworkVisualizer {
         if (Playground.networkBuilder == null) {
             gc.fillText("NetBuilder: null", containerHelper.getDrawX() + containerHelper.getWidth() - 150, containerHelper.getDrawY() + 25);
         } else {
-            gc.fillText(Playground.networkBuilder.toString(),containerHelper.getDrawX()+25,containerHelper.getDrawY() + 25);
+            gc.fillText(Playground.networkBuilder.toString(), containerHelper.getDrawX() + 25, containerHelper.getDrawY() + 25);
         }
+    }
+
+    private double getRelativeLineWidth(double weight) {
+        double minWidth = 0.5;
+        double maxWidth = 5.0;
+        return ((weight - lowestWeight) / (maxWeight - lowestWeight)) * (maxWidth - minWidth) + minWidth;
     }
 }
