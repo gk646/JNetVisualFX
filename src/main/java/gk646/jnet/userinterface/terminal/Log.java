@@ -10,7 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * The Log class, providing a display for helpful information and handing logging aswell.
+ * The Log class, providing a display for helpful information and handing log output aswell.
  */
 public final class Log {
     public static final NetLogger logger = new NetLogger("", null);
@@ -18,10 +18,9 @@ public final class Log {
     public static final int LINE_HEIGHT = 14;
     static final LimitedQueue<String> logText = new LimitedQueue<>(75);
     static int scrollOffset = 0;
-    double characterWidth = ContainerHelper.initCharacterWidth(12);
     static int maxCharsPerLine = 49;
-  static   Color backGround = Colors.UBUNTU_BLACK;
-  static   Color textColor = Colors.MILK;
+    static Color backGround = Colors.UBUNTU_BLACK;
+    static Color textColor = Colors.MILK;
 
     public Log() {
         logText.setLimit(containerHelper.getHeight() / LINE_HEIGHT);
@@ -29,6 +28,14 @@ public final class Log {
 
     public static void addLogText(String text) {
         logText.add(StringUtil.insertNewLines(text, maxCharsPerLine));
+    }
+
+    public static void setBackGround(Color newBackGround) {
+        backGround = newBackGround;
+    }
+
+    public static void setTextColor(Color newTextColor) {
+        textColor = newTextColor;
     }
 
     public void draw(GraphicsContext gc) {
@@ -64,12 +71,12 @@ public final class Log {
         gc.fillRoundRect(containerHelper.getDrawX(), containerHelper.getDrawY(), containerHelper.getWidth() + 3, containerHelper.getHeight(), 25, 25);
 
         gc.setFill(Colors.PHILIPINE_SILVER);
-        gc.fillText("[Log]", containerHelper.getDrawX() +containerHelper.getWidth()- 47, containerHelper.getDrawY() + 20);
+        gc.fillText("[Log]", containerHelper.getDrawX() + containerHelper.getWidth() - 47, containerHelper.getDrawY() + 20);
     }
 
     public void updateSize() {
         logText.setLimit(containerHelper.getHeight() / LINE_HEIGHT);
-        maxCharsPerLine = (int) (containerHelper.getWidth() / characterWidth);
+        maxCharsPerLine = (int) (containerHelper.getWidth() / Resources.LETTER_WIDTH_12);
         recalculateLineBreaks();
     }
 
@@ -81,14 +88,6 @@ public final class Log {
             string = StringUtil.insertNewLines(string, maxCharsPerLine);
             logText.set(string, i);
         }
-    }
-
-    public static void setBackGround(Color newBackGround) {
-        backGround = newBackGround;
-    }
-
-    public static void setTextColor(Color newTextColor) {
-       textColor = newTextColor;
     }
 }
 

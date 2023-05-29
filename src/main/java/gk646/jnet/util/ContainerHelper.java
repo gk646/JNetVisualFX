@@ -31,11 +31,7 @@ public final class ContainerHelper {
         this.height = heightPercent;
     }
 
-    public static double initCharacterWidth(int size) {
-        Text text = new Text("A");
-        text.setFont(Resources.getFontInSize(size));
-        return (float) (text.getLayoutBounds().getWidth() + 0.1);
-    }
+
 
     public int getDrawX() {
         return (int) (JNetVisualFX.bounds.x / 100f * percentX);

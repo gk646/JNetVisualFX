@@ -36,6 +36,7 @@ public final class UserStatistics {
         localNumbers.put(Stat.numberOfBackPropagations, 0);
         localNumbers.put(Stat.totalSecondsUsed, 0);
         localNumbers.put(Stat.totalCommandsUsed, 0);
+        localNumbers.put(Stat.exercisesFinished, 0);
     }
 
     public static void updateStat(Stat statName, int value) {
@@ -125,6 +126,6 @@ public final class UserStatistics {
     }
 
     public enum Stat {
-        netBuilderCustomizations, networksTrained, arraysCreated, numberOfForwardPasses, numberOfBackPropagations, totalSecondsUsed, totalCommandsUsed,
+        netBuilderCustomizations, networksTrained, arraysCreated, numberOfForwardPasses, numberOfBackPropagations, totalSecondsUsed, totalCommandsUsed, exercisesFinished
     }
 }

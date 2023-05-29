@@ -9,7 +9,6 @@ import gk646.jnet.userinterface.terminal.Terminal;
 import gk646.jnet.util.NumberUtil;
 import gk646.jnet.util.datastructures.Matrix;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +28,7 @@ public enum CreatableObjects {
             Matcher matcher = listPattern.matcher(prompt);
 
             if (!matcher.find()) {
-                Terminal.addText("invalid syntax: ($<listname> | [<list>], <activationFunction>)");
+                Terminal.addText("invalid syntax: (<$listname | [<list>]>, <activationFunction>)");
                 return;
             }
 

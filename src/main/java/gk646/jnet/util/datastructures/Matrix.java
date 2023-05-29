@@ -5,7 +5,7 @@ import gk646.jnet.userinterface.terminal.Log;
 import java.util.Arrays;
 
 public final class Matrix {
-    private static final double epsilon = 1e-10;
+    private static final double epsilon = 1e-5;
     private final int rows;
     private final int cols;
     private final double[][] data;

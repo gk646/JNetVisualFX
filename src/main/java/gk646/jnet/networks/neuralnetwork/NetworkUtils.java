@@ -34,7 +34,7 @@ public final class NetworkUtils {
                 error += network.lossFunction.apply(output[j], target[i][j]);
             }
         }
-        Log.logger.info(network.lossFunction + ": " + (float) error);
+        Log.logger.info(network.lossFunction + ": " + String.format("%.4f", error));
     }
 
     public void finishTraining(int repetitions, int inputLength) {
