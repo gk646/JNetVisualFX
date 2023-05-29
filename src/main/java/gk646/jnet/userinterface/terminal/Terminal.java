@@ -121,11 +121,11 @@ public final class Terminal {
     }
 
     public static class TerminalInfo {
-        static  Color backGround = Colors.LIGHT_BLACK;
         public static int cursorOffsetLeft = 0;
+        static Color backGround = Colors.LIGHT_BLACK;
         static Color textColor = Colors.MILK;
         static int maxCharsPerLine = 100;
-        static double characterWidth = ContainerHelper.initCharacterWidth(15);
+        static double characterWidth = Resources.LETTER_WIDTH_15;
         private static int fontSize = 15;
         static int lineHeight = fontSize + 4;
         static Font activeFont = Resources.getFontInSize(fontSize);

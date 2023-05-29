@@ -315,10 +315,7 @@ public enum Command {
 
         @Override
         public void cmd(String prompt) {
-            if (Playground.neuralNetwork == null) {
-                Terminal.addText(noNetwork);
-                return;
-            }
+            if (noNetworkCheck()) return;
 
             prompt = prompt.replace("jnet_train(", "");
             if (prompt.isBlank() || prompt.equals("jnet_train")) {
@@ -372,10 +369,7 @@ public enum Command {
 
         @Override
         public void cmd(String prompt) {
-            if (Playground.neuralNetwork == null) {
-                Terminal.addText(noNetwork);
-                return;
-            }
+            if (noNetworkCheck()) return;
 
             prompt = prompt.replace("jnet_randomtrain(", "");
             if (prompt.isBlank() || prompt.equals("jnet_randomtrain")) {
@@ -422,10 +416,7 @@ public enum Command {
 
         @Override
         public void cmd(String prompt) {
-            if (Playground.neuralNetwork == null) {
-                Terminal.addText(noNetwork);
-                return;
-            }
+            if (noNetworkCheck()) return;
 
             prompt = prompt.replace("jnet_out(", "");
             if (prompt.isBlank() || prompt.equals("jnet_out")) {
@@ -611,10 +602,27 @@ public enum Command {
             for (Exercise exercise : Exercise.values()) {
                 if (exercise.toString().equals(prompt)) {
                     ExerciseWindow.create(exercise);
+                    Terminal.addText("You can close and reopen the exercise window any time you want.\"ex_test\" to test if you finished the exercise, \"ex_hint\" to get a helpful hint.");
                     return;
                 }
             }
-            Terminal.addText("no exercise with number: "+ prompt);
+            Terminal.addText("no exercise with number: " + prompt);
+        }
+    },
+    ex_test("ex_test - test the active network against the active exercise") {
+        @Override
+        public void cmd(String prompt) {
+            if (noNetworkCheck()) return;
+            if (noExerciseCheck()) return;
+            ExerciseWindow.test();
+        }
+    },
+    ex_hint("ex_hint - give you a hint to the current exercise; resets each time you reopen one") {
+        @Override
+        public void cmd(String prompt) {
+            if (noNetworkCheck()) return;
+            if (noExerciseCheck()) return;
+            ExerciseWindow.getHint();
         }
     };
 
@@ -624,6 +632,7 @@ public enum Command {
     static final String missingList = "missing list names: ";
     static final String noNetBuilder = "no NetBuilder! \"man NetBuilder\" for info";
     static final String missingArgument = "missing argument";
+    static final String noExercise = "no active exercise!";
     private final String manPage;
     Matcher matcher;
 
@@ -641,6 +650,22 @@ public enum Command {
     boolean noNetBuilderCheck() {
         if (Playground.networkBuilder == null) {
             Terminal.addText(noNetBuilder);
+            return true;
+        }
+        return false;
+    }
+
+    boolean noExerciseCheck() {
+        if (!ExerciseWindow.isOpen()) {
+            Terminal.addText(noExercise);
+            return true;
+        }
+        return false;
+    }
+
+    boolean noNetworkCheck() {
+        if (Playground.neuralNetwork == null) {
+            Terminal.addText(noNetwork);
             return true;
         }
         return false;
