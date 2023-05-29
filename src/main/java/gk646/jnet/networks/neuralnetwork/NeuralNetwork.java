@@ -131,4 +131,8 @@ public final class NeuralNetwork {
     public Network getNetwork() {
         return network;
     }
+
+    public double getWeight(int layer, int from, int to) {
+        return network.layers[layer].getWeight(from, to);
+    }
 }

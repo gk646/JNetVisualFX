@@ -79,7 +79,7 @@ public final class Network {
             error[i] = lossFunction.apply(calcError[i], target[i]);
         }
         for (int i = layers.length - 1; i >= 0; i--) {
-            error = layers[i].backwardPassVisual(error, learnRate, momentum,i);
+            error = layers[i].backwardPassVisual(error, learnRate, momentum, i);
         }
     }
 
@@ -88,7 +88,6 @@ public final class Network {
         int layerNumber = 0;
         for (final Layer layer : layers) {
             referenceInput = layer.forwardPassVisual(referenceInput, layerNumber++);
-
         }
         return referenceInput;
     }

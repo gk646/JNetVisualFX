@@ -99,6 +99,8 @@ public final class Layer {
         for (int i = 0; i < output.length; i++) {
             for (int j = 0; j < input.length; j++) {
                 if (j < input.length - 1) {
+                    if (weights[j][i] > NetworkVisualizer.maxWeight) NetworkVisualizer.maxWeight = weights[j][i];
+                    else if (weights[j][i] < NetworkVisualizer.lowestWeight) NetworkVisualizer.lowestWeight = weights[j][i];
                     NetworkVisualizer.activeConnection[layerNumber][i][j] += 25;
                     NetworkUtils.sleep(NeuralNetwork.delayPerStep);
                 }
@@ -128,5 +130,9 @@ public final class Layer {
             }
         }
         return nextError;
+    }
+
+    public double getWeight(int from, int to) {
+        return weights[to][from];
     }
 }
