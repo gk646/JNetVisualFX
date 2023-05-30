@@ -1,16 +1,15 @@
-### JNetVisualFX
-
-
-JNetVisualFX is a terminal based NeuralNetwork visualizer with the focus on testing, training and playing around with *Neural Networks*. In the end its also meant as an educational application.
-
 <!--suppress CheckImageSize -->
 <img src="screenshots/0.9.7_training.png" alt="The startup screen with a 10,10,10,2 Layer Network" width="830" height="580">
 
 
-## For a comprehensive guide check [Wiki!](https://github.com/gk646/JNetVisualFX/wiki/Home/)
+## For a comprehensive guide check [the Wiki!](https://github.com/gk646/JNetVisualFX/wiki/Home/)
 
-### *Disclaimer*
-Iam in no way an expert on machine learning or neural networks. All information provided or gained through using JNetVisualFX is not guaranteed to be right nor do I guarantee it. I try to do my best to make an interesting application and learn about these topics myself by implementing them.
+**Disclaimer**:
+*Iam in no way an expert on machine learning or neural networks. I do not guarantee that all information provided or gained through using JNetVisualFX is right. I made this application to learn about these topics myself by implementing them.*
+
+
+## JNetVisualFX
+JNetVisualFX is a terminal based NeuralNetwork visualizer with the focus on testing, training and playing around with *Neural Networks*. In the end its also meant as an educational application.
 
 
 ### **How to Install**
@@ -21,11 +20,19 @@ The application comes already prepackaged in a .zip-archive with a runtime inclu
 **Unix**  
 Downlaod the v.x.x.x-LINUX.jar and run it. **You will need a basic Java Runtime installed**.  
 
+###  Features  
+
+- Intuitive controls through a custom command line
+- 35 different commands ranging from `print()`, `theme`, `set`,`jnet_train()`, to `getStat`.
+- **Visual Training:** While training each actively used connection is visualized for both forward pass and backpropagation
+- Each connection is rendered dynamically based on the correlating weight
+- **Guided exercises** and lots of information inside the application 
+- Local Save and User Statistics: Look up how many commands you used!
 
 ### **How to get started:**
 
 Upon starting, you won't have a built network yet. For building your first Network you need a NetBuilder, which is a reusable building block for your network.    
-Create a new NetBuilder with `new NetBuilder([4,4,4],sigmoid)`, the first argument being a list of numbers representing the neuronCount each layer. Second is a activationFunction.
+Create a new NetBuilder with `new NetBuilder([2,2,1],sigmoid)`, the first argument being a list of numbers representing the neuronCount each layer. Second is a activationFunction.
 You can customize your NetBuilder with further commands to your liking.  
 When you have your desired NetBuilder call `new Network` to create a new Network with your NetBuilder.  
 Voilà, you made your first Network now you can play around with it!
