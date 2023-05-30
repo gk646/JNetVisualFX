@@ -24,7 +24,8 @@ public final class Terminal {
     private int counter = 0;
 
     public Terminal() {
-        terminalText.add("Welcome to JNetVisualFX! To get started use: \"new NetBuilder([4,4,4],sigmoid)\"");
+        terminalText.add("Welcome to JNetVisualFX! To open the wiki type:\"wiki\"");
+        terminalText.add("To get started use:\"new NetBuilder([4,4,4],sigmoid)\"");
         commandHistory.add("help");
     }
 

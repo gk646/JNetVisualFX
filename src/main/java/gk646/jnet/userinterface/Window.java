@@ -2,6 +2,7 @@ package gk646.jnet.userinterface;
 
 import gk646.jnet.Main;
 import gk646.jnet.localdata.LocalFileSaver;
+import gk646.jnet.userinterface.exercise.ExerciseWindow;
 import gk646.jnet.userinterface.terminal.Log;
 import gk646.jnet.userinterface.userinput.InputHandler;
 import javafx.application.Application;
@@ -73,6 +74,8 @@ public class Window extends Application {
         sceneRoot.setOnKeyTyped(inputHandler::handleKeyType);
         sceneRoot.setOnKeyPressed(inputHandler::handleSpecialKeyType);
         sceneRoot.setOnKeyReleased(inputHandler::handleSpecialKeyLift);
+
+        stage.setOnCloseRequest(event -> ExerciseWindow.close());
 
         //System.out.println(System.getenv("TEST_KEY"));
         Log.logger.info("Startup took " + (System.nanoTime() - Main.startUpTime) / 1_000_000 + " ms");

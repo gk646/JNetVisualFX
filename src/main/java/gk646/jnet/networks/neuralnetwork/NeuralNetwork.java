@@ -53,7 +53,6 @@ public final class NeuralNetwork {
     public void trainVisual(double[][] input, double[][] target, int repetitions) {
         if (!network.netUtils.arrayShapeCheck(input, target)) return;
 
-
         worker = new Thread(() -> {
             for (int i = 0; i < repetitions; i++) {
                 for (int j = 0; j < input.length; j++) {

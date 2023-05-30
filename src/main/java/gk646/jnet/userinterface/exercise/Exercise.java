@@ -1,5 +1,6 @@
 package gk646.jnet.userinterface.exercise;
 
+import gk646.jnet.userinterface.terminal.Playground;
 import gk646.jnet.userinterface.terminal.Terminal;
 
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public enum Exercise {
                         
             To confirm if its working use "jnet_out([0,1])"
             with any input pair and check if you get the
-            correct output.
+            correct output; "ex_test" to test it.
             """) {
         @Override
         public String toString() {
@@ -59,8 +60,16 @@ public enum Exercise {
         }
 
         @Override
-        public boolean test() {
-            return true;
+        public double test() {
+            double error = 0;
+
+            double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+            double[][] outputs = {{1}, {0}, {0}, {1}};
+
+            for (int i = 0; i < inputs.length; i++) {
+                error += Playground.neuralNetwork.out(inputs[i])[0] - outputs[i][0];
+            }
+            return error;
         }
 
         @Override
@@ -70,21 +79,51 @@ public enum Exercise {
         }
     },
 
-    TWO("") {
+    TWO("""
+            The XOR Gate
+                        
+            The X stands for exclusive; so in some way
+            its a reversed OR, meaning its 1 if there is
+            only one 1 in the input. The special case
+            of 1,1 is however 0 since the are the same.
+                        
+            Figure out the truth table and make a network.
+                        
+                 Left  |  Right  | Output
+            ---------------------------
+                ?    |    ?    |   0
+                ?    |    ?    |   1
+                ?    |    ?    |   1
+                ?    |    ?    |   0
+                
+            This time also experiment with different
+            network sizes and parameters. Find out whats
+            the bare minimum of learn cycles needed
+            with any configuration iterations.
+             """) {
         @Override
         public String toString() {
             return "2";
         }
 
         @Override
-        public boolean test() {
-            return true;
+        public double test() {
+            double error = 0;
+
+            double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+            double[][] outputs = {{0}, {1}, {1}, {0}};
+
+            for (int i = 0; i < inputs.length; i++) {
+                error += Playground.neuralNetwork.out(inputs[i])[0] - outputs[i][0];
+            }
+            return error;
         }
 
         @Override
         void init() {
-            hintMap.put(0, "The correct input list is: [[0,0][0,1][1,0][1,1]]");
-            hintMap.put(1, "The correct output list is: [[1][0][0][1]]");
+            hintMap.put(0, "0,1 outputs 1");
+            hintMap.put(1, "0,0 outputs 0");
+            hintMap.put(2, "Just for solving it you should be able to use the same setup as for exercise 1");
         }
     };
     final HashMap<Integer, String> hintMap = new HashMap<>(5);
@@ -98,7 +137,7 @@ public enum Exercise {
 
     abstract void init();
 
-    public abstract boolean test();
+    public abstract double test();
 
     public void resetHints() {
         this.hintCounter = 0;

@@ -67,9 +67,9 @@ public enum Command {
                     return;
                 }
             }
-            for (CreatableObjects creatables : CreatableObjects.values()) {
-                if (creatables.name().equals(prompt)) {
-                    Terminal.addText(creatables.manPage);
+            for (CreatableObjects creatable : CreatableObjects.values()) {
+                if (creatable.name().equals(prompt)) {
+                    Terminal.addText(creatable.manPage);
                     return;
                 }
             }
@@ -167,7 +167,7 @@ public enum Command {
         @Override
         public void cmd(String prompt) {
             Terminal.addText("man <method or command> for manual the manual page");
-            Terminal.addText("if you need more help open the the JNetVisualFX wiki with: \"wiki\"");
+            Terminal.addText("If you need more help open the JNetVisualFX wiki with:\"wiki\"");
         }
     },
     wiki("wiki - opens the JNetVisualFX's github wiki pages") {
@@ -338,7 +338,7 @@ public enum Command {
             Matrix target = Playground.playgroundLists.get(arguments[1]);
 
             if (input == null) {
-                Terminal.addText("input matrix not fond: " + arguments[0]);
+                Terminal.addText(noInputMatrix + arguments[0]);
                 return;
             }
             if (target == null) {
@@ -392,7 +392,7 @@ public enum Command {
             Matrix target = Playground.playgroundLists.get(arguments[1]);
 
             if (input == null) {
-                Terminal.addText("input matrix not fond: " + arguments[0]);
+                Terminal.addText(noInputMatrix + arguments[0]);
                 return;
             }
             if (target == null) {
@@ -440,7 +440,7 @@ public enum Command {
             } else {
                 Matrix input = Playground.playgroundLists.get(prompt.substring(0, prompt.length() - 1));
                 if (input == null) {
-                    Terminal.addText("input matrix not fond: " + prompt.substring(0, prompt.length() - 1));
+                    Terminal.addText(noInputMatrix + prompt.substring(0, prompt.length() - 1));
                     return;
                 }
                 Terminal.addText(new Matrix((Playground.neuralNetwork.out(input.getRow(0)))).toString());
@@ -601,8 +601,11 @@ public enum Command {
 
             for (Exercise exercise : Exercise.values()) {
                 if (exercise.toString().equals(prompt)) {
-                    ExerciseWindow.create(exercise);
-                    Terminal.addText("You can close and reopen the exercise window any time you want.\"ex_test\" to test if you finished the exercise, \"ex_hint\" to get a helpful hint.");
+                    if (ExerciseWindow.create(exercise)) {
+                        Terminal.addText("You can close and reopen the exercise window any time you want.\"ex_test\" to test if you finished the exercise, \"ex_hint\" to get a helpful hint.");
+                        return;
+                    }
+                    Terminal.addText("exercise is already open");
                     return;
                 }
             }
@@ -633,6 +636,7 @@ public enum Command {
     static final String noNetBuilder = "no NetBuilder! \"man NetBuilder\" for info";
     static final String missingArgument = "missing argument";
     static final String noExercise = "no active exercise!";
+    static final String noInputMatrix = "input matrix not fond: ";
     private final String manPage;
     Matcher matcher;
 
