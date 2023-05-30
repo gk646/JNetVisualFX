@@ -72,7 +72,7 @@ public final class Network {
         }
     }
 
-    public void backPropagationVisual(double[] input, double[] target) {
+    void backPropagationVisual(double[] input, double[] target) {
         double[] calcError = forwardPassVisual(input);
         double[] error = new double[calcError.length];
         for (int i = 0; i < error.length; i++) {

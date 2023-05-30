@@ -1,7 +1,9 @@
 package gk646.jnet.userinterface.exercise;
 
+import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.userinterface.graphics.Colors;
 import gk646.jnet.userinterface.graphics.Resources;
+import gk646.jnet.userinterface.terminal.Terminal;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -11,26 +13,33 @@ import javafx.stage.StageStyle;
 
 public class ExerciseWindow {
     public static final int EXERCISE_WIDTH = 400;
-    public static final int EXERCISE_HEIGHT = 660;
-    static ExerciseWindow instance;
+    public static final int EXERCISE_HEIGHT = 670;
     static Exercise activeExercise;
+    static Stage activeStage;
 
-    ExerciseWindow(Exercise exercise) {
-        activeExercise = exercise;
-        activeExercise.resetHints();
+    private ExerciseWindow() {
+
     }
 
 
-    public static void create(Exercise exercise) {
-        if (instance != null) return;
+    public static boolean create(Exercise exercise) {
+        if (activeStage != null) {
+            if (!activeExercise.equals(exercise)) {
+                activeStage.close();
+                activeStage = null;
+                create(exercise);
+                return false;
+            }
+            return false;
+        }
 
-        instance = new ExerciseWindow(exercise);
-        Stage secondaryStage = new Stage(StageStyle.UNIFIED);
+        activeExercise = exercise;
+        activeStage = new Stage(StageStyle.UNIFIED);
 
-        secondaryStage.setTitle("Exercise " + exercise + " Info");
-        secondaryStage.setWidth(EXERCISE_WIDTH);
-        secondaryStage.setHeight(EXERCISE_HEIGHT);
-        secondaryStage.setResizable(false);
+        activeStage.setTitle("Exercise " + exercise + " Info");
+        activeStage.setWidth(EXERCISE_WIDTH);
+        activeStage.setHeight(EXERCISE_HEIGHT);
+        activeStage.setResizable(false);
         Group group = new Group();
         Canvas canvas = new Canvas(EXERCISE_WIDTH, EXERCISE_HEIGHT);
 
@@ -43,26 +52,35 @@ public class ExerciseWindow {
         group.getChildren().add(canvas);
 
         Scene scene = new Scene(group);
-        secondaryStage.setScene(scene);
-        secondaryStage.show();
+        activeStage.setScene(scene);
+        activeStage.show();
 
+        activeStage.setOnCloseRequest(event -> activeStage = null);
 
-        secondaryStage.setOnCloseRequest(event -> instance.close());
+        return true;
     }
 
     public static boolean isOpen() {
-        return instance != null;
+        return activeStage != null;
     }
 
     public static void test() {
-        activeExercise.test();
+        double error = activeExercise.test();
+        if (Math.abs(error) < 0.01) {
+            Terminal.addText("Tests passed! You successfully trained a network to solve equality!");
+            UserStatistics.updateStat(UserStatistics.Stat.exercisesFinished, 1);
+        } else if (Math.abs(error) < 0.2) {
+            Terminal.addText("Tests not passed! Your models accuracy was too low, but close!");
+        } else {
+            Terminal.addText("Tests not passed! Your models accuracy was too low!");
+        }
     }
 
     public static void getHint() {
         activeExercise.getHint();
     }
 
-    private void close() {
-        instance = null;
+    public static void close() {
+        if (activeStage != null) activeStage.close();
     }
 }
