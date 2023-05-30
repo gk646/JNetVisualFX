@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\Lukas\Documents\CodingProjects\Java\JNetVisualFX\build\libs\JNetVisualFX-0.9.9.jar</jar>
+  <jar>C:\Users\Lukas\Documents\CodingProjects\Java\JNetVisualFX\build\libs\JNetVisualFX-1.0.0.jar</jar>
   <outfile>C:\Users\Lukas\Desktop\Projects_Data\JNetVisualFX\JNetVisualFX.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
@@ -34,12 +34,12 @@
     <opt>-XX:ReservedCodeCacheSize=256m</opt>
   </jre>
   <versionInfo>
-    <fileVersion>0.9.9.0</fileVersion>
-    <txtFileVersion>Prototype 9.9</txtFileVersion>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>Release 1.0</txtFileVersion>
     <fileDescription>JavaFX educational application about neural networks</fileDescription>
     <copyright>MIT License gk646</copyright>
-    <productVersion>0.9.9.0</productVersion>
-    <txtProductVersion>Prototype 9.9</txtProductVersion>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>Release 1.0</txtProductVersion>
     <productName>JNetVisualFX</productName>
     <companyName></companyName>
     <internalName>JNetVisualFX</internalName>
