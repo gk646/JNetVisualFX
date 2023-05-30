@@ -4,7 +4,7 @@
 JNetVisualFX is a terminal based NeuralNetwork visualizer with the focus on testing, training and playing around with *Neural Networks*. In the end its also meant as an educational application.
 
 <!--suppress CheckImageSize -->
-<img src="screenshots/0.9.7_training.png" alt="The startup screen with a 10,10,10,2 Layer Network" width="830" height="580">
+<img src="screenshots/1.0_Main.png" alt="The startup screen with a 10,10,10,2 Layer Network" width="830" height="580">
 
 
 ## For a comprehensive guide check [Wiki!](https://github.com/gk646/JNetVisualFX/wiki/Home/)
