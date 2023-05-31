@@ -15,7 +15,7 @@ JNetVisualFX is a terminal based NeuralNetwork visualizer with the focus on test
 ### **How to Install**
 
 **Windows**  
-The application comes already prepackaged in a .zip-archive with a runtime included. Just unzip it and start `JNetVisualFX.exe`.  
+The application comes already prepackaged in a .zip-archive with a runtime included. Just unzip it and start `JNetVisualFX.exe`.  **[Download](https://github.com/gk646/JNetVisualFX/releases/download/v.1.0.0/JNetVisualFX.zip)**
 
 **Unix**  
 Downlaod the v.x.x.x-LINUX.jar and run it. **You will need a basic Java Runtime (19) installed**.  
