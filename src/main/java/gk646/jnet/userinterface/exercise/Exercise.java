@@ -126,7 +126,7 @@ public enum Exercise {
             hintMap.put(2, "Just for solving it you should be able to use the same setup as for exercise 1");
         }
     };
-    final HashMap<Integer, String> hintMap = new HashMap<>(5);
+    final HashMap<Integer, String> hintMap = HashMap.newHashMap(5);
     final String info;
     int hintCounter;
 

@@ -55,7 +55,10 @@ public class ExerciseWindow {
         activeStage.setScene(scene);
         activeStage.show();
 
-        activeStage.setOnCloseRequest(event -> activeStage = null);
+        activeStage.setOnCloseRequest(event -> {
+            activeStage = null;
+            activeExercise.resetHints();
+        });
 
         return true;
     }

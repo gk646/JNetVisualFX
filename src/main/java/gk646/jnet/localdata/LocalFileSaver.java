@@ -24,8 +24,6 @@ public final class LocalFileSaver {
         localData = LocalData.readLocalFiles(fullDirectoryPath);
     }
 
-
-
     public void saveLocalFiles() {
         if (!savePossible || fullDirectoryPath == null) return;
         localData.saveAll(fullDirectoryPath);

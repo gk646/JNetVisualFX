@@ -5,7 +5,7 @@ import gk646.jnet.userinterface.terminal.Log;
 import java.util.Arrays;
 
 public final class Matrix {
-    private static final double epsilon = 1e-5;
+    private static final double EPSILON = 1e-5;
     private final int rows;
     private final int cols;
     private final double[][] data;
@@ -57,11 +57,52 @@ public final class Matrix {
     }
 
     public Matrix multiply(Matrix o) {
-        return o;
+        double[][] otherData = o.data;
+
+        if (this.data[0].length != otherData.length) {
+            throw new IllegalArgumentException("Matrices cannot be multiplied: number of columns in the first matrix doesn't match the number of rows in the second.");
+        }
+
+        double[][] result = new double[this.data.length][otherData[0].length];
+
+        for (int i = 0; i < this.data.length; i++) {
+            for (int j = 0; j < otherData[0].length; j++) {
+                for (int k = 0; k < this.data[0].length; k++) {
+                    result[i][j] += this.data[i][k] * otherData[k][j];
+                }
+            }
+        }
+
+        return new Matrix(result);
     }
 
     public Matrix transpose() {
-        return this;
+        double[][] result = new double[this.data[0].length][this.data.length];
+        for (int i = 0; i < this.data.length; i++) {
+            for (int j = 0; j < this.data[0].length; j++) {
+                result[j][i] = this.data[i][j];
+            }
+        }
+
+        return new Matrix(result);
+    }
+    public static Matrix elementWiseMult(Matrix m, Matrix o) {
+        double[][] mData = m.data;
+        double[][] oData = o.data;
+
+        if (mData.length != oData.length || mData[0].length != oData[0].length) {
+            throw new IllegalArgumentException("Matrices should have the same dimensions for element-wise multiplication");
+        }
+
+        double[][] result = new double[mData.length][mData[0].length];
+
+        for (int i = 0; i < mData.length; i++) {
+            for (int j = 0; j < mData[0].length; j++) {
+                result[i][j] = mData[i][j] * oData[i][j];
+            }
+        }
+
+        return new Matrix(result);
     }
 
     public boolean isOneDimensional() {
@@ -80,7 +121,7 @@ public final class Matrix {
             for (double[] doubles : data) {
                 builder.append("[");
                 for (double value : doubles) {
-                    if (Math.abs((int) value - value) < epsilon) {
+                    if (Math.abs((int) value - value) < EPSILON) {
                         builder.append((int) value).append(",");
                     } else {
                         builder.append(value).append(",");
@@ -94,7 +135,7 @@ public final class Matrix {
         } else if (rows == 1) {
             builder.append("[");
             for (double value : data[0]) {
-                if (Math.abs((int) value - value) < epsilon) {
+                if (Math.abs((int) value - value) < EPSILON) {
                     builder.append((int) value).append(",");
                 } else {
                     builder.append(value).append(",");

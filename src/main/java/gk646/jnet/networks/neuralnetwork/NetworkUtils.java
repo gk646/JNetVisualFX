@@ -34,7 +34,10 @@ public final class NetworkUtils {
                 error += network.lossFunction.apply(output[j], target[i][j]);
             }
         }
-        Log.logger.info(network.lossFunction + ": " + String.format("%.4f", error));
+
+        if (NeuralNetwork.verbose) {
+            Log.logger.info(network.lossFunction + ": " + String.format("%.4f", error));
+        }
     }
 
     public void finishTraining(int repetitions, int inputLength) {
@@ -43,18 +46,9 @@ public final class NetworkUtils {
         UserStatistics.updateStat(UserStatistics.Stat.networksTrained, 1);
     }
 
-    public void printNeuronBias(Layer[] layers) {
-        for (int i = 0; i < layers.length; i++) {
-            System.out.println("NeuronLayer: " + i);
-            for (int j = 0; j < layers[i].layerSize; j++) {
-                System.out.println("|" + layers[i].neurons[j].bias + "|");
-            }
-            System.out.println();
-        }
-    }
 
     public void printNetwork() {
-        if (!NeuralNetwork.VERBOSE) return;
+        if (!NeuralNetwork.verbose) return;
         Log.addLogText("");
         StringBuilder sb = new StringBuilder();
         int max = 0;

@@ -1,7 +1,7 @@
 package gk646.jnet.networks.neuralnetwork.builder;
 
 public enum WeightInitState {
-    RANDOM(-0.2f, 0.2f), ZERO(0, 0.0000000000001);
+    RANDOM(-0.35f, 0.35f), ZERO(0, 0.0000000000001);
 
     double origin;
     double bound;

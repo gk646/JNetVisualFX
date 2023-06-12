@@ -4,11 +4,10 @@ import gk646.jnet.localdata.files.UserStatistics;
 import gk646.jnet.networks.neuralnetwork.NeuralNetwork;
 import gk646.jnet.networks.neuralnetwork.builder.ActivationFunction;
 import gk646.jnet.networks.neuralnetwork.builder.NetworkBuilder;
-import gk646.jnet.networks.neuralnetwork.builder.NeuronInitState;
-import gk646.jnet.networks.neuralnetwork.builder.WeightInitState;
 import gk646.jnet.userinterface.terminal.Log;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -65,10 +64,11 @@ class NetworkTest {
     @Test
     void backPropagationTestXOR() {
         new UserStatistics();
-        for (int p = 0; p < 1; p++) {
+        var list = new ArrayList<Integer>();
+        NeuralNetwork.verbose = false;
+        for (int p = 0; p < 1000; p++) {
             // Create the network with 2 inputs, 2 hidden neurons, and 1 output
-            NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(new int[]{2, 2, 1}, ActivationFunction.SIGMOID).
-                    setWeightInitState(WeightInitState.RANDOM).setNeuronInitState(NeuronInitState.RANDOM).setLearnRate(0.3).setMomentum(0.6));
+            NeuralNetwork network = new NeuralNetwork(new NetworkBuilder(new int[]{2, 2, 1}, ActivationFunction.SIGMOID).setLearnRate(0.35));
 
             // XOR input and output pairs
             double[][] inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
@@ -79,14 +79,19 @@ class NetworkTest {
             network.trainSynchronous(inputs, outputs, repetitions);
 
             // Test the network
-            double epsilon = 1f; // tolerance for the test
+            double epsilon = 0.1f; // tolerance for the test
             for (int i = 0; i < inputs.length; i++) {
                 double[] networkOutput = network.out(inputs[i]);
-                assertTrue(Math.abs(networkOutput[0] - outputs[i][0]) < epsilon);
+                if ((Math.abs(networkOutput[0] - outputs[i][0]) < epsilon)) {
+                    list.add(1);
+                    continue;
+                }
+                list.add(0);
+                //assertTrue(Math.abs(networkOutput[0] - outputs[i][0]) < epsilon);
             }
         }
+        var success = (double) list.stream().filter(i -> i == 1).count() / list.size();
+        assertTrue(success > 0.9);
+        System.out.println(success);
     }
-
-
-
 }

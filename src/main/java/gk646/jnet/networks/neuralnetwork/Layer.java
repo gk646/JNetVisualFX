@@ -15,9 +15,9 @@ public final class Layer {
     private final double[] input;
     private final double[][] weights;
     private final double[][] dweights;
+    private final double[] biases;
     ActivationFunction activeFunc;
     DerivativeActivationFunction derivativeFunc;
-    Neuron[] neurons;
 
     Layer(int inSize, int outSize, NetworkBuilder networkBuilder) {
         this.activeFunc = networkBuilder.getActiveFunc();
@@ -25,12 +25,11 @@ public final class Layer {
 
         this.layerSize = outSize;
 
-
+        this.biases = new double[outSize];
         this.output = new double[outSize];
         this.input = new double[inSize + 1];
         this.wSums = new double[outSize];
 
-        this.neurons = Neuron.layer(outSize, networkBuilder.getNeuronInitState());
 
         this.weights = new double[inSize + 1][outSize];
         this.dweights = new double[weights.length][outSize];
@@ -38,6 +37,7 @@ public final class Layer {
             for (int j = 0; j < inSize + 1; j++) {
                 this.weights[j][i] = NetworkUtils.rng.nextDouble(networkBuilder.getWeightInit().getOrigin(), networkBuilder.getWeightInit().getBound());
             }
+            biases[i] = NetworkUtils.rng.nextDouble(networkBuilder.getNeuronInitState().getOrigin(), networkBuilder.getNeuronInitState().getBound());
         }
     }
 
@@ -70,7 +70,7 @@ public final class Layer {
             for (int j = 0; j < input.length; j++) {
                 output[i] += weights[j][i] * input[j];
             }
-            //output[i] += neurons[i].bias;
+            output[i] += biases[i];
             wSums[i] = output[i];
             output[i] = activeFunc.apply(output[i]);
         }
@@ -82,12 +82,15 @@ public final class Layer {
         for (int i = 0; i < output.length; i++) {
             double d = error[i];
             d *= derivativeFunc.apply(wSums[i]);
+            double sum = 0;
             for (int j = 0; j < input.length; j++) {
                 nextError[j] += weights[j][i] * d;
+                sum += weights[j][i] * d;
                 double dw = input[j] * d * learnRate;
                 weights[j][i] -= dweights[j][i] * momentum + dw;
                 dweights[j][i] = dw;
             }
+            biases[i] -= learnRate * d;
         }
         return nextError;
     }

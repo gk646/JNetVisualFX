@@ -7,5 +7,6 @@ public final class Info {
     public static final String CONFIGURATION_FILE_NAME = "user-options.ini";
     public static final String USER_STATISTIC_FILE_NAME = "user-stats.txt";
     private Info() {
+
     }
 }
