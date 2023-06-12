@@ -49,7 +49,7 @@ public final class Network {
      * Performs a standard forwardPass through the Network.
      *
      * @param input a double Array
-     * @return a List of both pre- and postActivation values for each Layer (in that order).
+     * @return an array of both pre- and postActivation values for each Layer (in that order).
      */
 
     double[] forwardPass(double[] input) {
@@ -59,7 +59,6 @@ public final class Network {
         }
         return referenceInput;
     }
-
 
     void backPropagation(double[] input, double[] target) {
         double[] calcError = forwardPass(input);

@@ -26,7 +26,7 @@ public final class Terminal {
     public Terminal() {
         terminalText.add("Welcome to JNetVisualFX! To open the wiki type:\"wiki\"");
         terminalText.add("To get started use:\"new NetBuilder([2,2,1],sigmoid)\"");
-        terminalText.add("\"exercise <1 | 2> to start a guided exercise");
+        terminalText.add("\"exercise <1 | 2>\" to start a guided exercise");
         commandHistory.add("help");
     }
 

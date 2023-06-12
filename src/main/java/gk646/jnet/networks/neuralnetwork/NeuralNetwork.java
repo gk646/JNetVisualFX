@@ -12,7 +12,7 @@ import java.util.InputMismatchException;
  */
 
 public final class NeuralNetwork {
-    public static boolean VERBOSE = true;
+    public static boolean verbose = true;
     public static Thread worker;
     static int delayPerStep = 64;
     private final Network network;
@@ -37,7 +37,7 @@ public final class NeuralNetwork {
 
     /**
      * Get the output for a given input. Performs a simple forwardPass through the network.
-     * If {@link #VERBOSE} is true (default) prints out the result.
+     * If {@link #verbose} is true (default) prints out the result.
      *
      * @param inputs a float array.
      * @return the output array form the forwardPass
@@ -68,12 +68,10 @@ public final class NeuralNetwork {
 
     public void trainRandom(double[][] input, double[][] target, int repetitions) {
         if (!network.netUtils.arrayShapeCheck(input, target)) return;
-
         if (worker != null) {
             Log.logger.severe("training already in progress! \"jnet_fastforward\" to skip");
             return;
         }
-
         worker = new Thread(() -> {
             int number;
             for (int i = 0; i < repetitions; i++) {
@@ -94,8 +92,8 @@ public final class NeuralNetwork {
         var worker = new Thread(() -> {
             for (int i = 0; i < repetitions; i++) {
                 for (int j = 0; j < input.length; j++) {
-                    int number = NetworkUtils.rng.nextInt(input.length);
-                    network.backPropagation(input[number], target[number]);
+                    //int number = NetworkUtils.rng.nextInt(input.length);
+                    network.backPropagation(input[j], target[j]);
                 }
                 network.netUtils.perRepetitionTasks(input, target);
             }

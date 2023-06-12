@@ -14,7 +14,7 @@ public final class NumberUtil {
     }
 
     public static int getNewTotalTime(Number totalSeconds) {
-        long difference = System.nanoTime() - Main.startUpTime;
+        long difference = System.nanoTime() - Main.STARTUP_TIME;
         long diffSeconds = difference / 1_000_000_000;
         return (int) (diffSeconds + totalSeconds.intValue());
     }
